@@ -1,0 +1,35 @@
+Package: CHOPStudy
+Title: Research Compendium for the CHOP Study
+Version: 0.0.0.9000
+Date: 2025-01-15
+Authors@R: 
+    person(given = c("Steven", "J."),
+           family = "Pierce",
+           role = c("aut", "cre", "cph"),
+           email = "pierces1@msu.edu",
+           comment = c(ORCID = "0000-0002-0679-3019"))
+Description: This package is a research compendium for a study examining the 
+    incidence of bandemia in canine patients undergoing chemotherapy treatment. 
+    The research team is led by Dr. Alison Masyr (PI) at Michigan State 
+    University. 
+License: file LICENSE
+URL: https://github.com/sjpierce/CHOPStudy
+BugReport: https://github.com/sjpierce/CHOPStudy/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: 
+    R (>= 4.4),
+    piercer (>= 0.18.0)
+Suggests: 
+    devtools,
+    dplyr,
+    git2r,
+    here,
+    kableExtra,
+    knitr,
+    quarto,
+    rmarkdown, 
+    tidyverse,
+    tinytex
+VignetteBuilder: knitr
