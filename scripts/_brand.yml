@@ -43,7 +43,7 @@ typography:
       source: google
 
   base:
-    family: Lato
+    family: Arial    # Substitutes for Metropolis
   headings:
     family: Oswald
     color: SpartanGreen
