@@ -1,0 +1,6 @@
+project:
+  title: "scripts"
+  type: default
+  execute-dir: file
+  render:
+    - Render_Scripts.qmd
