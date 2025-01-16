@@ -1,0 +1,1452 @@
+---
+title: Analyze CHOP Study Data
+author: 
+  - name: Ruxin Shi
+    orcid: 0009-0001-9483-6444
+    email: shiruxin@msu.edu
+    affiliations: 
+      - name: Michigan State University, Center for Statistical Training and Consulting
+  - name: Steven J. Pierce
+    orcid: 0000-0002-0679-3019
+    email: pierces1@msu.edu
+    affiliations: 
+      - name: Michigan State University, Center for Statistical Training and Consulting
+params:
+  SourceFile: "Analyze_Data.qmd"
+  LogFile: "Analyze_Data.html"
+date: now
+date-modified: last-modified
+date-format: YYYY-MM-DD HH:mm:ss z
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    number-sections: true
+    number-depth: 3
+    code-fold: true
+    code-tools: true
+    code-line-numbers: false
+    embed-resources: true 
+    anchor-sections: true
+execute:
+  eval: true
+  echo: fenced
+  output: true
+  message: true
+  warning: false
+  error: true
+  include: true
+knitr:
+  opts_chunk: 
+    message: true 
+    cfsize: "scriptsize"
+---
+
+\FloatBarrier
+
+# Purpose
+
+This file provides the analysis results of data file 
+`Vinc Cases 1.9.24.xlsx` provided by Alison and Caitlin, which records 
+observations from dogs receiving CHOP chemotherapy at MSU VMC between 2016 and 
+2022.
+
+::: {.callout-note}
+The data file we received was called `Vinc Cases 1.9.23.xlsx`, but we renamed it 
+to `Vinc Cases 1.9.24.xlsx` before using it because that was the date we 
+received it. 
+:::
+
+# Setup
+
+This section of the report documents some setup tasks that are useful to the
+statistician on the team. Most readers of this report will probably want skip
+directly to @sec-Results.
+
+## Define Global Options
+
+Global R chunk options are defined in the YAML header but local chunk options
+will over-ride global options. We can temporarily disable an individual chunk by
+inserting `#| eval: false` on a line at the top of the chunk.
+
+## Load Packages
+
+Load R packages that we need to get additional functions.
+
+```{r}
+#| label: load-packages
+library(here)
+library(kableExtra)
+library(dplyr)
+library(knitr)
+library(gtsummary)
+library(glmmTMB)
+library(readxl)
+library(quarto)
+library(lme4)
+library(emmeans)
+library(ggplot2)
+```
+
+## Declare Path
+
+```{r}
+#| label: declare-path
+
+i_am("Masyr_C1358_2024-05-03.qmd")
+```
+
+## Read Data {#sec-Read-Data}
+
+```{r}
+#| label: load-data
+
+data_all <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx")) 
+names(data_all)
+```
+
+# Results {#sec-Results}
+
+## Total bands
+
+### Summary of total bands
+
+@fig-chop1_phase1_total_bands shows the histogram (left) and the boxplot (right) 
+of **Total bands** in the original units (x10.e3/uL=1000/uL), while 
+@fig-chop1_phase1_total_bands_rescaled shows the same data after rescaling to 
+units of (x100/ul) to obtain integer values usable in count models. This makes 
+it more convenient for us when fitting models. Both these figures show that 
+there are lots of zero values, which makes it hard to see the shape of the 
+distribution among the non-zero values. 
+
+```{r}
+#| label: fig-chop1_phase1_total_bands
+#| fig-cap: Histogram (left) and boxplot (right) of the total bands (x1000/ul)
+par(mfrow=c(1,2))
+hist(data_analyse$Total_Bands, main=NULL,
+     xlab="Total bands (x1000/ul)",
+     ylab = "Number of patients")
+boxplot(data_analyse$Total_Bands, ylab="Total bands (x1000/ul)")
+par(mfrow=c(1,1))
+```
+
+```{r}
+#| label: fig-chop1_phase1_total_bands_rescaled
+#| fig-cap: Histogram (left) and boxplot (right) of the total bands (x100/ul)
+par(mfrow=c(1,2))
+hist(data_analyse$Total_Bands_Rescaled, main = NULL, 
+     xlab="Total bands (x100/ul)",
+     ylab = "Number of patients")
+boxplot(data_analyse$Total_Bands_Rescaled, ylab="Total bands (x100/ul)")
+par(mfrow=c(1,1))
+```
+
+@tbl-chop1_bands_phase1 gives the mean and median value of the **Total bands** 
+(x100/ul). We can see that more than 75% outcomes are 0. Therefore, it's 
+possible that this distribution is **zero-inflated** (i.e., there may be more 
+values of zero than one would expect under a Poisson distribution).
+
+```{r}
+#| label: tbl-chop1_bands_phase1
+#| tbl-cap: Summary of total bands (x100/ul)
+A=summary(data_analyse$Total_Bands_Rescaled)
+round(as.matrix(A),4) %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+The histogram (left) and boxplot (right) of **log(Total bands [x100/ul])** and 
+**log(Total bands [x1000/ul])** are shown in 
+@fig-chop1_phase1_total_bands_rescaled_log and 
+@fig-chop1_phase1_total_bands_log, respectively. The difference between these 
+two graphs are in the units of measurement prior to the log transformation. In 
+both graphs, the log equals -Infinity when total bands are 0, so we recoded 
+these values to improve the figures and keep them compact and readable. And we 
+also present figures in 
+@fig-chop1_phase1_total_bands_rescaled_log_part and 
+@fig-chop1_phase1_total_bands_log_part that show only the data where total bands 
+\> 0 to better look at the shape of the distribution.
+
+```{r}
+#| label: fig-chop1_phase1_total_bands_rescaled_log
+#| fig-cap: Histogram (left) and boxplot (right) of the log(total bands x100/ul)
+
+par(mfrow=c(1,2))
+hist(data_analyse$log_Total_Bands_Rescaled,
+     xlab="log(Total bands [x100/ul])",
+     ylab = "Number of patients",
+     main=NULL,
+     breaks = 7, xlim = c(-3, 5), xaxt = "n", ylim = c(0, 500))
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+axis(1, at = axis_positions, labels = axis_labels)
+
+boxplot(data_analyse$log_Total_Bands_Rescaled,
+       ylab="log(Total bands [x100/ul])",
+       ylim = c(-3, 5), yaxt = "n")
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+
+par(mfrow=c(1,1))
+```
+
+```{r}
+#| label: fig-chop1_phase1_total_bands_log
+#| fig-cap: Histogram (left) and boxplot (right) of the log(total bands x1000/ul)
+
+par(mfrow=c(1,2))
+hist(data_analyse$log_Total_Bands, 
+     xlab="log(Total bands [x1000/ul])", 
+     ylab = "Number of patients",
+     main=NULL, 
+     breaks = 6, xlim = c(-5, 2), xaxt = "n", ylim = c(0, 500))
+axis_positions <- c(-5, seq(-3, 2, length.out = 6))
+axis_labels <- c("-Inf", formatC(seq(-3, 2, length.out = 6), 
+                                 format = "f", digits = 0))
+axis(1, at = axis_positions, labels = axis_labels)
+
+boxplot(data_analyse$log_Total_Bands,
+        ylab="log(Total bands [x1000/ul])",
+        ylim = c(-5, 2), yaxt = "n")
+axis_positions <- c(-5, seq(-3, 2, length.out = 6))
+axis_labels <- c("-Inf", formatC(seq(-3, 2, length.out = 6), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+
+par(mfrow=c(1,1))
+```
+
+::: {.callout-note}
+@fig-chop1_phase1_total_bands_log above becomes Figure 1 in the manuscript. 
+:::
+
+@tbl-Numbers_of_zero_and_proportion shows the frequency distribution for Total 
+Bands, which highlights the large proportion of zero values. The table also 
+shows the rescaled Total Bands values used in count models, and log transformed
+values for both original and recscaled Total Bands values. 
+
+```{r}
+#| label: tbl-Numbers_of_zero_and_proportion
+#| tbl-cap: "Frequency Distribution of Total Bands"
+
+data_analyse %>% 
+  count(Total_Bands) %>% 
+  mutate(Total_Bands_Rescaled = Total_Bands*10,
+         Log_Total_Bands = log(Total_Bands), 
+         Log_Total_Bands_Rescaled = log(Total_Bands_Rescaled),
+         Proportion = n/nrow(data_analyse)) %>% 
+  select(Total_Bands, Total_Bands_Rescaled, Log_Total_Bands, 
+         Log_Total_Bands_Rescaled, n, Proportion) %>% 
+  kable(digits = 3, col.names = c("Total bands (x1000/ul)", 
+                                  "Total bands (x100/ul)", 
+                                  "log(Total bands [x1000/ul])", 
+                                  "log(Total bands [x100/ul])", 
+                                  "n", 
+                                  "Proportion")) %>%
+  kable_styling() %>% 
+  add_header_above(header = c("Raw Values", "Transformations of Total Bands" = 3, 
+                              "Frequency" = 2))
+```
+
+```{r}
+#| label: fig-chop1_phase1_total_bands_rescaled_log_part
+#| fig-cap: "Histogram (left) and boxplot (right) of the log(total bands [x100/ul]) with only total bands > 0"
+par(mfrow=c(1,2))
+hist(data_analyse$log_Total_Bands_Rescaled[data_analyse$log_Total_Bands_Rescaled>-3],
+     xlab="log(Total bands [x100/ul])", xlim = c(0, 5),
+     ylab = "Number of patients",
+     main=NULL)
+boxplot(data_analyse$log_Total_Bands_Rescaled[data_analyse$log_Total_Bands_Rescaled>-3],
+        ylab="log(Total bands [x100/ul])", ylim = c(0,5))
+par(mfrow=c(1,1))
+```
+
+```{r}
+#| label: fig-chop1_phase1_total_bands_log_part
+#| fig-cap: "Histogram (left) and boxplot (right) of the log(total bands [x1000/ul]) with only total bands > 0"
+par(mfrow=c(1,2))
+hist(data_analyse$log_Total_Bands[data_analyse$log_Total_Bands>-5],
+     xlab="log(Total bands [x1000/ul])", xlim = c(-3, 2),
+     ylab = "Number of patients",
+     main=NULL)
+boxplot(data_analyse$log_Total_Bands[data_analyse$log_Total_Bands>-3],
+        ylab="log(Total bands [x1000/ul])", ylim = c(-3,2))
+par(mfrow=c(1,1))
+```
+
+### Summary of each drug
+
+@tbl-chop1_drug shows the number of times each drug is used. We can see that
+Drug 1 is used far more than other drugs.
+
+```{r}
+#| label: tbl-chop1_drug
+#| tbl-cap: Summary the number of times each drug is used
+
+data_analyse %>% 
+  mutate(Drug = factor(Drug, levels = 1:3, labels = paste("Drug", 1:3))) %>% 
+  count(Drug) %>% 
+  mutate(Proportion = n/nrow(data_analyse)) %>% 
+  kbl(digits = 3) %>%
+  kable_styling()
+```
+
+@fig-total_bands_rescaled_by_drugs shows the boxplot of 
+**Total bands (x100/ul)**, categorized by drugs, while @fig-total_bands_by_drugs 
+shows the boxplot of **Total bands (x1000/ul)**, categorized by drugs.
+
+```{r}
+#| label: fig-total_bands_rescaled_by_drugs
+#| fig-cap: Boxplot of the total bands (x100/ul), categorized by drugs.
+
+boxplot(data_analyse$Total_Bands_Rescaled ~ data_analyse$Drug,
+        ylab="Total bands (x100/ul)",
+        xlab = "Drug")
+```
+
+```{r}
+#| label: fig-total_bands_by_drugs
+#| fig-cap: Boxplot of the total bands (x1000/ul), categorized by drugs.
+
+boxplot(data_analyse$Total_Bands ~ data_analyse$Drug,
+        ylab="Total bands (x1000/ul)",
+        xlab = "Drug")
+```
+
+@tbl-total_bands_by_drugs gives the mean and median value of the **Total bands**, 
+categorized by drugs.
+
+```{r}
+#| label: tbl-total_bands_by_drugs
+#| tbl-cap: Summary of total bands (x100/ul), categorized by drugs.
+
+A=matrix(0,ncol=3,nrow=6)
+for(i in 1:3){
+  A[,i]=summary(data_analyse$Total_Bands_Rescaled[data_analyse$Drug==i])
+}
+colnames(A)=paste0("Drug ",1:3)
+rownames(A)=c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max")
+round(A,4)%>%   kbl() %>%   kable_styling()
+```
+
+@fig-total_bands_rescaled_by_drugs_log shows the boxplot of 
+**log(Total bands) (x100/ul)**, categorized by drugs, where -Inf means total 
+bands=0. Meanwhile, @fig-total_bands_by_drugs_log shows the boxplot of 
+**log(Total bands) (x1000/ul)**, categorized by drugs, where -Inf means total 
+bands=0. 
+
+```{r}
+#| label: fig-total_bands_rescaled_by_drugs_log
+#| fig-cap: Boxplot of the log(total bands)(x100/ul), categorized by drugs.
+
+boxplot(data_analyse$log_Total_Bands_Rescaled ~ data_analyse$Drug,
+        xlab = "Drug",
+        ylab="log(Total bands) (x100/ul)", ylim = c(-3, 5), yaxt = "n")
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+```{r}
+#| label: fig-total_bands_by_drugs_log
+#| fig-cap: Boxplot of the log(total bands [x1000/ul]), categorized by drugs.
+
+boxplot(data_analyse$log_Total_Bands ~ data_analyse$Drug,
+        xlab = "Drug",
+        ylab="log(Total bands [x1000/ul])", ylim = c(-5, 2), yaxt = "n")
+axis_positions <- c(-5, seq(-3, 2, length.out = 6))
+axis_labels <- c("-Inf", formatC(seq(-3, 2, length.out = 6), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+::: {.callout-note}
+@fig-total_bands_by_drugs_log above becomes Figure 2 in the manuscript. 
+:::
+
+@fig-total_bands_by_drugs_log_part shows the boxplot of 
+**log(Total bands) (x100/ul)** with only Total bands \> 0, categorized by drugs.
+
+```{r}
+#| label: fig-total_bands_by_drugs_log_part
+#| fig-cap: Boxplot of the log(total bands [x100/ul]), categorized by drugs.
+
+boxplot(data_analyse$log_Total_Bands_Rescaled[data_analyse$log_Total_Bands_Rescaled>-3] ~ data_analyse$Drug[data_analyse$log_Total_Bands_Rescaled>-1],
+        ylab="log(Total bands [x100/ul])",
+        xlab = "Drug")
+
+```
+
+@tbl-total_bands_by_drugs_zero shows the number and proportion of instances 
+where total bands equal 0 for each drug used.
+
+```{r}
+#| label: tbl-total_bands_by_drugs_zero
+#| tbl-cap: Number and proportion of instances where total bands equal 0 for each drug used.
+#| 
+data_analyse %>% 
+  mutate(Drug = factor(Drug, levels = 1:3, labels = paste("Drug", 1:3)),
+         Zero_Bands = Total_Bands == 0) %>% 
+  group_by(Drug) %>% 
+  summarize(n = n(),
+            Zero_Bands_N = sum(Zero_Bands),
+            Zero_Bands_Proportion = mean(Zero_Bands)) %>% 
+  kable(digits = 3, 
+        col.names = c("Drug", "Total N", "Total Bands = 0, N", 
+                      "Total Bands = 0, Proportion")) %>% 
+  kable_styling()
+```
+
+### Summary of total bands by visit time
+
+#### Total
+
+@tbl-total_bands_by_visit provides the mean and standard deviation of 
+**Total bands** for each visit time. From this data, we can observe that the 
+mean value of Total bands tends to decrease over time.
+
+```{r}
+#| label: tbl-total_bands_by_visit
+#| tbl-cap: Summary of total bands (x100/ul) for each visit time.
+Total_Bands_Rescaled_counts <- data_analyse %>%
+  group_by(Visit_Number) %>%
+   summarise(
+    mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
+    sd= round(sd(Total_Bands_Rescaled, na.rm = TRUE),4),
+    min = min(Total_Bands_Rescaled, na.rm = TRUE),
+    max= max(Total_Bands_Rescaled, na.rm = TRUE)
+  )
+Total_Bands_Rescaled_counts%>%kable()%>%kable_styling() 
+```
+
+@fig-total_bands_by_visit shows the boxplot of total bands (x100/ul) for each 
+visit time.
+
+```{r}
+#| label: fig-total_bands_by_visit
+#| fig-cap: Boxplot of total bands (x100/ul) for each visit time.
+boxplot(Total_Bands_Rescaled~Visit_Number,data=data_analyse,xlab="Visit number",ylab="Total bands (x100/ul)")
+```
+
+@fig-total_bands_rescaled_by_visit_log shows the boxplot of 
+**log(total bands x100/ul)** for each visit time, where -Inf means total bands = 
+0. @fig-total_bands_by_visit_log shows the boxplot of 
+**log(total bands x1000/ul)** for each visit time, where -Inf means total bands = 
+0.
+
+```{r}
+#| label: fig-total_bands_rescaled_by_visit_log
+#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time.
+boxplot(log_Total_Bands_Rescaled ~ Visit_Number, data=data_analyse,
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])",ylim = c(-3, 5), yaxt = "n")
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+```{r}
+#| label: fig-total_bands_by_visit_log
+#| fig-cap: Boxplot of log(total bands [x1000/ul]) for each visit time.
+boxplot(log_Total_Bands ~ Visit_Number, data=data_analyse,
+        xlab="Visit number",
+        ylab="log(Total bands [x1000/ul])",ylim = c(-5, 2), yaxt = "n")
+axis_positions <- c(-5, seq(-3, 2, length.out = 6))
+axis_labels <- c("-Inf", formatC(seq(-3, 2, length.out = 6), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+::: {.callout-note}
+@fig-total_bands_by_visit_log above becomes Figure 3a in the manuscript. 
+:::
+
+
+@fig-total_bands_by_visit_log_part shows the boxplot of log(total bands x100/ul)
+for each visit time and only include those with total bands \> 0.
+
+```{r}
+#| label: fig-total_bands_by_visit_log_part
+#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time (only include those with total bands \> 0).
+boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
+          Visit_Number[Total_Bands_Rescaled > 0],
+        data=data_analyse,
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])")
+```
+
+@tbl-total_bands_by_visit_zero shows the number and proportion of instances 
+where total bands equal 0 for each drug used.
+
+```{r}
+#| label: tbl-total_bands_by_visit_zero
+#| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time.
+
+data_analyse %>% 
+  mutate(Zero_Bands = Total_Bands == 0) %>% 
+  group_by(Visit_Number) %>% 
+  summarize(n = n(),
+            Zero_Bands_N = sum(Zero_Bands),
+            Zero_Bands_Proportion = mean(Zero_Bands)) %>% 
+  kable(digits = 3, 
+        col.names = c("Visit Number", "Total N", "Total Bands = 0, N", 
+                      "Total Bands = 0, Proportion")) %>% 
+  kable_styling()
+```
+
+#### Drug 1
+
+@tbl-total_bands_by_visit_drug1 provides the mean and standard deviation of 
+**Total bands** for individuals using Drug 1 at each visit time.
+
+```{r}
+#| label: tbl-total_bands_by_visit_drug1
+#| tbl-cap: Summary of total bands (x100/ul) for individuals using Drug 1 at each visit time.
+
+data_analyse %>% 
+  filter(Drug==1) %>%
+  group_by(Visit_Number) %>%
+  summarise(mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
+            sd= round(sd(Total_Bands_Rescaled, na.rm = TRUE),4),
+            min = min(Total_Bands_Rescaled, na.rm = TRUE),
+            max= max(Total_Bands_Rescaled, na.rm = TRUE)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
+```
+
+
+@fig-boxplot_total_bands is a boxplot that visualize the information.
+
+```{r}
+#| label: fig-boxplot_total_bands
+#| fig-cap: "Boxplot of total bands (x100/ul) for each visit time for drug 1"
+boxplot(Total_Bands_Rescaled~Visit_Number,
+        data=data_analyse[data_analyse$Drug==1,],
+        xlab="Visit number",
+        ylab="Total bands (x100/ul)")
+```
+
+@fig-total_bands_by_visit_drug1_log shows the boxplot of 
+log(total bands x100/ul) for individuals using Drug 1 at each visit time, where 
+-Inf means total bands=0.
+
+```{r}
+#| label: fig-total_bands_by_visit_drug1_log
+#| fig-cap: "Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 1."
+
+boxplot(log_Total_Bands_Rescaled~Visit_Number,
+        data=data_analyse[data_analyse$Drug==1,],
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])", ylim = c(-3, 5), yaxt = "n")
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+@fig-total_bands_by_visit_drug1_log_part shows the boxplot of log(total bands 
+x100/ul) for individuals using Drug 1 at each visit time and only include those 
+with total bands\>0.
+
+```{r}
+#| label: fig-total_bands_by_visit_drug1_log_part
+#| fig-cap: "Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 1 (only include those with total bands > 0)."
+
+boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
+          Visit_Number[Total_Bands_Rescaled>0],
+        data=data_analyse[data_analyse$Drug==1,],
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])")
+```
+
+@tbl-total_bands_by_visit_drug1_zero shows the number and proportion of 
+instances where total bands equal 0 for each drug used.
+
+```{r}
+#| label: tbl-total_bands_by_visit_drug1_zero
+#| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time for those using drug 1.
+
+data_analyse %>% 
+  filter(Drug == 1) %>% 
+  mutate(Zero_Bands = Total_Bands == 0) %>% 
+  group_by(Visit_Number) %>% 
+  summarize(n = n(),
+            Zero_Bands_N = sum(Zero_Bands),
+            Zero_Bands_Proportion = mean(Zero_Bands)) %>% 
+  kable(digits = 3, 
+        col.names = c("Visit Number", "Total N", "Total Bands = 0, N", 
+                      "Total Bands = 0, Proportion")) %>% 
+  kable_styling()
+```
+
+```{r}
+#| label: drug
+drug1 <- data_analyse %>% filter(Drug==1)
+drug2 <- data_analyse %>% filter(Drug==2)
+drug3 <- data_analyse %>% filter(Drug==3)
+```
+
+@fig-visit_times_of_drug_1 shows the times of using drug 1 at each visit number.
+
+```{r}
+#| label: fig-visit_times_of_drug_1
+#| fig-cap: Times of using drug 1 at each visit number
+
+drug_counts <- drug1 %>%
+  group_by(Visit_Number) %>%
+  summarise(Count = n())
+ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.3, size = 2.5) +
+  labs(x = "Visit number", y = "Times") +
+  scale_x_continuous(breaks = c(1:16))+
+  theme_minimal()
+```
+
+#### Drug 2  
+
+@tbl-total_bands_by_visit_drug2 provides the mean and standard deviation of 
+**Total bands** for individuals using Drug 2 at each visit time.
+
+```{r}
+#| label: tbl-total_bands_by_visit_drug2
+#| tbl-cap: Summary of total bands (x100/ul) for individuals using Drug 2 at each visit time.
+
+data_analyse %>% 
+  filter(Drug==2) %>%
+  group_by(Visit_Number) %>%
+  summarise(mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
+            sd= round(sd(Total_Bands_Rescaled, na.rm = TRUE),4),
+            min = min(Total_Bands_Rescaled, na.rm = TRUE),
+            max= max(Total_Bands_Rescaled, na.rm = TRUE)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
+```
+
+
+@fig-boxplot_drug_2 is a boxplot that visualize the information.
+
+```{r}
+#| label: fig-boxplot_drug_2
+#| fig-cap: "Boxplot of total bands (x100/ul) for each visit time for drug 2"
+
+boxplot(Total_Bands_Rescaled~Visit_Number,
+        data=data_analyse[data_analyse$Drug==2,],
+        xlab="Visit number",
+        ylab="Total bands (x100/ul)")
+```
+
+@fig-total_bands_by_visit_drug2_log shows the boxplot of log(total bands 
+x100/ul) for individuals using Drug 2 at each visit time, where -1 means total 
+bands=0.
+
+```{r}
+#| label: fig-total_bands_by_visit_drug2_log
+#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 2.
+
+boxplot(log_Total_Bands_Rescaled~Visit_Number,
+        data=data_analyse[data_analyse$Drug==2,],
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])", ylim = c(-3, 5), yaxt = "n")
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+@fig-total_bands_by_visit_drug2_log_part shows the boxplot of log(total bands 
+x100/ul) for individuals using Drug 2 at each visit time and only include those 
+with total bands\>0.
+
+```{r}
+#| label: fig-total_bands_by_visit_drug2_log_part
+#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 2 (only include those with total bands \> 0).
+
+boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
+          Visit_Number[Total_Bands_Rescaled>0],
+        data=data_analyse[data_analyse$Drug==2,],
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])")
+```
+
+@tbl-total_bands_by_visit_drug2_zero shows the number and proportion of 
+instances where total bands equal 0 for each drug used.
+
+```{r}
+#| label: tbl-total_bands_by_visit_drug2_zero
+#| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time for those using drug 2.
+
+data_analyse %>% 
+  filter(Drug == 2) %>% 
+  mutate(Zero_Bands = Total_Bands == 0) %>% 
+  group_by(Visit_Number) %>% 
+  summarize(n = n(),
+            Zero_Bands_N = sum(Zero_Bands),
+            Zero_Bands_Proportion = mean(Zero_Bands)) %>% 
+  kable(digits = 3, 
+        col.names = c("Visit Number", "Total N", "Total Bands = 0, N", 
+                      "Total Bands = 0, Proportion")) %>% 
+  kable_styling()
+```
+
+@fig-visit_times_of_drug_2 shows the times of using drug 2 at each visit number
+
+```{r}
+#| label: fig-visit_times_of_drug_2
+#| fig-cap: Times of using drug 2 at each visit number
+
+drug_counts <- drug2 %>%
+  group_by(Visit_Number) %>%
+  summarise(Count = n())
+ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.3, size = 2.5) +
+  labs(x = "Visit number", y = "Times") +
+  scale_x_continuous(breaks = c(1:16))+
+  theme_minimal()
+```
+
+#### Drug 3
+
+
+@tbl-total_bands_by_visit_drug3 provides the mean and standard deviation of 
+**Total bands** for individuals using Drug 3 at each visit time.
+
+```{r}
+#| label: tbl-total_bands_by_visit_drug3
+#| tbl-cap: Summary of total bands (x100/ul) for individuals using Drug 3 at each visit time.
+
+data_analyse %>% 
+  filter(Drug==3) %>%
+  group_by(Visit_Number) %>%
+  summarise(mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
+            sd= round(sd(Total_Bands_Rescaled, na.rm = TRUE),4),
+            min = min(Total_Bands_Rescaled, na.rm = TRUE),
+            max= max(Total_Bands_Rescaled, na.rm = TRUE)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
+```
+
+@fig-boxplot_drug_3 is a boxplot that visualize the information.
+
+```{r}
+#| label: fig-boxplot_drug_3
+#| #| fig-cap: "Boxplot of total bands (x100/ul) for each visit time for drug 3"
+
+boxplot(Total_Bands_Rescaled~Visit_Number,
+        data=data_analyse[data_analyse$Drug==3,],
+        xlab="Visit number",
+        ylab="Total bands (x100/ul)")
+```
+
+@fig-total_bands_by_visit_drug3_log shows the boxplot of log(total bands 
+x100/ul) for individuals using Drug 3 at each visit time, where -1 means total 
+bands=0.
+
+```{r}
+#| label: fig-total_bands_by_visit_drug3_log
+#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 3.
+
+boxplot(log_Total_Bands_Rescaled~Visit_Number,
+        data=data_analyse[data_analyse$Drug==3,],
+        xlab="Visit number",
+        ylab="log(Total bands [x100/ul])", ylim = c(-3, 5), yaxt = "n")
+axis_positions <- c(-3, seq(-1, 5, length.out = 7))
+axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
+                                 format = "f", digits = 0))
+axis(2, at = axis_positions, labels = axis_labels)
+```
+
+@fig-total_bands_by_visit_drug3_log_part shows the boxplot of log(total bands 
+x100/ul) for individuals using Drug 3 at each visit time and only include those 
+with total bands\>0.
+
+```{r}
+#| label: fig-total_bands_by_visit_drug3_log_part
+#| fig-cap: Boxplot of log(total bands x100/ul) for each visit time for those using drug 3.
+boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled>0]~Visit_Number[Total_Bands_Rescaled>0],data=data_analyse[data_analyse$Drug==3,],xlab="Visit number",ylab="log(Total bands) (x100/ul)")
+```
+
+@tbl-total_bands_by_visit_drug3_zero shows the number and proportion of 
+instances where total bands equal 0 for each drug used.
+
+```{r}
+#| label: tbl-total_bands_by_visit_drug3_zero
+#| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time for those using drug 3.
+
+data_analyse %>% 
+  filter(Drug == 3) %>% 
+  mutate(Zero_Bands = Total_Bands == 0) %>% 
+  group_by(Visit_Number) %>% 
+  summarize(n = n(),
+            Zero_Bands_N = sum(Zero_Bands),
+            Zero_Bands_Proportion = mean(Zero_Bands)) %>% 
+  kable(digits = 3, 
+        col.names = c("Visit Number", "Total N", "Total Bands = 0, N", 
+                      "Total Bands = 0, Proportion")) %>% 
+  kable_styling()
+```
+
+@fig-visit_times_of_drug_3 shows the times of using drug 3 at each visit number
+
+```{r}
+#| label: fig-visit_times_of_drug_3
+#| fig-cap: Times of using drug 3 at each visit number
+
+drug_counts <- drug3 %>%
+  group_by(Visit_Number) %>%
+  summarise(Count = n())
+ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), vjust = -0.3, size = 2.5) +
+  labs(x = "Visit number", y = "Times") +
+  scale_x_continuous(breaks = c(1:16))+
+  theme_minimal()
+```
+
+### Additional values needed  
+#### Total white blood cells (WBC) 
+
+@tbl-chop1_WBC_phase1 gives the mean and median value of the 
+**Total WBC (x1000/uL)**.  
+
+```{r}
+#| label: tbl-chop1_WBC_phase1
+#| tbl-cap: Summary of total WBC (x1000/uL)
+A=summary(data_analyse$Total_WBC)
+round(as.matrix(A),4) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+@tbl-total_WBC_by_visit provides the mean and standard deviation of 
+**Total WBC** for each visit time. From this data, we can observe that the mean 
+value of Total bands tends to decrease over time
+
+```{r}
+#| label: tbl-total_WBC_by_visit
+#| tbl-cap: Summary of total white blood cells (x1000/uL) for each visit time.
+data_analyse %>%
+  group_by(Visit_Number) %>%
+  summarise(mean = round(mean(Total_WBC, na.rm = TRUE),4),
+            sd= round(sd(Total_WBC, na.rm = TRUE),4),
+            min = min(Total_WBC, na.rm = TRUE),
+            max= max(Total_WBC, na.rm = TRUE)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() 
+```
+
+
+#### neutrophils (neuts)
+@tbl-chop1_neutrophils_phase1 gives the mean and median value of the 
+**Total neutrophils (x10e3/uL)**. 
+
+```{r}
+#| label: tbl-chop1_neutrophils_phase1
+#| tbl-cap: Summary of total neutrophils 
+
+A=summary(data_analyse$Total_Neutrophil)
+round(as.matrix(A),4)%>%
+  kbl() %>%
+  kable_styling()
+```
+
+@tbl-total_neutrophil_by_visit provides the mean and standard deviation of 
+**Total neutrophil** for each visit time. 
+
+```{r}
+#| label: tbl-total_neutrophil_by_visit
+#| tbl-cap: Summary of total neutrophil for each visit time.
+
+data_analyse %>%
+  group_by(Visit_Number) %>%
+  summarise(mean = round(mean(Total_Neutrophil, na.rm = TRUE),4),
+            sd= round(sd(Total_Neutrophil, na.rm = TRUE),4),
+            min = min(Total_Neutrophil, na.rm = TRUE),
+            max= max(Total_Neutrophil, na.rm = TRUE)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() 
+```
+
+### Bandemia grade  
+
+```{r}
+A=matrix(0,nrow = 6,ncol=4)
+colnames(A)=c("Bandemia grade","Value according to MSUVDL reference range (k/uL)","Numbers","Proportion")
+A[,1]=c(0:5)
+A[,2]=c("0.0-0.10","0.11-0.29","0.30-0.59","0.60-1.00",">1.00","death")
+A[,3]=c(sum(data_analyse$Total_Bands_Rescaled<=1),
+        sum(data_analyse$Total_Bands_Rescaled>1&data_analyse$Total_Bands_Rescaled<3),
+        sum(data_analyse$Total_Bands_Rescaled>=3&data_analyse$Total_Bands_Rescaled<6),
+        sum(data_analyse$Total_Bands_Rescaled>=6&data_analyse$Total_Bands_Rescaled<=10),
+        sum(data_analyse$Total_Bands_Rescaled>10),0)
+A=as.data.frame(A)
+A$Numbers=as.numeric(A$Numbers)
+A[,4]=A[,3]/609
+A %>% 
+  kable(digits = 3) %>%
+  kable_styling()
+```
+
+
+### Model that use total bands as the outcome
+
+#### "Generalized Linear Mixed Model" (GLMM) with a Negative Binomial link function
+
+**Poisson regression** is a statistical model designed for analyzing count data,
+specifically when dealing with non-negative integer counts that are expected to
+follow a Poisson distribution. It's most effectively employed in scenarios
+involving event frequencies, such as the number of occurrences of a particular
+event. The primary objective of Poisson regression is to establish the
+relationship between a dependent variable, which represents these counts, and
+one or more independent variables. These independent variables can be either
+categorical or continuous, allowing for a wide range of applications in various
+fields.
+
+So we considered to use Poisson regression here.
+
+A key characteristic of Poisson regression is that it assumes the mean and
+variance of the distribution are equal, a property known as equidispersion.
+
+First let's exam it's mean and variance.
+
+```{r}
+#| label: mean_var
+print(round(c("mean"=mean(data_analyse$Total_Bands_Rescaled),"var"=var(data_analyse$Total_Bands_Rescaled)),4))
+```
+
+Given that the sample data exhibit a mean of $1.823$, which is substantially
+lower than the observed variance of $44.995$, the use of a Negative Binomial
+link function should be justified in this context. This significant discrepancy
+suggests overdispersion, a scenario where the Negative Binomial distribution is
+particularly suitable due to its flexibility in handling extra-Poisson
+variation.
+
+Additionally, considering the use of a zero-inflated model might be appropriate,
+as more than 75% of the values are zeros.
+
+Next we check the correlation between the surface area and the weight.
+
+```{r}
+#| label: correlation
+data_Info=data_analyse[1,]
+for(i in 2:length(data_analyse$Patient_Number)){
+  if(data_analyse$Patient_Number[i]!=data_analyse$Patient_Number[i-1]){
+      data_Info=rbind(data_Info,data_analyse[i,])
+  }
+}
+print(round(cor(data_Info$Surface_Area_m2,data_Info$Weight_kg),4))
+```
+
+The correlation is 0.99. Therefore, we include only one of them in the model to
+avoid collinearity.
+
+@fig-chop1_m2 shows the distribution of patients' surface area. It's nearly 
+normal distribution.
+
+```{r}
+#| label: fig-chop1_m2
+#| fig-cap: Histogram of surface area (in CHOP 1)
+
+ggplot(data_Info, aes(x=Surface_Area_m2)) + 
+  geom_histogram(binwidth = 0.1, colour="black", fill="white") + 
+  ggtitle("Histogram of m^2") + 
+  xlab("m^2") + 
+  ylab("Frequency") + 
+  xlim(0, 2)
+```
+
+@tbl-chop1_m2 provides the mean and median of the surface area
+
+```{r}
+#| label: tbl-chop1_m2
+#| tbl-cap: Summary of patient's surface area (in CHOP 1)
+
+A=summary(data_Info$Surface_Area_m2)
+round(as.matrix(A),4)%>%   kbl() %>%   kable_styling() 
+```
+
+```{r}
+#| label: model_regression
+#colnames(data_analyse)[c(1,3,10,13,14)]=c("Patient_number","Visit_number","Total_Bands_Rescaled","Weight","Surface_area")
+data_analyse$Drug=as.factor(data_analyse$Drug)
+data_analyse$Surface_area=data_analyse$Surface_Area_m2-mean(data_Info$Surface_Area_m2)
+data_analyse$Visit_number=data_analyse$Visit_Number-1
+model_nb <- glmmTMB(Total_Bands_Rescaled ~ Drug +Surface_area+ Visit_number+(1 | Patient_Number),
+                      data=data_analyse,
+                      ziformula=~1,
+                      family=nbinom2)
+```
+
+#### Results
+
+Below shows the regression results of the model.
+
+```{r}
+#| label: summary_model
+summary(model_nb)
+```
+
+Note: In this analysis, we employ the NB2 parameterization, which assumes that 
+$\sigma^2 = \mu + \alpha\mu^2$, where $\mu$ is the mean, and $\sigma^2$ is the 
+variance. The model results yield an estimated value of $\hat{\alpha} = 0.376$.
+
+@fig-EMMs_with_CI_log provides the estimated marginal means of 
+log(Total bands)(x100/ul).
+
+```{r}
+#| label: fig-EMMs_with_CI_log
+#| fig-cap: Estimated Marginal Means of log(Total bands)(x100/ul)
+emm <- emmeans(model_nb, ~ Drug)
+emm_df <- as.data.frame(emm)
+ggplot(emm_df, aes(x = Drug, y = emmean)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
+  xlab("Drug") +
+  ylab("Estimated Marginal Means: log(Total bands)(x100/ul)") +
+  ggtitle("EMMs with Confidence Intervals")
+
+
+```
+
+The estimated mean for each drug is calculated assuming the Surface_area equals 
+the mean of Surface_area ($0.9470$), and the visit number is 1.
+
+```{r}
+#| label: tbl-log_total_bands
+#| tbl-cap: Estimated Means of log(Total bands)(x100/ul) for each Drug
+
+emm_df[,c(2,3,5,6)]=round(emm_df[,c(2,3,5,6)],4)
+emm_df%>%kable()%>%kable_styling()
+```
+
+```{r}
+#| label: EMMs_with_CI
+#| fig-cap: Estimated Marginal Means of Total bands (x100/ul)
+emm <- emmeans(model_nb, ~ Drug,type="response")
+emm_df <- as.data.frame(emm)
+ggplot(emm_df, aes(x = Drug, y = response)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
+  xlab("Drug") +
+  ylab("Estimated Marginal Means: Total bands (x100/ul)") +
+  ggtitle("EMMs with Confidence Intervals")
+```
+
+```{r}
+#| label: tbl-total_bands
+#| tbl-cap: Estimated Means of Total bands (x100/ul) for each Drug
+
+emm_df[,c(2,3,5,6)]=round(emm_df[,c(2,3,5,6)],4)
+emm_df%>%kable()%>%kable_styling()
+```
+
+@fig-EMMs_with_CI_line shows the estimated results from the model, with the 
+red line representing the threshold $Total\_bands = 200/uL$ for the incidence of 
+Bandemia
+
+```{r}
+#| label: fig-EMMs_with_CI_line
+#| fig-cap: Estimated Marginal Means of Total bands (x100/ul)
+emm <- emmeans(model_nb, ~ Drug+Visit_number,type="response")
+emm_df <- as.data.frame(emm)
+ggplot(emm_df, aes(x = Drug, y = response)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
+  geom_hline(yintercept = 2, linetype = "dashed", color = "red") + 
+  xlab("Drug") +
+  ylab("Estimated Marginal Means: Total bands (x100/ul)") +
+  ggtitle("EMMs with Confidence Intervals")
+```
+
+In @tbl-rate_ratios, the rate ratios are presented. These are measures used to
+compare the rates of occurrence of an event across different groups or under
+different conditions. Also included are the corresponding confidence intervals
+for these comparisons between the drugs.
+
+```{r}
+#| label: tbl-rate_ratios
+#| tbl-cap: Rate ratios between the drugs
+emm <- emmeans(model_nb, ~ Drug)
+
+pairwise <- pairs(emm, simple = "each", by = NULL)
+contrast <- contrast(emm, method = "revpairwise")
+
+rr <- summary(contrast, infer = c(TRUE, TRUE), type = "response")
+rr=rr[,-4]
+rr=rr[,-6]
+colnames(rr)=c("contrast","rate ratio","SE","lower CI","upper CI","z.ratio","p.value")
+rr[,c(2:7)]=round(rr[,c(2:7)],4)
+
+rr%>%kable()%>%kable_styling()
+```
+
+### Model that use total bands as the outcome (considering the interaction between surface area and drug type)
+
+```{r}
+#| label: model_regression_interaction
+model_nb_interact <- glmmTMB(Total_Bands_Rescaled ~ Drug +Surface_area+ Visit_number+Drug*Surface_area+(1 | Patient_Number),
+                      data=data_analyse,
+                      ziformula=~1,
+                      family=nbinom2)
+```
+
+#### Results
+
+Below shows the regression results of the model.
+
+```{r}
+#| label: summary_model_2
+summary(model_nb_interact)
+```
+
+Note: In this analysis, we employ the NB2 parameterization, which assumes that 
+$\sigma^2 = \mu + \alpha\mu^2$, where $\mu$ is the mean, and $\sigma^2$ is the 
+variance. The model results yield an estimated value of $\hat{\alpha} = 0.499$.
+
+After including the interaction between surface area and drug type in the model,
+we found that these interactions do not significantly impact the outcome.
+
+We further use a nested model comparison to test the overall interaction effect.
+
+```{r}
+#| label: compare_anova
+anova(model_nb, model_nb_interact)
+```
+
+Based on the testing results, including the interaction effect does not
+significantly improve the model's fit to the data compared to the model without
+the interaction term. This suggests that the interaction effect is not
+statistically significant (pvalue=0.5332). Therefore, we can focus on
+interpreting the model without the interaction effect.
+
+## Bandemia
+
+@tbl-chop1_Bandemia displays the proportion of Bandemia incidents among all the
+analyzed samples. Bandemia is defined as a condition where the Total bands
+(x10.e3/uL) are equal to or higher than 0.2.
+
+```{r}
+#| label: tbl-chop1_Bandemia
+#| tbl-cap: Incidence of Bandemia
+#data_analyse$Visit_number=data_analyse$Visit_number+1
+#data_analyse$Total_bands=data_analyse$Total_bands/10
+
+A=summary(as.factor(data_analyse$Bandemia))
+A=as.matrix(A)
+A_drop=apply(A, MARGIN = 2, function(x) {
+  total <- sum(x)
+  prop <- x / total * 100
+  return(paste(x, " (", sprintf("%.1f%%", prop), ")", sep=""))
+})
+colnames(A_drop)=c("Times (%)")
+rownames(A_drop)=c("No","Yes")
+A_drop %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+@tbl-chop1_Bandemia_each_drug displays the proportion of Bandemia incidents
+among all the analyzed samples, categorized by drugs.
+
+```{r}
+#| label: tbl-chop1_Bandemia_each_drug
+#| tbl-cap: Results of each drug
+A=table(data_analyse$Drug, data_analyse$Bandemia)
+A=as.matrix(A)
+colnames(A)=c("No","Yes")
+rownames(A)=c(paste0("Drug ",1:3))
+A_prop <- apply(A, MARGIN = 1, function(x) {
+  total <- sum(x)
+  prop <- x / total * 100
+  return(paste(x, " (", sprintf("%.1f%%", prop), ")", sep=""))
+})
+df_A_prop <- as.data.frame(t(A_prop))
+colnames(df_A_prop)=c("No","Yes")
+rownames(df_A_prop)=c(paste0("Drug ",1:3))
+df_A_prop %>% 
+  kbl() %>% 
+  kable_styling()
+```
+
+
+@tbl-total_bandamia_by_visit provides the proportion of **bandemia** for each
+visit time. From this, we can observe that the mean value of **bandemia** tends
+to decrease over time.
+
+```{r}
+#| label: tbl-total_bandamia_by_visit
+#| tbl-cap: Summary of total bands for each visit time.
+
+total_bandemia_counts <- data_analyse %>%
+  group_by(Visit_Number) %>%
+  summarise(Proportion = round(mean(Bandemia, na.rm = TRUE),4)) 
+
+total_bandemia_counts %>% 
+  kable() %>%
+  kable_styling()
+```
+
+```{r}
+#| label: fig-Proportion_Visit_number
+#| fig-cap: Proportion of Bandemia at each visit number
+barplot(Proportion~Visit_Number, data=total_bandemia_counts,
+        xlab="Visit number",
+        ylim=c(0,0.5))
+```
+
+::: {.callout-note}
+@fig-Proportion_Visit_number above becomes Figure 3b in the manuscript. 
+:::
+
+@tbl-total_bandamia_by_visit_drug1 provides the proportion of **bandemia** for
+individuals using Drug 1 at each visit time. From this, we can observe that the
+mean value of **bandemia** tends to decrease over time.
+
+```{r}
+#| label: tbl-total_bandamia_by_visit_drug1
+#| tbl-cap: Summary of total bands for those using drug 1 at each visit time.
+
+total_bandemia_counts_drug1 <- data_analyse %>% 
+  filter(Drug==1) %>%
+  group_by(Visit_Number) %>%
+  summarise(Proportion = round(mean(Bandemia, na.rm = TRUE),4))
+
+total_bandemia_counts_drug1 %>%
+  kable() %>% 
+  kable_styling()
+```
+
+```{r}
+#| label: fig-Proportion_Visit_number_drug1
+#| fig-cap: Proportion of Bandemia at each visit number for those using drug 1
+barplot(Proportion~Visit_Number, data=total_bandemia_counts_drug1,
+        xlab="Visit number",
+        ylim=c(0,0.5))
+```
+
+@tbl-total_bandemia_by_visit_drug2 provides the proportion of **bandemia** for 
+individuals using Drug 2 at each visit time
+
+```{r}
+#| label: tbl-total_bandemia_by_visit_drug2
+#| tbl-cap: Summary of total bands for those using drug 2 at each visit time.
+
+total_bandemia_counts_drug2 <- data_analyse %>% 
+  filter(Drug==2) %>%
+  group_by(Visit_Number) %>%
+  summarise(Proportion = round(mean(Bandemia, na.rm = TRUE),4))
+
+total_bandemia_counts_drug2 %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+
+```{r}
+#| label: Proportion_Visit_number_drug2
+#| fig-cap: Proportion of Bandemia at each visit number for those using drug 2
+
+barplot(Proportion~Visit_Number, data=total_bandemia_counts_drug2,
+        xlab="Visit number",
+        ylim=c(0,0.5))
+```
+
+@tbl-total_bandamia_by_visit_drug3 provides the proportion of **bandemia** for 
+individuals using Drug 3 at each visit time
+
+```{r}
+#| label: tbl-total_bandamia_by_visit_drug3
+#| tbl-cap: Summary of total bands for those using drug 3 at each visit time.
+
+total_bandemia_counts_drug3 <- data_analyse %>% 
+ filter(Drug==3) %>%
+  group_by(Visit_Number) %>%
+  summarise(Proportion = round(mean(Bandemia, na.rm = TRUE),4))
+
+total_bandemia_counts_drug3 %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+```{r}
+#| label: Proportion_Visit_number_drug3
+#| fig-cap: Proportion of Bandemia at each visit number for those using drug 3
+
+barplot(Proportion~Visit_Number, data=total_bandemia_counts_drug3,
+        xlab="Visit number",
+        ylim=c(0,0.5))
+```
+
+### Model that use incidence of Bendemia as the outcome
+
+#### Logistic regression with random effect
+
+Due to the high correlation between weight and surface area, I have included
+only **Surface area** in the model. Additionally, as the outcome variable is
+binary, logistic regression was applied.
+
+**Logistic regression** is a widely used statistical method for modeling the 
+probability of a binary outcome based on one or more predictor variables. It's
+particularly applicable when the response variable is categorical and binary in
+nature, meaning it has two possible outcomes such as 'yes' or 'no', 'success' or
+'failure', 'presence' or 'absence', etc.
+
+Logistic regression is suitable in situations where you need to model the impact
+of several independent variables (which can be either categorical or continuous)
+on a binary dependent variable. Common applications include medical fields for
+disease diagnosis, in finance for credit scoring, in marketing for predicting
+customer churn, and in many other fields where binary outcomes are to be
+predicted.
+
+```{r}
+#|label: incidence_m2
+
+model <- glmer(Bandemia ~ Drug + Surface_area + Visit_number + (1 | Patient_Number), 
+               data = data_analyse, 
+               family = binomial(link = "logit"))
+```
+
+#### Results
+
+```{r}
+#|label: summary_model_logistic
+summary(model)
+```
+
+In the model, Drug 1 is set as the baseline. Drug 2 is found to significantly
+decrease the probability of causing Bandemia compared to the baseline (Drug 1).
+
+@fig-EMMs_with_CI_logit shows the estimated means of logit(Bandemia) for each
+drug. And it is calculated assuming the Surface_area equals the mean of
+Surface_area ($0.9470$), and the visit number is 1.
+
+```{r}
+#| label: fig-EMMs_with_CI_logit
+#| fig-cap: Estimated Marginal Means of logit(Bandemia) for each drug
+
+emm <- emmeans(model, ~ Drug)
+emm_df <- as.data.frame(emm)
+ggplot(emm_df, aes(x = Drug, y = emmean)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
+  xlab("Drug") +
+  ylab("Estimated Marginal Means:logit(Bandemia)") +
+  ggtitle("EMMs with Confidence Intervals")
+```
+
+@tbl-logit_bandemia lists the values used to generate the figure above.
+
+```{r}
+#| label: tbl-logit_bandemia
+#| tbl-cap: Estimated Means of logit(bandemia) for each Drug
+
+emm_df[,c(2,3,5,6)]=round(emm_df[,c(2,3,5,6)],4)
+
+emm_df%>%kable()%>%kable_styling()
+```
+
+@fig-Estimated_Marginal_Proportions shows the estimated means of proportion of
+Bandemia for each drug. And it is calculated assuming the Surface_area equals
+the mean of Surface_area ($0.9470$), and the visit number is 1.
+
+```{r}
+#| label: fig-Estimated_Marginal_Proportions
+#| fig-cap: Estimated Marginal Proportions of Bandemia
+emm <- emmeans(model, ~ Drug,type="response")
+emm_df <- as.data.frame(emm)
+ggplot(emm_df, aes(x = Drug, y = prob)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
+  xlab("Drug") +
+  ylab("Estimated Marginal Proportions: Bandemia") +
+  ggtitle("Estimated values with Confidence Intervals")
+```
+
+@tbl-bandemia lists the values used to generate the figure above.
+
+```{r}
+#| label: tbl-bandemia
+#| tbl-cap: Estimated Proportions of Bandemia for each Drug
+
+emm_df[,c(2,3,5,6)]=round(emm_df[,c(2,3,5,6)],4)
+emm_df%>%kable()%>%kable_styling()
+```
+
+@tbl-odds_ratio presents the odds ratios comparing between the drugs. The odds
+ratio of 3.2610 indicates that Drug 1 is significant (pvalue=0.003<0.5)
+associated with a higher likelihood of the outcome compared to Drug 2, while
+Drug 2 has an odds ratio of 0.2987, suggesting a significant (pvalue=0.018<0.5)
+lower likelihood of the outcome as compared to Drug 3.
+
+```{r}
+#| label: tbl-odds_ratio
+#| tbl-cap: odds ratios comparing between the drugs
+emm <- emmeans(model, ~ Drug)
+
+pairwise <- pairs(emm)
+contrast <- contrast(emm, method = "revpairwise")
+
+rr <- summary(pairwise, infer = c(TRUE, TRUE), type = "response")
+rr=rr[,-4]
+rr=rr[,-6]
+colnames(rr)=c("contrast","rate ratio","SE","lower CI","upper CI","z.ratio","p.value")
+rr[,c(2:7)]=round(rr[,c(2:7)],4)
+
+rr%>%kable()%>%kable_styling()
+```
+
+We get similar results from these two models. In summary, the likelihood of
+Bendemia occurrence with drug 2 is significantly lower compared to its
+occurrence with drugs 1 and 3. Additionally, a negative association was found
+between surface area and the total bands value, with this association being
+statistically significant.
+
+# Software Information
+This section documents information that is important for reproducibility. Most
+users will not need to read it. It is primarily here for use by the statistician
+on the team.
+
+We used [R](https://www.r-project.org/) as our main computing environment and
+[Quarto](https://quarto.org/) scripts to enhance reproducibility. We used
+[RStudio](www.rstudio.org) as the editor to interface with R and Quarto.
+
+- Software chain:
+  **qmd file > RStudio > Quarto > R > knitr > md file > Pandoc > HTML file**.
+- Source file: **`r params$SourceFile`**
+- Output file: **`r params$LogFile`**
+- [Quarto `r quarto_version()`](https://quarto.org/) runs `*.qmd` files through 
+  [R](https://www.r-project.org/) and [knitr](https://yihui.org/knitr/) to 
+  produce `*.md` markdown files.
+- [Pandoc `r rmarkdown::pandoc_version()`](https://pandoc.org) converts markdown 
+  files (`*.md`) to other formats, including LaTeX (`*.tex`) and HTML (`*.html`) 
+  among others.
+
+## Versions
+This document was generated using the following computational environment and 
+dependencies:
+
+```{r}
+#| label: show-version
+#| echo: true
+
+# Get R and R package version numbers in use.
+devtools::session_info()
+```
+
+## Git Details
+The current Git commit details and status are:
+
+``` {r}
+#| label: git-details
+#| echo: true
+
+git_report()
+```
