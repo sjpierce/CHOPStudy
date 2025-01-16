@@ -1,0 +1,357 @@
+---
+title: Import and Manage CHOP Study Data
+author: 
+  - name: Ruxin Shi
+    orcid: 0009-0001-9483-6444
+    email: shiruxin@msu.edu
+    affiliations: 
+      - name: Michigan State University, Center for Statistical Training and Consulting
+  - name: Steven J. Pierce
+    orcid: 0000-0002-0679-3019
+    email: pierces1@msu.edu
+    affiliations: 
+      - name: Michigan State University, Center for Statistical Training and Consulting
+params:
+  SourceFile: "Import_Data.qmd"
+  LogFile: "Import_Data.html"
+date: now
+date-modified: last-modified
+date-format: YYYY-MM-DD HH:mm:ss z
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    number-sections: true
+    number-depth: 3
+    code-fold: true
+    code-tools: true
+    code-line-numbers: false
+    embed-resources: true 
+    anchor-sections: true
+execute:
+  eval: true
+  echo: fenced
+  output: true
+  message: true
+  warning: false
+  error: true
+  include: true
+knitr:
+  opts_chunk: 
+    message: true 
+    cfsize: "scriptsize"
+---
+
+\FloatBarrier
+
+# Purpose
+
+This file provides the analysis results of data file 
+`Vinc Cases 1.9.24.xlsx` provided by Alison and Caitlin, which records 
+observations from dogs receiving CHOP chemotherapy at MSU VMC between 2016 and 
+2022.
+
+::: {.callout-note}
+The data file we received was called `Vinc Cases 1.9.23.xlsx`, but we renamed it 
+to `Vinc Cases 1.9.24.xlsx` before using it because that was the date we 
+received it. 
+:::
+
+# Setup
+
+This section of the report documents some setup tasks that are useful to the
+statistician on the team. Most readers of this report will probably want skip
+directly to @sec-Results.
+
+## Define Global Options
+
+Global R chunk options are defined in the YAML header but local chunk options
+will over-ride global options. We can temporarily disable an individual chunk by
+inserting `#| eval: false` on a line at the top of the chunk.
+
+## Load Packages
+
+Load R packages that we need to get additional functions.
+
+```{r}
+#| label: load-packages
+library(here)
+library(kableExtra)
+library(dplyr)
+library(knitr)
+library(gtsummary)
+library(glmmTMB)
+library(readxl)
+library(quarto)
+library(lme4)
+library(emmeans)
+library(ggplot2)
+```
+
+## Declare Path
+
+```{r}
+#| label: declare-path
+
+i_am("Masyr_C1358_2024-05-03.qmd")
+```
+
+## Read Data {#sec-Read-Data}
+
+```{r}
+#| label: load-data
+
+data_all <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx")) 
+names(data_all)
+```
+
+## Data Management {#sec-Data-Mgt}
+
+The units of measurement for `Total_Bands` are 1000/ul and some are not integers 
+(they have non-zero digits to the right of the decimal place). We create the 
+`Total_Bands_Rescale` that is rescaled to units of 100/ul by computing 
+`Total_Bands_Rescale = Total_Bands*10`. That rescaled variable is intended for 
+use in count models because those require non-negative integer values for all 
+counts. We also created log transformed versions of both `Total_Bands` and 
+`Total_Bands_Rescaled` below for use in graphing data. Because the 
+`log(0) = -Infinity`, we recode the `-Infinity` values for `log_Total_Bands` to 
+-5 and the `-Infinity` values for `log_Total_Bands_Rescaled` to - 3 so that we 
+can make compact graphs of the distributions. 
+
+```{r}
+#| label: manage-data
+
+data_all <- data_all %>% 
+  rename(Patient_Number = `Patient Number`,
+         Visit_Number = `Visit #`,
+         CHOP_Start_Date = `CHOP start date`,
+         Phase_of_Treatment = `Phase of treatment`,
+         CHOP_Number = `CHOP number`,
+         CBC_Date = `CBC date`,
+         Total_WBC = `Total WBC (x10.e3/uL)`,
+         Total_Neutrophil = `Total neutrophil`,
+         Total_Bands = `Total bands`, 
+         Bandemia_Grade = `Bandemia grade`,
+         Weight_kg = kg,
+         Surface_Area_m2 = `m^2`,
+         Notes = `...15`) %>% 
+  mutate(Patient_Number = factor(Patient_Number),
+         Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
+         Weeks = Days_Since_Start/7,
+         Total_Bands_Rescaled = Total_Bands*10,
+         log_Total_Bands = if_else(Total_Bands == 0, 
+                                   true = -5, 
+                                   false = log(Total_Bands)),
+         log_Total_Bands_Rescaled = if_else(Total_Bands_Rescaled == 0, 
+                                   true = -3, 
+                                   false = log(Total_Bands_Rescaled)),
+         Bandemia = if_else(Total_Bands >= 0.2, true = 1, false = 0))
+
+# Show the updated variable names to confirm all looks right. 
+names(data_all)
+```
+
+::: {.callout-note}
+In previous versions of the output (04/02/2024 and earlier), Ruxin had been 
+recoding Patient_Number values > 28 by subtracting 1 from them. Steve removed 
+that code because it makes no functional difference to our analyses and it is 
+easier to cross-reference back to source data file if we don't do that. 
+:::
+
+### Only include data from phase I of CHOP 1
+
+For the following analysis, we would only include samples from phase I of CHOP 1.
+
+```{r}
+#| label: Phase-I-of-CHOP-1
+
+data_chop1 <- data_all %>% filter(CHOP_Number == 1)
+
+data_chop1_phase_1 <- data_chop1 %>% filter(Phase_of_Treatment==1)
+```
+
+### Only include data about drug 1, drug 2, drug 3
+
+Given the sample size, we would only include results of drug 1 (vincristine), 
+drug 2 (cyclophosphamide) and drug 3 (doxorubicin).
+
+```{r}
+#| label: drug123
+data_analyse <- data_chop1_phase_1 %>% filter(Drug %in% 1:3)
+#data_analyse=as.data.frame(data_analyse)
+```
+
+### Data Cleaning: Check for Implausible Visit Timing
+Here, we examine the visit timing (in weeks since CHOP started) when a CBC lab 
+sample was collected. We break this down by visit number. We're looking for 
+aggregate statistics that don't make sense, such as negative numbers, which 
+would imply that a lab visit occurred before CHOP started. That could be caused 
+by data entry errors in date variables. 
+
+## Visit Timing (Weeks Since CHOP Started) by Visit Number
+@tbl-Visit-Timing shows descriptive statistics for the visit timing broken down 
+by visit number. 
+
+```{r}
+#| label: tbl-Visit-Timing 
+# Days from the start date
+
+data_analyse %>% 
+  group_by(Visit_Number) %>% 
+  summarise(mean_weeks = mean(Weeks, na.rm = TRUE),
+            sd_weeks = sd(Weeks, na.rm = TRUE),
+            min_weeks = min(Weeks, na.rm = TRUE),
+            max_weeks = max(Weeks, na.rm = TRUE)) %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+
+:::{.callout-caution}
+Note: The mean, minimum, and maximum number of weeks since CHOP started are all 
+**negative** values at Visit 3. That implies a data problem we need to 
+investigate and fix. 
+:::
+
+So we find the individuals with weeks less than 0.
+
+```{r}
+#| label: individuals_with_weeks_less_than_0
+data_analyse %>% 
+  filter(Weeks < 0) %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+The Patient_Number is 80. Print all the relevant records of that patient.
+
+```{r}
+#| label: patient_80
+data_analyse[data_analyse$Patient_Number==80,] %>%
+  kable() %>%
+  kable_styling()
+```
+
+It should be **2020-01-30** based on the other records. So we corrected it.
+
+```{r}
+#| label: patient_80_correct
+data_analyse$CBC_Date[data_analyse$Weeks < 0] = "2020-01-30"
+# Days from the start date
+```
+
+Then we find the individuals with weeks larger than 10 at the third visit time.
+
+```{r}
+#| label: individuals_with_weeks_larger_than_10 
+data_analyse %>% 
+  filter(Weeks > 10 & Visit_Number==3) %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+The outlier comes from Patient_Number 62. Print all the relevant records of that patient.
+
+```{r}
+#| label: patient_62
+data_analyse %>% 
+  filter(Patient_Number == 62) %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+It should be **2018-5-25** based on the other records.
+
+Now we summarize the time since first visit in weeks per visit again.
+
+```{r}
+#| label: time_since_first_visit_2
+#| tbl-cap: Time since first visit in weeks per visit
+data_analyse$CBC_Date[data_analyse$Weeks > 100] = "2018-05-25 UTC"
+
+# Days from the start date
+data_analyse <- data_analyse %>%
+  mutate(Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
+         Weeks = Days_Since_Start/7)
+
+data_analyse %>%
+  group_by(Visit_Number) %>%
+  summarise(mean_weeks = mean(Weeks, na.rm = TRUE),
+            sd_weeks = sd(Weeks, na.rm = TRUE),
+            min_weeks = min(Weeks, na.rm = TRUE),
+            max_weeks = max(Weeks, na.rm = TRUE)) %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+@fig-visualize_weeks is a boxplot that visualize the information of weeks.
+
+```{r}
+#| label: fig-visualize_weeks
+#| fig-cap: Time since first visit in weeks per visit
+boxplot(Weeks ~ Visit_Number, data = data_analyse, xlab="Visit Number")
+```
+
+For your reference, we also find the individuals with weeks larger than 10 at 
+the first visit time.
+
+```{r}
+#| label: weeks_larger_than_10_at_the_first
+data_analyse %>% 
+  filter(Weeks > 10 & Visit_Number == 1) %>%
+  kable() %>% 
+  kable_styling()
+```
+
+And printed the relevant records below.
+
+```{r}
+#| label: patient_65
+data_analyse %>% 
+  filter(Patient_Number == 65) %>%
+  kable() %>%
+  kable_styling()
+```
+
+# Software Information
+This section documents information that is important for reproducibility. Most
+users will not need to read it. It is primarily here for use by the statistician
+on the team.
+
+We used [R](https://www.r-project.org/) as our main computing environment and
+[Quarto](https://quarto.org/) scripts to enhance reproducibility. We used
+[RStudio](www.rstudio.org) as the editor to interface with R and Quarto.
+
+- Software chain:
+  **qmd file > RStudio > Quarto > R > knitr > md file > Pandoc > HTML file**.
+- Source file: **`r params$SourceFile`**
+- Output file: **`r params$LogFile`**
+- [Quarto `r quarto_version()`](https://quarto.org/) runs `*.qmd` files through 
+  [R](https://www.r-project.org/) and [knitr](https://yihui.org/knitr/) to 
+  produce `*.md` markdown files.
+- [Pandoc `r rmarkdown::pandoc_version()`](https://pandoc.org) converts markdown 
+  files (`*.md`) to other formats, including LaTeX (`*.tex`) and HTML (`*.html`) 
+  among others.
+
+## Versions
+This document was generated using the following computational environment and 
+dependencies:
+
+```{r}
+#| label: show-version
+#| echo: true
+
+# Get R and R package version numbers in use.
+devtools::session_info()
+```
+
+## Git Details
+The current Git commit details and status are:
+
+``` {r}
+#| label: git-details
+#| echo: true
+
+git_report()
+```
