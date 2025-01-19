@@ -47,10 +47,11 @@ knitr:
 
 # Purpose
 
-This file provides the analysis results of data file 
-`Vinc Cases 1.9.24.xlsx` provided by Alison and Caitlin, which records 
-observations from dogs receiving CHOP chemotherapy at MSU VMC between 2016 and 
-2022.
+This file imports raw data provided by Alison Masyr and Caitlin Eliason that 
+contains observations of dogs receiving CHOP chemotherapy at MSU Veterinary 
+Medicine Clinic (VMC) between 2016 and 2022. This file does some data cleaning 
+and management, then saves out revised data files that will be used for the 
+analyses in other scripts. 
 
 ::: {.callout-note}
 The data file we received was called `Vinc Cases 1.9.23.xlsx`, but we renamed it 
@@ -60,9 +61,9 @@ received it.
 
 # Setup
 
-This section of the report documents some setup tasks that are useful to the
-statistician on the team. Most readers of this report will probably want skip
-directly to @sec-Results.
+This section documents some setup tasks that are useful to the statistician on 
+the team. Most readers of this document will probably want skip directly to 
+@sec-Data-Mgt.
 
 ## Define Global Options
 
