@@ -104,18 +104,20 @@ Raw_CHOP <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx"))
 names(Raw_CHOP)
 ```
 
-## Data Management {#sec-Data-Mgt}
+# Data Management {#sec-Data-Mgt}
+The first task is just renaming variables. After that, we also need to convert 
+some to factors and compute some additional variables. 
 
 The units of measurement for `Total_Bands` are 1000/ul and some are not integers 
-(they have non-zero digits to the right of the decimal place). We create the 
-`Total_Bands_Rescale` that is rescaled to units of 100/ul by computing 
-`Total_Bands_Rescale = Total_Bands*10`. That rescaled variable is intended for 
-use in count models because those require non-negative integer values for all 
-counts. We also created log transformed versions of both `Total_Bands` and 
-`Total_Bands_Rescaled` below for use in graphing data. Because the 
-`log(0) = -Infinity`, we recode the `-Infinity` values for `log_Total_Bands` to 
--5 and the `-Infinity` values for `log_Total_Bands_Rescaled` to - 3 so that we 
-can make compact graphs of the distributions. 
+(they have non-zero digits to the right of the decimal place). Thereforee, we 
+rescaled into a new variable that has units of 100/ul by computing 
+`Total_Bands_Rescale = Total_Bands*10`. That rescaled variable was used in  
+count models because those require non-negative integer values for all counts. 
+We also created log transformed versions of both `Total_Bands` and 
+`Total_Bands_Rescaled` for use in graphing data. Because `log(0) = -Infinity`, 
+we recode the `-Infinity` values for `log_Total_Bands` to -5 and the `-Infinity` 
+values for `log_Total_Bands_Rescaled` to -3 so that we can make compact graphs 
+of the distributions. 
 
 ```{r}
 #| label: create-All_CHOP
