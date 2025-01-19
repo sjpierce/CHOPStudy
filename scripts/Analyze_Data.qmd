@@ -97,13 +97,12 @@ library(ggplot2)
 i_am("Masyr_C1358_2024-05-03.qmd")
 ```
 
-## Read Data {#sec-Read-Data}
+## Load Data {#sec-Load-Data}
 
 ```{r}
 #| label: load-data
 
-data_all <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx")) 
-names(data_all)
+load(file=here("data/Imported_CHOP_Data.RData"))
 ```
 
 # Results {#sec-Results}
