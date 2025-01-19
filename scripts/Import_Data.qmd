@@ -353,7 +353,35 @@ data_analyse %>%
   filter(Patient_Number == 65) %>%
   kable() %>%
   kable_styling()
+# Save Data
+
+``` {r}
+#| label: create-save-what
+
+# Character vector of object names that will be saved.
+save_what <- c("Raw_CHOP", "All_CHOP", "Subset_CHOP")
 ```
+
+``` {r}
+#| label: save-data
+
+save(list = save_what, 
+     file=here("data/Imported_CHOP_Data.RData"))
+```
+
+::: {.callout-tip}
+The current data file can be loaded into R by copying the following code chunk 
+into a script, setting the chunk option `eval: true`, and running the chunk. 
+That will overwrite any objects already in memory that have the same names as 
+the objects being loaded.
+
+``` {r}
+#| label: load-data
+#| eval: false
+
+load(file=here("data/Imported_CHOP_Data.RData"))
+```
+:::
 
 # Software Information
 This section documents information that is important for reproducibility. Most
