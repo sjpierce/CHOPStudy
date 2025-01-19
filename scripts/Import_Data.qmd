@@ -98,10 +98,10 @@ here::i_am(path = "scripts/Import_Data.qmd")
 ## Read Data {#sec-Read-Data}
 
 ```{r}
-#| label: load-data
+#| label: import-data
 
-data_all <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx")) 
-names(data_all)
+Raw_CHOP <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx")) 
+names(Raw_CHOP)
 ```
 
 ## Data Management {#sec-Data-Mgt}
