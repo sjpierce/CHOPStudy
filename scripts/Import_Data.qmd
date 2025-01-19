@@ -92,7 +92,7 @@ library(CHOPStudy)  # for version info
 ```{r}
 #| label: declare-path
 
-i_am("Masyr_C1358_2024-05-03.qmd")
+here::i_am(path = "scripts/Import_Data.qmd")
 ```
 
 ## Read Data {#sec-Read-Data}
