@@ -118,10 +118,10 @@ counts. We also created log transformed versions of both `Total_Bands` and
 can make compact graphs of the distributions. 
 
 ```{r}
-#| label: manage-data
+#| label: create-All_CHOP
 
-data_all <- data_all %>% 
-  rename(Patient_Number = `Patient Number`,
+All_CHOP <- Raw_CHOP %>% 
+  rename(Patient = `Patient Number`,
          Visit_Number = `Visit #`,
          CHOP_Start_Date = `CHOP start date`,
          Phase_of_Treatment = `Phase of treatment`,
@@ -134,7 +134,7 @@ data_all <- data_all %>%
          Weight_kg = kg,
          Surface_Area_m2 = `m^2`,
          Notes = `...15`) %>% 
-  mutate(Patient_Number = factor(Patient_Number),
+  mutate(Patient = factor(Patient),
          Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
          Weeks = Days_Since_Start/7,
          Total_Bands_Rescaled = Total_Bands*10,
@@ -147,7 +147,7 @@ data_all <- data_all %>%
          Bandemia = if_else(Total_Bands >= 0.2, true = 1, false = 0))
 
 # Show the updated variable names to confirm all looks right. 
-names(data_all)
+names(All_CHOP)
 ```
 
 ::: {.callout-note}
