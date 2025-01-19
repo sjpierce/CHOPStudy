@@ -1,14 +1,14 @@
 ---
 title: Import and Manage CHOP Study Data
 author: 
-  - name: Ruxin Shi
-    orcid: 0009-0001-9483-6444
-    email: shiruxin@msu.edu
-    affiliations: 
-      - name: Michigan State University, Center for Statistical Training and Consulting
   - name: Steven J. Pierce
     orcid: 0000-0002-0679-3019
     email: pierces1@msu.edu
+    affiliations: 
+      - name: Michigan State University, Center for Statistical Training and Consulting
+  - name: Ruxin Shi
+    orcid: 0009-0001-9483-6444
+    email: shiruxin@msu.edu
     affiliations: 
       - name: Michigan State University, Center for Statistical Training and Consulting
 params:
