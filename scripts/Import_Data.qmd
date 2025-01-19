@@ -336,23 +336,20 @@ Note: The descriptive statistics now look much more sensible.
 boxplot(Weeks ~ Visit_Number, data = Subset_CHOP, xlab="Visit Number")
 ```
 
+## Further Subsetting of the Data
+After reading peer review feedback on a manuscript that got rejected, the team 
+decided on 2024-08-29 to narrow the focus of the analyses. This means we will 
+now focus only on data for patients who had their first visit within 2 weeks of 
+their CHOP start date. This section implements that decision. 
 
-```{r}
-#| label: weeks_larger_than_10_at_the_first
-data_analyse %>% 
-  filter(Weeks > 10 & Visit_Number == 1) %>%
-  kable() %>% 
-  kable_styling()
+``` {r}
+#| label: tbl-visit1-weeks
+#| tbl-cap: Visit 1 Frequency Distribution for Weeks Since CHOP Start
+
+# CONTINUE HERE
 ```
 
-And printed the relevant records below.
 
-```{r}
-#| label: patient_65
-data_analyse %>% 
-  filter(Patient_Number == 65) %>%
-  kable() %>%
-  kable_styling()
 # Save Data
 
 ``` {r}
