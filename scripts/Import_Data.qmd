@@ -159,9 +159,13 @@ that code because it makes no functional difference to our analyses and it is
 easier to cross-reference back to source data file if we don't do that. 
 :::
 
-### Only include data from phase I of CHOP 1
-
-For the following analysis, we would only include samples from phase I of CHOP 1.
+## Subset the Data 
+Here, we select a subset of records that we want to use for the study, namely 
+we retain only records for the first phase of the first instance of using the 
+CHOP protocol (`CHOP_Number` = 1) for each patient. We retain only data about 
+drug 1 (vincristine), drug 2 (cyclophosphamide), and drug 3 (doxorubicin). The drug
+selection is motivated by the fact that we don't have enough data about other
+drugs.
 
 ```{r}
 #| label: Phase-I-of-CHOP-1
