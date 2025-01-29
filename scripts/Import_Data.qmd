@@ -421,6 +421,7 @@ save_what <- c("Raw_CHOP", "All_CHOP", "Final_CHOP")
 
 ``` {r}
 #| label: save-data
+#| execute: false
 
 save(list = save_what, 
      file=here("data/Imported_CHOP_Data.RData"))
