@@ -146,7 +146,8 @@ All_CHOP <- Raw_CHOP %>%
          log_Total_Bands_Rescaled = if_else(Total_Bands_Rescaled == 0, 
                                    true = -3, 
                                    false = log(Total_Bands_Rescaled)),
-         Bandemia = if_else(Total_Bands >= 0.2, true = 1, false = 0))
+         Bandemia = if_else(Total_Bands >= 0.2, true = 1, false = 0)) %>% 
+  arrange(Patient, CHOP_Number, Visit_Number, CBC_Date)
 
 # Show the updated variable names to confirm all looks right. 
 names(All_CHOP)
