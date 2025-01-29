@@ -416,7 +416,7 @@ Final_CHOP <- All_CHOP %>%
 #| label: create-save-what
 
 # Character vector of object names that will be saved.
-save_what <- c("Raw_CHOP", "All_CHOP", "Subset_CHOP")
+save_what <- c("Raw_CHOP", "All_CHOP", "Final_CHOP")
 ```
 
 ``` {r}
