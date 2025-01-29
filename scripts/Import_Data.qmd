@@ -340,15 +340,37 @@ Note: The descriptive statistics now look much more sensible.
 boxplot(Weeks ~ Visit_Number, data = All_CHOP, xlab="Visit Number")
 ```
 
-## Further Subsetting of the Data
+## Create More Variables
 After reading peer review feedback on a manuscript that got rejected, the team 
-decided on 2024-08-29 to narrow the focus of the analyses. This means we will 
-now focus only on data for patients who had their first visit within 2 weeks of 
-their CHOP start date. This section implements that decision. 
+decided on 2024-08-29 to narrow the focus of the analyses. We will now focus 
+only on data for patients who had their first visit within 2 weeks of 
+their CHOP start date. This section creates variables we can use to implement 
+that decision
+
+First we create a subset of the data containing only records for visit 1 within 
+the respective CHOP cycles, then add a logical variable marking which visit 1 
+observations had `CBC_Dates` indicating that the lab sample was collected within 
+2 weeks of the start of that CHOP cycle. 
 
 ``` {r}
-#| label: tbl-visit1-weeks
-#| tbl-cap: Visit 1 Frequency Distribution for Weeks Since CHOP Start
+#| label: create-Visit1_CHOP
+
+Visit1_CHOP <- All_CHOP %>% 
+  filter(Visit_Number == 1) %>% 
+  mutate(Started_in_2Weeks = Weeks <= 2) %>% 
+  select(Patient, CHOP_Number, Started_in_2Weeks)
+```
+
+Next we merge that new `Started_in_2Weeks` variable back onto the full dataset. 
+We can then use it later to select cases. 
+
+``` {r}
+#| label: merge-All_CHOP-Visit1_CHOP
+
+All_CHOP <- left_join(x = All_CHOP, y = Visit1_CHOP, 
+                      by = join_by(Patient, CHOP_Number)) 
+```
+
 
 # CONTINUE HERE
 ```
