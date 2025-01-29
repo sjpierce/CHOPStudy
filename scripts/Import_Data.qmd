@@ -316,9 +316,9 @@ by visit number.
 
 ```{r}
 #| label: tbl-Visit-Timing2 
-# Days from the start date
+#| tbl-cap: Updated Descriptive Statistics for Visit Timing (Weeks Since CHOP Started)
 
-Subset_CHOP %>% 
+All_CHOP %>% 
   group_by(Visit_Number) %>% 
   summarise(mean_weeks = mean(Weeks, na.rm = TRUE),
             sd_weeks = sd(Weeks, na.rm = TRUE),
@@ -337,7 +337,7 @@ Note: The descriptive statistics now look much more sensible.
 ```{r}
 #| label: fig-visualize_weeks
 #| fig-cap: Time since first visit in weeks per visit
-boxplot(Weeks ~ Visit_Number, data = Subset_CHOP, xlab="Visit Number")
+boxplot(Weeks ~ Visit_Number, data = All_CHOP, xlab="Visit Number")
 ```
 
 ## Further Subsetting of the Data
