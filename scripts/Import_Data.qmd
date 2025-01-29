@@ -109,7 +109,7 @@ The first task is just renaming variables. After that, we also need to convert
 some to factors and compute some additional variables. 
 
 The units of measurement for `Total_Bands` are 1000/ul and some are not integers 
-(they have non-zero digits to the right of the decimal place). Thereforee, we 
+(they have non-zero digits to the right of the decimal place). Therefore, we 
 rescaled into a new variable that has units of 100/ul by computing 
 `Total_Bands_Rescale = Total_Bands*10`. That rescaled variable was used in  
 count models because those require non-negative integer values for all counts. 
