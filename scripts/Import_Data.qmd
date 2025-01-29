@@ -154,10 +154,11 @@ names(All_CHOP)
 ```
 
 ::: {.callout-note}
-In previous versions of the output (04/02/2024 and earlier), Ruxin had been 
-recoding Patient_Number values > 28 by subtracting 1 from them. Steve removed 
-that code because it makes no functional difference to our analyses and it is 
-easier to cross-reference back to source data file if we don't do that. 
+In previous versions of the output (2024-04-02 and earlier), we had been 
+recoding Patient_Number values > 28 by subtracting 1 from them just to make the 
+whole sent of numbers sequential. We removed that code because it makes no 
+functional difference to our analyses and it is easier to cross-reference back 
+to source data file if we don't do that. 
 :::
 
 ## Subset the Data 
