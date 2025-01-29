@@ -306,7 +306,7 @@ All_CHOP <- All_CHOP %>%
          Weeks = Days_Since_Start/7)
 ```
 
-## ReCheck for Outlier Weeks
+## Recheck for Outlier Values for Weeks Since CHOP Started
 We've fixed negative values for Weeks, but still need to look for any other 
 outlier values that may be data quality problems. So, we look at a summary by
 visit number. We're looking for aggregate statistics that don't make sense and 
