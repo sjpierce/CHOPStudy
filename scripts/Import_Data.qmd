@@ -371,8 +371,42 @@ All_CHOP <- left_join(x = All_CHOP, y = Visit1_CHOP,
                       by = join_by(Patient, CHOP_Number)) 
 ```
 
+## Summarize Amount of Data
+The first thing to do is summarize how much data there is before we start 
+applying any selection criteria. 
 
-# CONTINUE HERE
+```{r}
+#| label: tbl-amt-data
+#| tbl-cap: Amount of Raw Data
+
+Step1 <- All_CHOP %>% 
+  count(Patient) %>% 
+  summarise(Step = 1,
+            Event = "All raw data", 
+            N_Dogs = n(),
+            N_Observations = sum(n))
+
+Step1 %>% 
+  kable() %>% 
+  kable_styling()
+```
+
+## Subset the Data 
+Here, we select a subset of records that we want to use for the study, namely 
+we retain only records for the first phase of the first instance of using the 
+CHOP protocol (`CHOP_Number` = 1) for each patient. We retain only data about 
+drug 1 (vincristine), drug 2 (cyclophosphamide), and drug 3 (doxorubicin). The drug
+selection is motivated by the fact that we don't have enough data about other
+drugs.
+
+```{r}
+#| label: create-Subset_CHOP
+#| execute: false
+
+Final_CHOP <- All_CHOP %>% 
+  mutate(Drop_Step = case_when(CHOP_Number >= 2 ~ 1, 
+                               Phase_of_Treatment != 1 ~ 2,
+                               !Drug %in% 1:3 ~ 3)
 ```
 
 
