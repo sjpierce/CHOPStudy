@@ -499,16 +499,14 @@ xtabs(~Visit_Number + Drug, data = CHOP1_Start2W_Phase1_Drug123) %>%
   add_header_above(., header = c(" ", "Drug" = 3, " "))
 ```
 
+## Rename Data Frame
+
 ```{r}
-#| label: create-Subset_CHOP
+#| label: create-Final_CHOP
 #| execute: false
 
-Final_CHOP <- All_CHOP %>% 
-  mutate(Drop_Step = case_when(CHOP_Number >= 2 ~ 1, 
-                               Phase_of_Treatment != 1 ~ 2,
-                               !Drug %in% 1:3 ~ 3)
+Final_CHOP <- CHOP1_Start2W_Phase1_Drug123
 ```
-
 
 # Save Data
 
@@ -521,7 +519,7 @@ save_what <- c("Raw_CHOP", "All_CHOP", "Final_CHOP")
 
 ``` {r}
 #| label: save-data
-#| execute: false
+#| execute: true
 
 save(list = save_what, 
      file=here("data/Imported_CHOP_Data.RData"))
