@@ -339,8 +339,9 @@ relative to the start of the CHOP cycle. We will later subset the data to deal
 with that. 
 
 ```{r}
-#| label: fig-visualize_weeks
-#| fig-cap: Time since first visit in weeks per visit
+#| label: fig-visualize-weeks
+#| fig-cap: Weeks Since CHOP Started by Visit (Before Case Selection)
+
 boxplot(Weeks ~ Visit_Number, data = All_CHOP, xlab="Visit Number")
 ```
 
