@@ -376,33 +376,128 @@ All_CHOP <- left_join(x = All_CHOP, y = Visit1_CHOP,
                       by = join_by(Patient, CHOP_Number)) 
 ```
 
-## Summarize Amount of Data
-The first thing to do is summarize how much data there is before we start 
-applying any selection criteria. 
+## Subset the Data 
+In this section, we begin a sequential filtering process to get to the subset of 
+records we want to analyze. Each step adds another filter that drops records. 
+Before we start filtering, we store information on the amount of raw data before 
+any filtering. 
+
+``` {r}
+#| label: create-Step0
+
+Step0 <- All_CHOP %>% 
+  count(Patient) %>% 
+  summarise(Step = 0,
+            Event = "Keep all records", 
+            N_Dogs = n(),
+            N_Observations = sum(n))
+```
+
+### By CHOP Cycle Number
+In this step, we retain only records for the first CHOP cycle for each patient. 
+
+``` {r}
+#| label: create-CHOP1
+
+CHOP1 <- All_CHOP %>% 
+  filter(CHOP_Number == 1)
+
+Step1 <- CHOP1 %>% 
+  count(Patient) %>% 
+  summarise(Step = 1,
+            Event = "Keep only records for CHOP cycle 1", 
+            N_Dogs = n(),
+            N_Observations = sum(n))
+```
+
+### By Whether Visit 1 Occurred Within 2 Weeks of CHOP Cycle Starting
+In this step, we retain only records for patients whose first visit during 
+their first cycle started within 2 weeks of the CHOP cycle start date. 
+
+``` {r}
+#| label: create-CHOP1_Start2W
+
+CHOP1_Start2W <- CHOP1 %>% 
+  filter(Started_in_2Weeks == TRUE)
+
+Step2 <- CHOP1_Start2W %>% 
+  count(Patient) %>% 
+  summarise(Step = 2,
+            Event = "Keep only if patient's visit 1 occurred within 2 weeks of CHOP start", 
+            N_Dogs = n(),
+            N_Observations = sum(n))
+```
+
+### By Phase of Treatment
+In this step, we retain only records where the visit occurred during the first 
+phase of treatment 
+
+``` {r}
+#| label: create-CHOP1_Start2W_Phase1
+
+CHOP1_Start2W_Phase1 <- CHOP1_Start2W %>% 
+  filter(Phase_of_Treatment == 1)
+
+Step3 <- CHOP1_Start2W_Phase1 %>% 
+  count(Patient) %>% 
+  summarise(Step = 3,
+            Event = "Keep only Phase 1 records", 
+            N_Dogs = n(),
+            N_Observations = sum(n))
+```
+
+### By Drug
+Here, we retain only the records where the drug associated with the visit was  
+drug 1 (vincristine), drug 2 (cyclophosphamide), or drug 3 (doxorubicin). The 
+drug selection is motivated by the fact that we don't have enough data about 
+other drugs.
+
+``` {r}
+#| label: create-CHOP1_Start2W_Phase1_Drug123
+
+CHOP1_Start2W_Phase1_Drug123 <- CHOP1_Start2W_Phase1 %>% 
+  filter(Drug %in% 1:3)
+
+Step4 <- CHOP1_Start2W_Phase1_Drug123 %>% 
+  count(Patient) %>% 
+  summarise(Step = 4,
+            Event = "Keep only Drug 1, 2, & 3 records", 
+            N_Dogs = n(),
+            N_Observations = sum(n))
+```
+
+## Summarize Amount of Data Remaining
+Now @tbl-amt-data summarizes how much data there was at each step of record 
+selection. 
 
 ```{r}
 #| label: tbl-amt-data
-#| tbl-cap: Amount of Raw Data
+#| tbl-cap: Amount of Data Available By Step in Case Selection
 
-Step1 <- All_CHOP %>% 
-  count(Patient) %>% 
-  summarise(Step = 1,
-            Event = "All raw data", 
-            N_Dogs = n(),
-            N_Observations = sum(n))
-
-Step1 %>% 
+bind_rows(Step0, Step1, Step2, Step3, Step4) %>% 
   kable() %>% 
   kable_styling()
 ```
 
-## Subset the Data 
-Here, we select a subset of records that we want to use for the study, namely 
-we retain only records for the first phase of the first instance of using the 
-CHOP protocol (`CHOP_Number` = 1) for each patient. We retain only data about 
-drug 1 (vincristine), drug 2 (cyclophosphamide), and drug 3 (doxorubicin). The drug
-selection is motivated by the fact that we don't have enough data about other
-drugs.
+```{r}
+#| label: fig-visualize-weeks-again
+#| fig-cap: Weeks Since CHOP Started By Visit Number (After Case Selection)
+
+boxplot(Weeks ~ Visit_Number, data = CHOP1_Start2W_Phase1_Drug123, 
+        xlab="Visit Number")
+```
+
+```{r}
+#| label: tbl-visit-drug
+#| tbl-cap: Number of Records by Visit and Drug (After Case Selection)
+
+xtabs(~Visit_Number + Drug, data = CHOP1_Start2W_Phase1_Drug123) %>% 
+  addmargins() %>% 
+  kable(col.names = c("Visit", "1 vincristine", "2 cyclophosphamide", 
+                      "3 doxorubicin", "Sum")) %>% 
+  kable_styling() %>% 
+  add_header_above(., header = c(" ", "Drug" = 3, " "))
+```
 
 ```{r}
 #| label: create-Subset_CHOP
