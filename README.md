@@ -35,11 +35,11 @@ To collaborate on the code for this package, you must have a GitHub
 account. You can request such access by emailing the package maintainer
 your GitHub username and ask to be added as a collaborator on this
 repository. You will need to use [Git](https:/git-scm.com) (Torvalds et
-al., 2024) for version control on files associated with this package and
+al., 2025) for version control on files associated with this package and
 to synchronize changes between your local copy of the repository and
 [GitHub](https://github.com), with
 [RStudio](https://posit.co/products/open-source/rstudio/) (RStudio Team,
-2024) as the primary editor. There is a lot of useful information about
+2025) as the primary editor. There is a lot of useful information about
 using these tools at the [Happy Git and GitHub for the
 userR](https://happygitwithr.com) website (Bryan et al., n.d.). Other
 useful resources on using Git and GitHub include Bryan (2018) and
@@ -103,7 +103,7 @@ package to work.
 
 Install [RStudio
 Desktop](https://posit.co/products/open-source/rstudio/) version
-2024.12.0+467 (or later). We recommend using RStudio to interact with
+2024.12.1+563 (or later). We recommend using RStudio to interact with
 the files for this package. RStudio is both a good interface to R and
 has built-in support for using some of the other software discussed
 below.
@@ -112,7 +112,7 @@ below.
 
 We rely on [Quarto](https://quarto.org) (Allaire et al., 2025) scripts
 to enhance reproducibility because they provide excellent support for
-generating dynamic reports (Mair, 2016). Install Quarto version 1.6.40
+generating dynamic reports (Mair, 2016). Install Quarto version 1.7.13
 or later. Although RStudio bundles a version of Quarto, we want the most
 recent stable release instead. Quarto also includes a copy of
 [Pandoc](https://pandoc.org/).
@@ -549,7 +549,7 @@ entry-spacing="0" line-spacing="2">
 <div id="ref-Allaire-RN8427" class="csl-entry">
 
 Allaire, J. J., Dervieux, C., Scheidegger, C., Teague, C., & Xie, Y.
-(2025). *Quarto* (Version 1.6.40) \[Computer Program\]. Posit Software,
+(2025). *Quarto* (Version 1.7.13) \[Computer Program\]. Posit Software,
 PBC. <https://quarto.org>
 
 </div>
@@ -607,15 +607,15 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.1.0) \[Computer Program, R package, Private
+study* (Version 0.3.0) \[Computer Program, R package, Private
 Repository\]. GitHub. <https://github.com/sjpierce/CHOPStudy>
 
 </div>
 
 <div id="ref-RStudio-Team-RN8351" class="csl-entry">
 
-RStudio Team. (2024). *RStudio Desktop: Integrated development
-environment for R* (Version 2024.12.0+467) \[Computer Program\]. Posit
+RStudio Team. (2025). *RStudio Desktop: Integrated development
+environment for R* (Version 2024.12.1+563) \[Computer Program\]. Posit
 Software, PBC. <https://posit.co>
 
 </div>
@@ -623,7 +623,7 @@ Software, PBC. <https://posit.co>
 <div id="ref-Torvalds-RN3929" class="csl-entry">
 
 Torvalds, L., Hamano, J. C., & other contributors to the Git Project.
-(2024). *Git for Windows* (Version 2.47.1(1)) \[Computer Program\].
+(2025). *Git for Windows* (Version 2.48.1(1)) \[Computer Program\].
 Software Freedom Conservancy. <https://git-scm.com>
 
 </div>
