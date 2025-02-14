@@ -111,7 +111,7 @@ some to factors and compute some additional variables.
 The units of measurement for `Total_Bands` are 1000/ul and some are not integers 
 (they have non-zero digits to the right of the decimal place). Therefore, we 
 rescaled into a new variable that has units of 100/ul by computing 
-`Total_Bands_Rescale = Total_Bands*10`. That rescaled variable was used in  
+`Total_Bands_Rescale = Total_Bands*10`. That rescaled variable was used in 
 count models because those require non-negative integer values for all counts. 
 We also created log transformed versions of both `Total_Bands` and 
 `Total_Bands_Rescaled` for use in graphing data. Because `log(0) = -Infinity`, 
@@ -156,7 +156,7 @@ names(All_CHOP)
 ::: {.callout-note}
 In previous versions of the output (2024-04-02 and earlier), we had been 
 recoding Patient_Number values > 28 by subtracting 1 from them just to make the 
-whole sent of numbers sequential. We removed that code because it makes no 
+whole set of numbers sequential. We removed that code because it makes no 
 functional difference to our analyses and it is easier to cross-reference back 
 to source data file if we don't do that. 
 :::
@@ -205,7 +205,7 @@ All_CHOP %>%
 ```
 
 ::: {.callout-caution}
-Both patients 55 (@@tbl-patient55) and 80 (@@tbl-patient80) each have one visit 
+Both patients 55 (@tbl-patient55) and 80 (@tbl-patient80) each have one visit 
 with a clearly inaccurate date where the year was entered as 1930 instead of 
 2020. For both dates, correcting the year while leaving the month and day 
 portions of the date alone will correct the error and yield dates that make 
@@ -332,7 +332,11 @@ All_CHOP %>%
 Note: The descriptive statistics now look much more sensible. 
 :::
 
-@fig-visualize_weeks is a boxplot that visualize the information of weeks.
+@fig-visualize-weeks is a boxplot that visualizes the distribution of `Weeks` 
+separately for each `Visit_Number`. This illustrates that there are some 
+outliers where the visit was held long after it would normally be scheduled 
+relative to the start of the CHOP cycle. We will later subset the data to deal 
+with that. 
 
 ```{r}
 #| label: fig-visualize_weeks
@@ -345,7 +349,7 @@ After reading peer review feedback on a manuscript that got rejected, the team
 decided on 2024-08-29 to narrow the focus of the analyses. We will now focus 
 only on data for patients who had their first visit within 2 weeks of 
 their CHOP start date. This section creates variables we can use to implement 
-that decision
+that decision.
 
 First we create a subset of the data containing only records for visit 1 within 
 the respective CHOP cycles, then add a logical variable marking which visit 1 
