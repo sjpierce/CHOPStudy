@@ -42,8 +42,7 @@ execute:
   include: true
 knitr:
   opts_chunk: 
-    message: true 
-    cfsize: "scriptsize"
+    message: true
 ---
 
 \FloatBarrier
