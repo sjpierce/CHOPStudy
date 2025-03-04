@@ -1,5 +1,23 @@
 # CHOPStudy News
 
+## 0.4.0, 2025-02-14
+* `scripts/.gitignore`
+    * Added file.
+* `scripts/_quarto.yml`
+    * Add output-dir key and list scripts to render. 
+* `scripts/Descriptive_Analysis.qmd` 
+    * Add file based on copying parts from `scripts/Analyze_data.qmd`
+* `scripts/Import_Data.qmd`
+    * Improve narrative text.
+    * Improve figure caption.
+    * Improve section on subsetting the data. 
+    * Update saving out data. 
+    * Add a subtitle.
+    * Remove cfsize knitr chunk option (not relevant in HTML output). 
+    * Define new variables.
+* `scripts/references.bib`
+    * Updated references. 
+
 ## 0.3.0, 2025-01-29
 * `scripts/Import_Data.qmd`
     * Change author order because I'm re-working things a lot. 
