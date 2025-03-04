@@ -1,6 +1,8 @@
 project:
   title: "scripts"
   type: default
+  output-dir: "output"
   execute-dir: file
   render:
-    - Render_Scripts.qmd
+    - Import_Data.qmd
+    - Descriptive_Analysis.qmd
