@@ -165,6 +165,24 @@ functional difference to our analyses and it is easier to cross-reference back
 to source data file if we don't do that. 
 :::
 
+## Check Patient and MRN Variables
+I assumed that that `Patient` and `MRN` variables were created such that these 
+two variables have a one-to-one correspondence. Each `Patient` value should 
+always be paired with the same `MRN` value and vice versa. If that is true, 
+then the number of unique combinations will be the same as the number of unique 
+values for each variable separately and then it doesn't matter which of those 
+two variables we use to identify a given dog. 
+
+```{r}
+#| label: check-Patient-MRN
+
+tibble(Patients_N = All_Visits %>% select(Patient) %>% n_distinct(), 
+       MRNs_N = All_Visits %>% select(MRN) %>% n_distinct(),
+       Combinations_N = All_Visits %>% select(Patient, MRN) %>% n_distinct(),
+       Match = if_else(Patients_N == MRNs_N & Patients_N == Combinations_N, 
+                       true = TRUE, false = FALSE))
+```
+
 ## Fix Negative Values for Weeks Since CHOP Started
 Here, we examine when a CBC lab sample was collected via the `Weeks` variable, 
 which measures how many weeks had elapsed between the start of the CHOP protocol 
@@ -347,6 +365,22 @@ with that.
 #| fig-cap: Weeks Since CHOP Started by Visit (Before Case Selection)
 
 boxplot(Weeks ~ Visit_Number, data = All_Visits, xlab="Visit Number")
+```
+
+## Check Uniqueness of Visit Records
+Next we verify that each row in the visit-level data (`All_Visits`) is a unique 
+combination of a patient (`Patient` and `MRN`), a CHOP cycle (`CHOP_Number`), 
+and a visit number (`Visit_Number`). 
+
+```{r}
+#| label: check-visit-uniqueness
+
+# We expect a value of TRUE for Matching_N.
+tibble(All_Visits_N = nrow(All_Visits),
+       Unique_Visits_N = All_Visits %>% 
+         select(MRN, CHOP_Number, Visit_Number) %>% 
+         n_distinct(),
+       Matching_N = All_Visits_N == Unique_Visits_N)
 ```
 
 ```
