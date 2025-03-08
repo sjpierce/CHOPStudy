@@ -383,6 +383,32 @@ tibble(All_Visits_N = nrow(All_Visits),
        Matching_N = All_Visits_N == Unique_Visits_N)
 ```
 
+## Create Patient-Level Dataset
+The `All_Visits` dataset has multiple rows per patient because the CHOP protocol 
+involves multiple visits, each of which is recorded as a separate visit number. 
+We need a patient-level data file to correctly get descriptive statistics on 
+patient weight and body surface area. 
+
+```{r}
+#| label: create-All-Patients
+
+All_Patients <- All_Visits %>% 
+  select(Patient, MRN, Weight_kg, Surface_Area_m2) %>% 
+  unique()
+```
+
+Next, we verify that the number of rows in `All_Patients` is equal to the number 
+of unique MRNs in `All_Visits`. If that is true, then all rows in `All_Visits` 
+for a given `MRN` must have the exact same values for both weight and surface 
+area. 
+
+```{r}
+#| label: check-patient-N
+
+# We expect a value of TRUE for Matching_N.
+tibble(All_MRNs_N = All_Visits %>% select(MRN) %>% n_distinct(),
+       All_Patients_N = nrow(All_Patients),
+       Matching_N = All_MRNs_N == All_Patients_N)
 ```
 
 ## Create More Variables
