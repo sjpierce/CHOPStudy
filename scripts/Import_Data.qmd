@@ -429,7 +429,7 @@ observations had `CBC_Dates` indicating that the lab sample was collected within
 Visit1_CHOP <- All_Visits %>% 
   filter(Visit_Number == 1) %>% 
   mutate(Started_in_2Weeks = Weeks <= 2) %>% 
-  select(Patient, CHOP_Number, Started_in_2Weeks)
+  select(Patient, MRN, CHOP_Number, Started_in_2Weeks)
 ```
 
 Next we merge that new `Started_in_2Weeks` variable back onto the `All_Visits` 
