@@ -442,7 +442,7 @@ All_Visits <- left_join(x = All_Visits, y = Visit1_CHOP,
                       by = join_by(Patient, MRN, CHOP_Number)) 
 ```
 
-## Subset the Data 
+## Subset the Visit-Level  Data 
 In this section, we begin a sequential filtering process to get to the subset of 
 records we want to analyze. Each step adds another filter that drops records. 
 Before we start filtering, we store information on the amount of raw data before 
@@ -487,9 +487,8 @@ happened there.
 All_Visits %>% 
   select(Patient, MRN, CHOP_Number) %>% 
   filter(CHOP_Number != 1) %>% 
-  group_by(Patient, MRN) %>% 
-  summarize(Visits_Dropped = n(), 
-            Min_CHOP_Number = min(CHOP_Number)) %>% 
+  group_by(Patient, MRN, CHOP_Number) %>% 
+  summarize(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
 ```
@@ -559,9 +558,8 @@ happened there.
 
 CHOP1_Start2W %>% 
   filter(Phase_of_Treatment != 1) %>% 
-  group_by(Patient, MRN) %>% 
-  summarise(Visits_Dropped = n(),
-            Min_Phase = min(Phase_of_Treatment)) %>% 
+  group_by(Patient, MRN, Phase_of_Treatment) %>% 
+  summarise(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
 ```
@@ -596,9 +594,8 @@ happened there.
 
 CHOP1_Start2W_Phase1 %>% 
   filter(!Drug %in% 1:3) %>% 
-  group_by(Patient, MRN) %>% 
-  summarise(Visits_Dropped = n(),
-            Min_Drug = min(Drug)) %>% 
+  group_by(Patient, MRN, Drug) %>% 
+  summarise(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
 ```
