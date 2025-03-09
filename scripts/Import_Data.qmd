@@ -608,6 +608,19 @@ CHOP1_Start2W_Phase1 %>%
 Final_Visits <- CHOP1_Start2W_Phase1_Drug123
 ```
 
+### Subset the Patient-Level Data
+Now we trim the `All_Patients` data down to just the patients included in the 
+`Final_Visits` data frame. 
+
+```{r}
+#| label: create-Final-Patients
+
+Final_Visits <- All_Patients %>% 
+  filter(Patient %in% Final_Visits$Patient) 
+
+dim(Final_Patients)
+```
+
 ### Summarize Amount of Data Remaining
 Now @tbl-amt-data summarizes how much data there was at each step of record 
 selection. 
