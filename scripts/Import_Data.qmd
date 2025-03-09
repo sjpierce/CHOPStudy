@@ -600,7 +600,15 @@ CHOP1_Start2W_Phase1 %>%
   kable_styling()
 ```
 
-## Summarize Amount of Data Remaining
+## Rename Data Frame
+
+```{r}
+#| label: create-Final-Visits
+
+Final_Visits <- CHOP1_Start2W_Phase1_Drug123
+```
+
+### Summarize Amount of Data Remaining
 Now @tbl-amt-data summarizes how much data there was at each step of record 
 selection. 
 
@@ -631,15 +639,6 @@ xtabs(~Visit_Number + Drug, data = CHOP1_Start2W_Phase1_Drug123) %>%
                       "3 doxorubicin", "Sum")) %>% 
   kable_styling() %>% 
   add_header_above(., header = c(" ", "Drug" = 3, " "))
-```
-
-## Rename Data Frame
-
-```{r}
-#| label: create-Final-Visits
-#| execute: false
-
-Final_Visits <- CHOP1_Start2W_Phase1_Drug123
 ```
 
 # Save Data
