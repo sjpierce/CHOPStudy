@@ -476,6 +476,24 @@ Step1 <- CHOP1 %>%
             N_Observations = sum(n))
 ```
 
+The chunk below identified the list of patients removed by the filtering step 
+above. This is just for reference in case the team wants to understand what 
+happened there.
+
+```{r}
+#| label: tbl-Step1-drops
+#| tbl-cap: Records Dropped in Step 1 Subsetting
+
+All_Visits %>% 
+  select(Patient, MRN, CHOP_Number) %>% 
+  filter(CHOP_Number != 1) %>% 
+  group_by(Patient, MRN) %>% 
+  summarize(Visits_Dropped = n(), 
+            Min_CHOP_Number = min(CHOP_Number)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
+```
+
 ### By Whether Visit 1 Occurred Within 2 Weeks of CHOP Cycle Starting
 In this step, we retain only records for patients whose first visit during 
 their first cycle started within 2 weeks of the CHOP cycle start date. 
@@ -492,6 +510,25 @@ Step2 <- CHOP1_Start2W %>%
             Event = "Keep only if patient's visit 1 occurred within 2 weeks of CHOP start", 
             N_Dogs = n(),
             N_Observations = sum(n))
+```
+
+The chunk below identified the list of patients removed by the filtering step 
+above. This is just for reference in case the team wants to understand what 
+happened there.
+
+```{r}
+#| label: tbl-Step2-drops
+#| tbl-cap: Records Dropped in Step 2 Subsetting
+
+CHOP1 %>% 
+  filter(Started_in_2Weeks == FALSE) %>% 
+  group_by(Patient, MRN) %>% 
+  summarise(Visits_Dropped = n(),
+            CHOP1_Start_Date = min(CHOP_Start_Date),
+            Visit1_CBC_Date = min(CBC_Date), 
+            Visit1_Weeks = min(Weeks)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
 ```
 
 ### By Phase of Treatment
@@ -512,6 +549,23 @@ Step3 <- CHOP1_Start2W_Phase1 %>%
             N_Observations = sum(n))
 ```
 
+The chunk below identified the list of patients removed by the filtering step 
+above. This is just for reference in case the team wants to understand what 
+happened there.
+
+```{r}
+#| label: tbl-Step3-drops
+#| tbl-cap: Records Dropped in Step 3 Subsetting
+
+CHOP1_Start2W %>% 
+  filter(Phase_of_Treatment != 1) %>% 
+  group_by(Patient, MRN) %>% 
+  summarise(Visits_Dropped = n(),
+            Min_Phase = min(Phase_of_Treatment)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
+```
+
 ### By Drug
 Here, we retain only the records where the drug associated with the visit was  
 drug 1 (vincristine), drug 2 (cyclophosphamide), or drug 3 (doxorubicin). The 
@@ -530,6 +584,23 @@ Step4 <- CHOP1_Start2W_Phase1_Drug123 %>%
             Event = "Keep only Drug 1, 2, & 3 records", 
             N_Dogs = n(),
             N_Observations = sum(n))
+```
+
+The chunk below identified the list of patients removed by the filtering step 
+above. This is just for reference in case the team wants to understand what 
+happened there.
+
+```{r}
+#| label: tbl-Step4-drops
+#| tbl-cap: Records Dropped in Step 3 Subsetting
+
+CHOP1_Start2W_Phase1 %>% 
+  filter(!Drug %in% 1:3) %>% 
+  group_by(Patient, MRN) %>% 
+  summarise(Visits_Dropped = n(),
+            Min_Drug = min(Drug)) %>% 
+  kable(digits = 2) %>% 
+  kable_styling()
 ```
 
 ## Summarize Amount of Data Remaining
