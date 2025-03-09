@@ -660,7 +660,8 @@ xtabs(~Visit_Number + Drug, data = CHOP1_Start2W_Phase1_Drug123) %>%
 #| label: create-save-what
 
 # Character vector of object names that will be saved.
-save_what <- c("Raw_CHOP", "All_CHOP", "Final_CHOP")
+save_what <- c("Raw_Visits", "All_Visits", "All_Patients", "Final_Visits", 
+               "Final_Patients")
 ```
 
 ``` {r}
