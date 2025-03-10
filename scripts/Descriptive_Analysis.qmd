@@ -104,6 +104,82 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 ```
 
 # Results {#sec-Results}
+@tbl-patient-descriptives shows patient-level descriptive statistics for weight 
+and surface area, while @tbl-visit-descriptives shows visit-level descriptive 
+statistics for biomarkers. 
+
+```{r}
+#| label: tbl-patient-descriptives
+#| tbl-cap: !expr paste0("Patient-Level Descriptive Statistics by Variable ", 
+#|                       "(N = "
+#|                       nrow(Final_Patients), " Patients)"
+#| message: false
+#| results: asis
+
+VNames <- c("Weight_kg", "Surface_Area_m2")
+
+CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
+
+Final_Patients %>% 
+  select(Weight_kg, Surface_Area_m2) %>% 
+  pivot_longer(cols = c(Weight_kg, Surface_Area_m2), names_to = "Variable", 
+               values_to = "Value") %>% 
+  mutate(Variable = factor(Variable, levels = VNames)) %>% 
+  # Aggregate to one row per variable.
+  group_by(Variable) %>% 
+  summarise(N = sum(!is.na(Value)), 
+            Mean = mean(Value, na.rm = TRUE),
+            SD = sd(Value, na.rm = TRUE),
+            Min = min(Value, na.rm = TRUE),
+            Q25 = quantile(Value, probs = .25, na.rm = TRUE),
+            Q50 = quantile(Value, probs = .50, na.rm = TRUE),
+            Q75 = quantile(Value, probs = .75, na.rm = TRUE),
+            Max = max(Value, na.rm = TRUE)) %>% 
+  kable(., format = "html", digits = 2, 
+        col.names = CNames, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) %>% 
+  cat()
+```
+
+
+```{r}
+#| label: tbl-visit-descriptive-overall
+#| tbl-cap: !expr paste0("Visit-Level Descriptive Statistics by Variable for (N = ", 
+#|                       nrow(Final_Visits), "Visits)"
+#| message: false
+#| results: asis
+
+VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", 
+            "Total_Bands_Rescaled", "BN_Ratio", "log_Total_Bands",
+            "log_Total_Bands_Rescaled")
+
+CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
+
+Final_Visits %>% 
+  select(Total_WBC, Total_Neutrophil, Total_Bands, Total_Bands_Rescaled, 
+  BN_Ratio, log_Total_Bands, log_Total_Bands_Rescaled) %>% 
+  pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, 
+                        Total_Bands_Rescaled, BN_Ratio, log_Total_Bands,
+                        log_Total_Bands_Rescaled), 
+               names_to = "Variable", values_to = "Value") %>% 
+  mutate(Variable = factor(Variable, levels = VNames)) %>% 
+  # Aggregate to one row per variable.
+  group_by(Variable) %>% 
+  summarise(N = sum(!is.na(Value)), 
+            Mean = mean(Value, na.rm = TRUE),
+            SD = sd(Value, na.rm = TRUE),
+            Min = min(Value, na.rm = TRUE),
+            Q25 = quantile(Value, probs = .25, na.rm = TRUE),
+            Q50 = quantile(Value, probs = .50, na.rm = TRUE),
+            Q75 = quantile(Value, probs = .75, na.rm = TRUE),
+            Max = max(Value, na.rm = TRUE)) %>% 
+  kable(., format = "html", digits = 1, 
+        col.names = CNames, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) %>% 
+  cat()
+```
 
 ## Total bands
 
