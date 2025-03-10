@@ -185,49 +185,44 @@ Final_Visits %>%
 
 ### Summary of total bands
 
-@fig-chop1_phase1_total_bands shows the histogram (left) and the boxplot (right) 
+@fig-total-bands shows the histogram (left) and the boxplot (right) 
 of **Total bands** in the original units (x10.e3/uL=1000/uL), while 
-@fig-chop1_phase1_total_bands_rescaled shows the same data after rescaling to 
+@fig-total-bands-rescaled shows the same data after rescaling to 
 units of (x100/ul) to obtain integer values usable in count models. This makes 
 it more convenient for us when fitting models. Both these figures show that 
 there are lots of zero values, which makes it hard to see the shape of the 
 distribution among the non-zero values. 
 
 ```{r}
-#| label: fig-chop1_phase1_total_bands
-#| fig-cap: Histogram (left) and boxplot (right) of the total bands (x1000/ul)
-par(mfrow=c(1,2))
-hist(Final_CHOP$Total_Bands, main=NULL,
-     xlab="Total bands (x1000/ul)",
-     ylab = "Number of patients")
-boxplot(Final_CHOP$Total_Bands, ylab="Total bands (x1000/ul)")
-par(mfrow=c(1,1))
+#| label: fig-total-bands
+#| fig-cap: Distribution of Total Bands (x1000/ul)
+#| fig-width: 6
+#| fig-height: 4
+#| message: false
+
+ggplot(Final_Visits, aes(x = Total_Bands)) + 
+  geom_histogram(aes(y=..count..), colour="black", fill="grey70") +
+  scale_x_continuous(limits = c(-0.2,7), n.breaks = 8, oob = function(x, limits) x) +
+  scale_y_continuous(limits=c(-0.2, 500)) +
+  xlab("Total Bands (x1000/ul)") +
+  ylab("No. of Patients")
 ```
 
 ```{r}
-#| label: fig-chop1_phase1_total_bands_rescaled
-#| fig-cap: Histogram (left) and boxplot (right) of the total bands (x100/ul)
-par(mfrow=c(1,2))
-hist(Final_CHOP$Total_Bands_Rescaled, main = NULL, 
-     xlab="Total bands (x100/ul)",
-     ylab = "Number of patients")
-boxplot(Final_CHOP$Total_Bands_Rescaled, ylab="Total bands (x100/ul)")
-par(mfrow=c(1,1))
+#| label: fig-total-bands-rescaled
+#| fig-cap: Distribution of Rescaled Total Bands (x100/ul)
+#| fig-width: 6
+#| fig-height: 4
+#| message: false
+
+ggplot(Final_Visits, aes(x = Total_Bands_Rescaled)) + 
+  geom_histogram(aes(y=..count..), colour="black", fill="grey70") +
+  scale_x_continuous(limits = c(-2,70), n.breaks = 8, oob = function(x, limits) x) +
+  scale_y_continuous(limits=c(-0.2, 500)) +
+  xlab("Rescaled Total Bands (x100/ul)") +
+  ylab("No. of Patients")
 ```
 
-@tbl-chop1_bands_phase1 gives the mean and median value of the **Total bands** 
-(x100/ul). We can see that more than 75% outcomes are 0. Therefore, it's 
-possible that this distribution is **zero-inflated** (i.e., there may be more 
-values of zero than one would expect under a Poisson distribution).
-
-```{r}
-#| label: tbl-chop1_bands_phase1
-#| tbl-cap: Summary of total bands (x100/ul)
-A=summary(Final_CHOP$Total_Bands_Rescaled)
-round(as.matrix(A),4) %>% 
-  kbl() %>% 
-  kable_styling()
-```
 
 The histogram (left) and boxplot (right) of **log(Total bands [x100/ul])** and 
 **log(Total bands [x1000/ul])** are shown in 
