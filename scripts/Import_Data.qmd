@@ -617,10 +617,8 @@ Now we trim the `All_Patients` data down to just the patients included in the
 ```{r}
 #| label: create-Final-Patients
 
-Final_Visits <- All_Patients %>% 
+Final_Patients <- All_Patients %>% 
   filter(Patient %in% Final_Visits$Patient) 
-
-dim(Final_Patients)
 ```
 
 There are `r nrow(Final_Patients)` rows in `Final_Patients`. 
