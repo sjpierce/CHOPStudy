@@ -73,6 +73,8 @@ Load R packages that we need to get additional functions.
 #| label: load-packages
 library(here)       # for here(), i_am()
 library(dplyr)      # for filter(), group_by(), mutate(), rename(), summarise()
+library(tidyr)      # for pivot_longer()
+library(ggplot2)    # for ggplot()
 library(knitr)      # for kable()
 library(kableExtra) # for kable_styling 
 library(gtsummary)  # for 
