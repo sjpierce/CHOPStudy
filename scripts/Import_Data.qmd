@@ -600,7 +600,7 @@ CHOP1_Start2W_Phase1 %>%
   kable_styling()
 ```
 
-## Rename Data Frame
+### Rename Data Frame
 
 ```{r}
 #| label: create-Final-Visits
@@ -608,7 +608,9 @@ CHOP1_Start2W_Phase1 %>%
 Final_Visits <- CHOP1_Start2W_Phase1_Drug123
 ```
 
-### Subset the Patient-Level Data
+There are `r nrow(Final_Visits)` rows in `Final_Visits`. 
+
+## Subset the Patient-Level Data
 Now we trim the `All_Patients` data down to just the patients included in the 
 `Final_Visits` data frame. 
 
@@ -621,7 +623,9 @@ Final_Visits <- All_Patients %>%
 dim(Final_Patients)
 ```
 
-### Summarize Amount of Data Remaining
+There are `r nrow(Final_Patients)` rows in `Final_Patients`. 
+
+## Summarize Amount of Data Remaining
 Now @tbl-amt-data summarizes how much data there was at each step of record 
 selection. 
 
