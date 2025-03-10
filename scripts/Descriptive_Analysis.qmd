@@ -241,7 +241,7 @@ also present figures in
 #| fig-cap: Histogram (left) and boxplot (right) of the log(total bands x100/ul)
 
 par(mfrow=c(1,2))
-hist(Final_CHOP$log_Total_Bands_Rescaled,
+hist(Final_Visits$log_Total_Bands_Rescaled,
      xlab="log(Total bands [x100/ul])",
      ylab = "Number of patients",
      main=NULL,
@@ -251,7 +251,7 @@ axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7),
                                  format = "f", digits = 0))
 axis(1, at = axis_positions, labels = axis_labels)
 
-boxplot(Final_CHOP$log_Total_Bands_Rescaled,
+boxplot(Final_Visits$log_Total_Bands_Rescaled,
        ylab="log(Total bands [x100/ul])",
        ylim = c(-3, 5), yaxt = "n")
 axis_positions <- c(-3, seq(-1, 5, length.out = 7))
@@ -267,7 +267,7 @@ par(mfrow=c(1,1))
 #| fig-cap: Histogram (left) and boxplot (right) of the log(total bands x1000/ul)
 
 par(mfrow=c(1,2))
-hist(Final_CHOP$log_Total_Bands, 
+hist(Final_Visits$log_Total_Bands, 
      xlab="log(Total bands [x1000/ul])", 
      ylab = "Number of patients",
      main=NULL, 
@@ -277,7 +277,7 @@ axis_labels <- c("-Inf", formatC(seq(-3, 2, length.out = 6),
                                  format = "f", digits = 0))
 axis(1, at = axis_positions, labels = axis_labels)
 
-boxplot(Final_CHOP$log_Total_Bands,
+boxplot(Final_Visits$log_Total_Bands,
         ylab="log(Total bands [x1000/ul])",
         ylim = c(-5, 2), yaxt = "n")
 axis_positions <- c(-5, seq(-3, 2, length.out = 6))
@@ -301,12 +301,12 @@ values for both original and recscaled Total Bands values.
 #| label: tbl-Numbers_of_zero_and_proportion
 #| tbl-cap: "Frequency Distribution of Total Bands"
 
-Final_CHOP %>% 
+Final_Visits %>% 
   count(Total_Bands) %>% 
   mutate(Total_Bands_Rescaled = Total_Bands*10,
          Log_Total_Bands = log(Total_Bands), 
          Log_Total_Bands_Rescaled = log(Total_Bands_Rescaled),
-         Proportion = n/nrow(Final_CHOP)) %>% 
+         Proportion = n/nrow(Final_Visits)) %>% 
   select(Total_Bands, Total_Bands_Rescaled, Log_Total_Bands, 
          Log_Total_Bands_Rescaled, n, Proportion) %>% 
   kable(digits = 3, col.names = c("Total bands (x1000/ul)", 
@@ -324,11 +324,11 @@ Final_CHOP %>%
 #| label: fig-chop1_phase1_total_bands_rescaled_log_part
 #| fig-cap: "Histogram (left) and boxplot (right) of the log(total bands [x100/ul]) with only total bands > 0"
 par(mfrow=c(1,2))
-hist(Final_CHOP$log_Total_Bands_Rescaled[Final_CHOP$log_Total_Bands_Rescaled>-3],
+hist(Final_Visits$log_Total_Bands_Rescaled[Final_Visits$log_Total_Bands_Rescaled>-3],
      xlab="log(Total bands [x100/ul])", xlim = c(0, 5),
      ylab = "Number of patients",
      main=NULL)
-boxplot(Final_CHOP$log_Total_Bands_Rescaled[Final_CHOP$log_Total_Bands_Rescaled>-3],
+boxplot(Final_Visits$log_Total_Bands_Rescaled[Final_Visits$log_Total_Bands_Rescaled>-3],
         ylab="log(Total bands [x100/ul])", ylim = c(0,5))
 par(mfrow=c(1,1))
 ```
@@ -337,11 +337,11 @@ par(mfrow=c(1,1))
 #| label: fig-chop1_phase1_total_bands_log_part
 #| fig-cap: "Histogram (left) and boxplot (right) of the log(total bands [x1000/ul]) with only total bands > 0"
 par(mfrow=c(1,2))
-hist(Final_CHOP$log_Total_Bands[Final_CHOP$log_Total_Bands>-5],
+hist(Final_Visits$log_Total_Bands[Final_Visits$log_Total_Bands>-5],
      xlab="log(Total bands [x1000/ul])", xlim = c(-3, 2),
      ylab = "Number of patients",
      main=NULL)
-boxplot(Final_CHOP$log_Total_Bands[Final_CHOP$log_Total_Bands>-3],
+boxplot(Final_Visits$log_Total_Bands[Final_Visits$log_Total_Bands>-3],
         ylab="log(Total bands [x1000/ul])", ylim = c(-3,2))
 par(mfrow=c(1,1))
 ```
@@ -355,10 +355,10 @@ Drug 1 is used far more than other drugs.
 #| label: tbl-chop1_drug
 #| tbl-cap: Summary the number of times each drug is used
 
-Final_CHOP %>% 
+Final_Visits %>% 
   mutate(Drug = factor(Drug, levels = 1:3, labels = paste("Drug", 1:3))) %>% 
   count(Drug) %>% 
-  mutate(Proportion = n/nrow(Final_CHOP)) %>% 
+  mutate(Proportion = n/nrow(Final_Visits)) %>% 
   kbl(digits = 3) %>%
   kable_styling()
 ```
@@ -371,7 +371,7 @@ shows the boxplot of **Total bands (x1000/ul)**, categorized by drugs.
 #| label: fig-total_bands_rescaled_by_drugs
 #| fig-cap: Boxplot of the total bands (x100/ul), categorized by drugs.
 
-boxplot(Final_CHOP$Total_Bands_Rescaled ~ Final_CHOP$Drug,
+boxplot(Final_Visits$Total_Bands_Rescaled ~ Final_Visits$Drug,
         ylab="Total bands (x100/ul)",
         xlab = "Drug")
 ```
@@ -380,7 +380,7 @@ boxplot(Final_CHOP$Total_Bands_Rescaled ~ Final_CHOP$Drug,
 #| label: fig-total_bands_by_drugs
 #| fig-cap: Boxplot of the total bands (x1000/ul), categorized by drugs.
 
-boxplot(Final_CHOP$Total_Bands ~ Final_CHOP$Drug,
+boxplot(Final_Visits$Total_Bands ~ Final_Visits$Drug,
         ylab="Total bands (x1000/ul)",
         xlab = "Drug")
 ```
@@ -394,7 +394,7 @@ categorized by drugs.
 
 A=matrix(0,ncol=3,nrow=6)
 for(i in 1:3){
-  A[,i]=summary(Final_CHOP$Total_Bands_Rescaled[Final_CHOP$Drug==i])
+  A[,i]=summary(Final_Visits$Total_Bands_Rescaled[Final_Visits$Drug==i])
 }
 colnames(A)=paste0("Drug ",1:3)
 rownames(A)=c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max")
@@ -411,7 +411,7 @@ bands=0.
 #| label: fig-total_bands_rescaled_by_drugs_log
 #| fig-cap: Boxplot of the log(total bands)(x100/ul), categorized by drugs.
 
-boxplot(Final_CHOP$log_Total_Bands_Rescaled ~ Final_CHOP$Drug,
+boxplot(Final_Visits$log_Total_Bands_Rescaled ~ Final_Visits$Drug,
         xlab = "Drug",
         ylab="log(Total bands) (x100/ul)", ylim = c(-3, 5), yaxt = "n")
 axis_positions <- c(-3, seq(-1, 5, length.out = 7))
@@ -425,7 +425,7 @@ axis(2, at = axis_positions, labels = axis_labels)
 #| label: fig-total_bands_by_drugs_log
 #| fig-cap: Boxplot of the log(total bands [x1000/ul]), categorized by drugs.
 
-boxplot(Final_CHOP$log_Total_Bands ~ Final_CHOP$Drug,
+boxplot(Final_Visits$log_Total_Bands ~ Final_Visits$Drug,
         xlab = "Drug",
         ylab="log(Total bands [x1000/ul])", ylim = c(-5, 2), yaxt = "n")
 axis_positions <- c(-5, seq(-3, 2, length.out = 6))
@@ -445,7 +445,7 @@ axis(2, at = axis_positions, labels = axis_labels)
 #| label: fig-total_bands_by_drugs_log_part
 #| fig-cap: Boxplot of the log(total bands [x100/ul]), categorized by drugs.
 
-boxplot(Final_CHOP$log_Total_Bands_Rescaled[Final_CHOP$log_Total_Bands_Rescaled>-3] ~ Final_CHOP$Drug[Final_CHOP$log_Total_Bands_Rescaled>-1],
+boxplot(Final_Visits$log_Total_Bands_Rescaled[Final_Visits$log_Total_Bands_Rescaled>-3] ~ Final_Visits$Drug[Final_Visits$log_Total_Bands_Rescaled>-1],
         ylab="log(Total bands [x100/ul])",
         xlab = "Drug")
 
@@ -458,7 +458,7 @@ where total bands equal 0 for each drug used.
 #| label: tbl-total_bands_by_drugs_zero
 #| tbl-cap: Number and proportion of instances where total bands equal 0 for each drug used.
 #| 
-Final_CHOP %>% 
+Final_Visits %>% 
   mutate(Drug = factor(Drug, levels = 1:3, labels = paste("Drug", 1:3)),
          Zero_Bands = Total_Bands == 0) %>% 
   group_by(Drug) %>% 
@@ -482,7 +482,7 @@ mean value of Total bands tends to decrease over time.
 ```{r}
 #| label: tbl-total_bands_by_visit
 #| tbl-cap: Summary of total bands (x100/ul) for each visit time.
-Total_Bands_Rescaled_counts <- Final_CHOP %>%
+Total_Bands_Rescaled_counts <- Final_Visits %>%
   group_by(Visit_Number) %>%
    summarise(
     mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
@@ -499,7 +499,7 @@ visit time.
 ```{r}
 #| label: fig-total_bands_by_visit
 #| fig-cap: Boxplot of total bands (x100/ul) for each visit time.
-boxplot(Total_Bands_Rescaled~Visit_Number,data=Final_CHOP,xlab="Visit number",ylab="Total bands (x100/ul)")
+boxplot(Total_Bands_Rescaled~Visit_Number,data=Final_Visits,xlab="Visit number",ylab="Total bands (x100/ul)")
 ```
 
 @fig-total_bands_rescaled_by_visit_log shows the boxplot of 
@@ -511,7 +511,7 @@ boxplot(Total_Bands_Rescaled~Visit_Number,data=Final_CHOP,xlab="Visit number",yl
 ```{r}
 #| label: fig-total_bands_rescaled_by_visit_log
 #| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time.
-boxplot(log_Total_Bands_Rescaled ~ Visit_Number, data=Final_CHOP,
+boxplot(log_Total_Bands_Rescaled ~ Visit_Number, data=Final_Visits,
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])",ylim = c(-3, 5), yaxt = "n")
 axis_positions <- c(-3, seq(-1, 5, length.out = 7))
@@ -523,7 +523,7 @@ axis(2, at = axis_positions, labels = axis_labels)
 ```{r}
 #| label: fig-total_bands_by_visit_log
 #| fig-cap: Boxplot of log(total bands [x1000/ul]) for each visit time.
-boxplot(log_Total_Bands ~ Visit_Number, data=Final_CHOP,
+boxplot(log_Total_Bands ~ Visit_Number, data=Final_Visits,
         xlab="Visit number",
         ylab="log(Total bands [x1000/ul])",ylim = c(-5, 2), yaxt = "n")
 axis_positions <- c(-5, seq(-3, 2, length.out = 6))
@@ -545,7 +545,7 @@ for each visit time and only include those with total bands \> 0.
 #| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time (only include those with total bands \> 0).
 boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
           Visit_Number[Total_Bands_Rescaled > 0],
-        data=Final_CHOP,
+        data=Final_Visits,
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])")
 ```
@@ -557,7 +557,7 @@ where total bands equal 0 for each drug used.
 #| label: tbl-total_bands_by_visit_zero
 #| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   mutate(Zero_Bands = Total_Bands == 0) %>% 
   group_by(Visit_Number) %>% 
   summarize(n = n(),
@@ -578,7 +578,7 @@ Final_CHOP %>%
 #| label: tbl-total_bands_by_visit_drug1
 #| tbl-cap: Summary of total bands (x100/ul) for individuals using Drug 1 at each visit time.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   filter(Drug==1) %>%
   group_by(Visit_Number) %>%
   summarise(mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
@@ -596,7 +596,7 @@ Final_CHOP %>%
 #| label: fig-boxplot_total_bands
 #| fig-cap: "Boxplot of total bands (x100/ul) for each visit time for drug 1"
 boxplot(Total_Bands_Rescaled~Visit_Number,
-        data=Final_CHOP[Final_CHOP$Drug==1,],
+        data=Final_Visits[Final_Visits$Drug==1,],
         xlab="Visit number",
         ylab="Total bands (x100/ul)")
 ```
@@ -610,7 +610,7 @@ log(total bands x100/ul) for individuals using Drug 1 at each visit time, where
 #| fig-cap: "Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 1."
 
 boxplot(log_Total_Bands_Rescaled~Visit_Number,
-        data=Final_CHOP[Final_CHOP$Drug==1,],
+        data=Final_Visits[Final_Visits$Drug==1,],
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])", ylim = c(-3, 5), yaxt = "n")
 axis_positions <- c(-3, seq(-1, 5, length.out = 7))
@@ -629,7 +629,7 @@ with total bands\>0.
 
 boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
           Visit_Number[Total_Bands_Rescaled>0],
-        data=Final_CHOP[Final_CHOP$Drug==1,],
+        data=Final_Visits[Final_Visits$Drug==1,],
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])")
 ```
@@ -641,7 +641,7 @@ instances where total bands equal 0 for each drug used.
 #| label: tbl-total_bands_by_visit_drug1_zero
 #| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time for those using drug 1.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   filter(Drug == 1) %>% 
   mutate(Zero_Bands = Total_Bands == 0) %>% 
   group_by(Visit_Number) %>% 
@@ -656,9 +656,9 @@ Final_CHOP %>%
 
 ```{r}
 #| label: drug
-drug1 <- Final_CHOP %>% filter(Drug==1)
-drug2 <- Final_CHOP %>% filter(Drug==2)
-drug3 <- Final_CHOP %>% filter(Drug==3)
+drug1 <- Final_Visits %>% filter(Drug==1)
+drug2 <- Final_Visits %>% filter(Drug==2)
+drug3 <- Final_Visits %>% filter(Drug==3)
 ```
 
 @fig-visit_times_of_drug_1 shows the times of using drug 1 at each visit number.
@@ -687,7 +687,7 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
 #| label: tbl-total_bands_by_visit_drug2
 #| tbl-cap: Summary of total bands (x100/ul) for individuals using Drug 2 at each visit time.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   filter(Drug==2) %>%
   group_by(Visit_Number) %>%
   summarise(mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
@@ -706,7 +706,7 @@ Final_CHOP %>%
 #| fig-cap: "Boxplot of total bands (x100/ul) for each visit time for drug 2"
 
 boxplot(Total_Bands_Rescaled~Visit_Number,
-        data=Final_CHOP[Final_CHOP$Drug==2,],
+        data=Final_Visits[Final_Visits$Drug==2,],
         xlab="Visit number",
         ylab="Total bands (x100/ul)")
 ```
@@ -720,7 +720,7 @@ bands=0.
 #| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 2.
 
 boxplot(log_Total_Bands_Rescaled~Visit_Number,
-        data=Final_CHOP[Final_CHOP$Drug==2,],
+        data=Final_Visits[Final_Visits$Drug==2,],
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])", ylim = c(-3, 5), yaxt = "n")
 axis_positions <- c(-3, seq(-1, 5, length.out = 7))
@@ -739,7 +739,7 @@ with total bands\>0.
 
 boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
           Visit_Number[Total_Bands_Rescaled>0],
-        data=Final_CHOP[Final_CHOP$Drug==2,],
+        data=Final_Visits[Final_Visits$Drug==2,],
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])")
 ```
@@ -751,7 +751,7 @@ instances where total bands equal 0 for each drug used.
 #| label: tbl-total_bands_by_visit_drug2_zero
 #| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time for those using drug 2.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   filter(Drug == 2) %>% 
   mutate(Zero_Bands = Total_Bands == 0) %>% 
   group_by(Visit_Number) %>% 
@@ -791,7 +791,7 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
 #| label: tbl-total_bands_by_visit_drug3
 #| tbl-cap: Summary of total bands (x100/ul) for individuals using Drug 3 at each visit time.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   filter(Drug==3) %>%
   group_by(Visit_Number) %>%
   summarise(mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
@@ -809,7 +809,7 @@ Final_CHOP %>%
 #| #| fig-cap: "Boxplot of total bands (x100/ul) for each visit time for drug 3"
 
 boxplot(Total_Bands_Rescaled~Visit_Number,
-        data=Final_CHOP[Final_CHOP$Drug==3,],
+        data=Final_Visits[Final_Visits$Drug==3,],
         xlab="Visit number",
         ylab="Total bands (x100/ul)")
 ```
@@ -823,7 +823,7 @@ bands=0.
 #| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time for those using drug 3.
 
 boxplot(log_Total_Bands_Rescaled~Visit_Number,
-        data=Final_CHOP[Final_CHOP$Drug==3,],
+        data=Final_Visits[Final_Visits$Drug==3,],
         xlab="Visit number",
         ylab="log(Total bands [x100/ul])", ylim = c(-3, 5), yaxt = "n")
 axis_positions <- c(-3, seq(-1, 5, length.out = 7))
@@ -839,7 +839,7 @@ with total bands\>0.
 ```{r}
 #| label: fig-total_bands_by_visit_drug3_log_part
 #| fig-cap: Boxplot of log(total bands x100/ul) for each visit time for those using drug 3.
-boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled>0]~Visit_Number[Total_Bands_Rescaled>0],data=Final_CHOP[Final_CHOP$Drug==3,],xlab="Visit number",ylab="log(Total bands) (x100/ul)")
+boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled>0]~Visit_Number[Total_Bands_Rescaled>0],data=Final_Visits[Final_Visits$Drug==3,],xlab="Visit number",ylab="log(Total bands) (x100/ul)")
 ```
 
 @tbl-total_bands_by_visit_drug3_zero shows the number and proportion of 
@@ -849,7 +849,7 @@ instances where total bands equal 0 for each drug used.
 #| label: tbl-total_bands_by_visit_drug3_zero
 #| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time for those using drug 3.
 
-Final_CHOP %>% 
+Final_Visits %>% 
   filter(Drug == 3) %>% 
   mutate(Zero_Bands = Total_Bands == 0) %>% 
   group_by(Visit_Number) %>% 
@@ -888,7 +888,7 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
 ```{r}
 #| label: tbl-chop1_WBC_phase1
 #| tbl-cap: Summary of total WBC (x1000/uL)
-A=summary(Final_CHOP$Total_WBC)
+A=summary(Final_Visits$Total_WBC)
 round(as.matrix(A),4) %>%
   kbl() %>%
   kable_styling()
@@ -901,7 +901,7 @@ value of Total bands tends to decrease over time
 ```{r}
 #| label: tbl-total_WBC_by_visit
 #| tbl-cap: Summary of total white blood cells (x1000/uL) for each visit time.
-Final_CHOP %>%
+Final_Visits %>%
   group_by(Visit_Number) %>%
   summarise(mean = round(mean(Total_WBC, na.rm = TRUE),4),
             sd= round(sd(Total_WBC, na.rm = TRUE),4),
@@ -920,7 +920,7 @@ Final_CHOP %>%
 #| label: tbl-chop1_neutrophils_phase1
 #| tbl-cap: Summary of total neutrophils 
 
-A=summary(Final_CHOP$Total_Neutrophil)
+A=summary(Final_Visits$Total_Neutrophil)
 round(as.matrix(A),4)%>%
   kbl() %>%
   kable_styling()
@@ -933,7 +933,7 @@ round(as.matrix(A),4)%>%
 #| label: tbl-total_neutrophil_by_visit
 #| tbl-cap: Summary of total neutrophil for each visit time.
 
-Final_CHOP %>%
+Final_Visits %>%
   group_by(Visit_Number) %>%
   summarise(mean = round(mean(Total_Neutrophil, na.rm = TRUE),4),
             sd= round(sd(Total_Neutrophil, na.rm = TRUE),4),
@@ -950,11 +950,11 @@ A=matrix(0,nrow = 6,ncol=4)
 colnames(A)=c("Bandemia grade","Value according to MSUVDL reference range (k/uL)","Numbers","Proportion")
 A[,1]=c(0:5)
 A[,2]=c("0.0-0.10","0.11-0.29","0.30-0.59","0.60-1.00",">1.00","death")
-A[,3]=c(sum(Final_CHOP$Total_Bands_Rescaled<=1),
-        sum(Final_CHOP$Total_Bands_Rescaled>1&Final_CHOP$Total_Bands_Rescaled<3),
-        sum(Final_CHOP$Total_Bands_Rescaled>=3&Final_CHOP$Total_Bands_Rescaled<6),
-        sum(Final_CHOP$Total_Bands_Rescaled>=6&Final_CHOP$Total_Bands_Rescaled<=10),
-        sum(Final_CHOP$Total_Bands_Rescaled>10),0)
+A[,3]=c(sum(Final_Visits$Total_Bands_Rescaled<=1),
+        sum(Final_Visits$Total_Bands_Rescaled>1&Final_Visits$Total_Bands_Rescaled<3),
+        sum(Final_Visits$Total_Bands_Rescaled>=3&Final_Visits$Total_Bands_Rescaled<6),
+        sum(Final_Visits$Total_Bands_Rescaled>=6&Final_Visits$Total_Bands_Rescaled<=10),
+        sum(Final_Visits$Total_Bands_Rescaled>10),0)
 A=as.data.frame(A)
 A$Numbers=as.numeric(A$Numbers)
 A[,4]=A[,3]/609
