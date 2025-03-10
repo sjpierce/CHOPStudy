@@ -1,6 +1,24 @@
 # CHOPStudy News
 
-## 0.4.0, 2025-02-14
+## 0.5.0, 2025-03-07
+* `scripts/Descriptive_Analysis.qmd` 
+    * Load additional packages. 
+    * Add patient and visit-level descriptive tables. 
+    * Improve histograms of total bands.
+    * Update data frame names.
+* `scripts/Import_Data.qmd`
+    * Renamed data frames and chunks.
+    * Added assumption checks. 
+    * Added patient-level dataset.
+    * Add variables to an intermediate data frame. 
+    * Add tables to show which records were dropped. 
+    * Updated list of data frames saved out.
+    * Move code for renaming data frame.
+    * Subset the patient-level data.
+    * Update heading structure.
+    * Fix patient's data frame.
+    
+## 0.4.0, 2025-03-05
 * `scripts/.gitignore`
     * Added file.
 * `scripts/_quarto.yml`
