@@ -151,9 +151,12 @@ All_Visits <- Raw_Visits %>%
          log_Total_Bands_Rescaled = if_else(Total_Bands_Rescaled == 0, 
                                    true = -3, 
                                    false = log(Total_Bands_Rescaled)),
+         # Binary transformations of Total_Bands. 
+         Bands_Present = if_else(Total_Bands > 0, true = 1, false = 0),
          Bandemia = if_else(Total_Bands >= 0.2, true = 1, false = 0),
+         # Band:Neutrophil ratio transformations. 
          BN_Ratio = Total_Bands/Total_Neutrophil,
-         BN_Ratio_GT1 = if_else(BN_Ratio >= 1, true = 1, false = 0)) %>% 
+         High_BN_Ratio = if_else(BN_Ratio >= 1, true = 1, false = 0)) %>% 
   arrange(Patient, CHOP_Number, Visit_Number, CBC_Date)
 
 # Show the updated variable names to confirm all looks right. 
