@@ -104,24 +104,24 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 ```
 
 # Results {#sec-Results}
-@tbl-patient-descriptives shows patient-level descriptive statistics for weight 
-and surface area, while @tbl-visit-descriptives shows visit-level descriptive 
+@tbl-patient-describe shows patient-level descriptive statistics for weight 
+and surface area, while @tbl-visit-describe-cont shows visit-level descriptive 
 statistics for biomarkers. 
 
 ```{r}
-#| label: tbl-patient-descriptives
+#| label: tbl-patient-describe
 #| tbl-cap: !expr paste0("Patient-Level Descriptive Statistics by Variable ", 
 #|                       "(N = "
 #|                       nrow(Final_Patients), " Patients)"
 #| message: false
 #| results: asis
 
-VNames <- c("Weight_kg", "Surface_Area_m2")
+VNames <- c("Weight_kg", "Surface_Area_m2", "N_Visits")
 
 CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
 
 Final_Patients %>% 
-  select(Weight_kg, Surface_Area_m2) %>% 
+  select(Weight_kg, Surface_Area_m2, N_Visits) %>% 
   pivot_longer(cols = c(Weight_kg, Surface_Area_m2), names_to = "Variable", 
                values_to = "Value") %>% 
   mutate(Variable = factor(Variable, levels = VNames)) %>% 
