@@ -111,7 +111,7 @@ for continuous and catgegorical biomarker variables.
 
 ```{r}
 #| label: tbl-patient-describe
-#| tbl-cap: !expr paste0("Patient-Level Descriptive Statistics by Variable ", 
+#| tbl-cap: !expr paste0("Descriptive Statistics for Patient-Level Variables ", 
 #|                       "(N = ", nrow(Final_Patients), " Patients)")
 #| message: false
 #| results: asis
@@ -145,8 +145,8 @@ Final_Patients %>%
 
 ```{r}
 #| label: tbl-visit-describe-cont
-#| tbl-cap: !expr paste0("Visit-Level Descriptive Statistics for Continuous ", 
-#|                       "Biomarker Variables (N = ", nrow(Final_Visits), " Visits)")
+#| tbl-cap: !expr paste0("Descriptive Statistics for Continuous Biomarker ", 
+#|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
 #| results: asis
 
@@ -188,8 +188,8 @@ Final_Visits %>%
 
 ```{r}
 #| label: tbl-visit-describe-cat
-#| tbl-cap: !expr paste0("Visit-Level Descriptive Statistics for Categorical ", 
-#|                       "Biomarker Variables (N = ", nrow(Final_Visits), " Visits)")
+#| tbl-cap: !expr paste0("Descriptive Statistics for Categorical Biomarker ", 
+#|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
 #| results: asis
 
