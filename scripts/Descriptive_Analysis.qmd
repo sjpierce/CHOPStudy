@@ -214,6 +214,25 @@ Final_Visits %>%
   cat()
 ```
 
+@tbl-drug-freq shows the number of times each drug was used. 
+
+```{r}
+#| label: tbl-drug-freq
+#| tbl-cap: !expr paste0("Frequency Distribution for Drug Used (N = ", 
+#|                       nrow(Final_Visits), " Visits)")
+
+DrugNames <- c("vincristine", "cyclophosphamide", "doxorubicin")
+
+Final_Visits %>% 
+  count(Drug) %>% 
+  rename(N_Visits = n) %>% 
+  mutate(Name = factor(Drug, levels = 1:3, labels = DrugNames), 
+         Percent = 100*(N_Visits/nrow(Final_Visits))) %>% 
+  select(Drug, Name, N_Visits, Percent) %>% 
+  kbl(digits = 1) %>%
+  kable_styling()
+```
+
 ## Total bands
 
 ### Summary of total bands
@@ -381,20 +400,6 @@ par(mfrow=c(1,1))
 
 ### Summary of each drug
 
-@tbl-chop1_drug shows the number of times each drug is used. We can see that
-Drug 1 is used far more than other drugs.
-
-```{r}
-#| label: tbl-chop1_drug
-#| tbl-cap: Summary the number of times each drug is used
-
-Final_Visits %>% 
-  mutate(Drug = factor(Drug, levels = 1:3, labels = paste("Drug", 1:3))) %>% 
-  count(Drug) %>% 
-  mutate(Proportion = n/nrow(Final_Visits)) %>% 
-  kbl(digits = 3) %>%
-  kable_styling()
-```
 
 @fig-total_bands_rescaled_by_drugs shows the boxplot of 
 **Total bands (x100/ul)**, categorized by drugs, while @fig-total_bands_by_drugs 
