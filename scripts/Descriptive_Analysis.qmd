@@ -111,8 +111,7 @@ statistics for biomarkers.
 ```{r}
 #| label: tbl-patient-describe
 #| tbl-cap: !expr paste0("Patient-Level Descriptive Statistics by Variable ", 
-#|                       "(N = "
-#|                       nrow(Final_Patients), " Patients)"
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
 #| message: false
 #| results: asis
 
@@ -144,9 +143,9 @@ Final_Patients %>%
 
 
 ```{r}
-#| label: tbl-visit-descriptive-overall
-#| tbl-cap: !expr paste0("Visit-Level Descriptive Statistics by Variable for (N = ", 
-#|                       nrow(Final_Visits), "Visits)"
+#| label: tbl-visit-describe-cont
+#| tbl-cap: !expr paste0("Visit-Level Descriptive Statistics for Continuous ", 
+#|                       "Biomarker Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
 #| results: asis
 
