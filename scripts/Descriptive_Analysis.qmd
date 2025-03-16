@@ -122,8 +122,8 @@ CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
 
 Final_Patients %>% 
   select(Weight_kg, Surface_Area_m2, N_Visits) %>% 
-  pivot_longer(cols = c(Weight_kg, Surface_Area_m2), names_to = "Variable", 
-               values_to = "Value") %>% 
+  pivot_longer(cols = c(Weight_kg, Surface_Area_m2, N_Visits), 
+               names_to = "Variable", values_to = "Value") %>% 
   mutate(Variable = factor(Variable, levels = VNames)) %>% 
   # Aggregate to one row per variable.
   group_by(Variable) %>% 
@@ -151,17 +151,20 @@ Final_Patients %>%
 #| results: asis
 
 VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", 
-            "Total_Bands_Rescaled", "BN_Ratio", "log_Total_Bands",
-            "log_Total_Bands_Rescaled")
+            "Total_Bands_Rescaled", "BN_Ratio")
+VNamesUnits <- c("Total_WBC (x1000/ul)", 
+                 "Total_Neutrophil (x1000/ul)", 
+                 "Total_Bands (x1000/ul)", 
+                 "Total_Bands_Rescaled (x100/ul)", 
+                 "BN_Ratio")
 
 CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
 
 Final_Visits %>% 
   select(Total_WBC, Total_Neutrophil, Total_Bands, Total_Bands_Rescaled, 
-  BN_Ratio, log_Total_Bands, log_Total_Bands_Rescaled) %>% 
+         BN_Ratio) %>% 
   pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, 
-                        Total_Bands_Rescaled, BN_Ratio, log_Total_Bands,
-                        log_Total_Bands_Rescaled), 
+                        Total_Bands_Rescaled, BN_Ratio), 
                names_to = "Variable", values_to = "Value") %>% 
   mutate(Variable = factor(Variable, levels = VNames)) %>% 
   # Aggregate to one row per variable.
@@ -174,6 +177,8 @@ Final_Visits %>%
             Q50 = quantile(Value, probs = .50, na.rm = TRUE),
             Q75 = quantile(Value, probs = .75, na.rm = TRUE),
             Max = max(Value, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Variable = factor(Variable, levels = VNames, labels = VNamesUnits)) %>% 
   kable(., format = "html", digits = 1, 
         col.names = CNames, row.names = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
