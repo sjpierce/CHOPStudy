@@ -912,11 +912,10 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
   theme_minimal()
 ```
 
-### Additional values needed  
-#### Total white blood cells (WBC) 
+## Total white blood cells (WBC) 
 @tbl-total_WBC_by_visit provides the mean and standard deviation of 
 **Total WBC** for each visit time. From this data, we can observe that the mean 
-value of Total bands tends to decrease over time
+value of Total bands tends to decrease over time.
 
 ```{r}
 #| label: tbl-total_WBC_by_visit
@@ -932,7 +931,7 @@ Final_Visits %>%
 ```
 
 
-#### neutrophils (neuts)
+## Neutrophils (neuts)
 @tbl-total_neutrophil_by_visit provides the mean and standard deviation of 
 **Total neutrophil** for each visit time. 
 
@@ -950,7 +949,7 @@ Final_Visits %>%
   kable_styling() 
 ```
 
-### Bandemia grade  
+## Bandemia grade  
 
 ```{r}
 A=matrix(0,nrow = 6,ncol=4)
