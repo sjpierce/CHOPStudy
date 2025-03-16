@@ -186,6 +186,34 @@ Final_Visits %>%
   cat()
 ```
 
+```{r}
+#| label: tbl-visit-describe-cat
+#| tbl-cap: !expr paste0("Visit-Level Descriptive Statistics for Categorical ", 
+#|                       "Biomarker Variables (N = ", nrow(Final_Visits), " Visits)")
+#| message: false
+#| results: asis
+
+VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio")
+
+Final_Visits %>% 
+  select(Bands_Present, Bandemia, High_BN_Ratio) %>% 
+  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio), 
+               names_to = "Variable", values_to = "Value") %>% 
+  group_by(Variable, Value, .drop = FALSE) %>% 
+  summarise(N = n()) %>% 
+  mutate(Variable = factor(Variable, levels = VNames),
+         Value = factor(Value, levels=0:1, labels = c("No", "Yes")),
+         Percent = 100*(N/nrow(Final_Visits))) %>% 
+  arrange(Variable, desc(Value)) %>% 
+  mutate(Variable = factor(Variable, levels = VNames)) %>% 
+  kable(., format = "html", digits = 1, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) %>% 
+  collapse_rows(., columns = 1, valign = "top", 
+                row_group_label_position = "stack") %>% 
+  cat()
+```
+
 ## Total bands
 
 ### Summary of total bands
