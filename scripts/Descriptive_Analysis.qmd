@@ -881,19 +881,6 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
 
 ### Additional values needed  
 #### Total white blood cells (WBC) 
-
-@tbl-chop1_WBC_phase1 gives the mean and median value of the 
-**Total WBC (x1000/uL)**.  
-
-```{r}
-#| label: tbl-chop1_WBC_phase1
-#| tbl-cap: Summary of total WBC (x1000/uL)
-A=summary(Final_Visits$Total_WBC)
-round(as.matrix(A),4) %>%
-  kbl() %>%
-  kable_styling()
-```
-
 @tbl-total_WBC_by_visit provides the mean and standard deviation of 
 **Total WBC** for each visit time. From this data, we can observe that the mean 
 value of Total bands tends to decrease over time
@@ -913,19 +900,6 @@ Final_Visits %>%
 
 
 #### neutrophils (neuts)
-@tbl-chop1_neutrophils_phase1 gives the mean and median value of the 
-**Total neutrophils (x10e3/uL)**. 
-
-```{r}
-#| label: tbl-chop1_neutrophils_phase1
-#| tbl-cap: Summary of total neutrophils 
-
-A=summary(Final_Visits$Total_Neutrophil)
-round(as.matrix(A),4)%>%
-  kbl() %>%
-  kable_styling()
-```
-
 @tbl-total_neutrophil_by_visit provides the mean and standard deviation of 
 **Total neutrophil** for each visit time. 
 
