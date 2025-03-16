@@ -611,14 +611,28 @@ Final_Visits <- CHOP1_Start2W_Phase1_Drug123
 There are `r nrow(Final_Visits)` rows in `Final_Visits`. 
 
 ## Subset the Patient-Level Data
+We aggregate data from `Final_Visits` to count how many visits each dog has so  
+we can merge that into the final patient-level data.  
+
+```{r}
+#| label: create-Visit-Counts
+
+Visit_Counts <- Final_Visits %>% 
+  count(Patient) %>% 
+  rename(N_Visits = n)
+```
+
+There are `r nrow(Visit_Counts)` rows in `Visit_Counts`. 
+
 Now we trim the `All_Patients` data down to just the patients included in the 
-`Final_Visits` data frame. 
+`Final_Visits` data frame and merge it with `Visit_Counts`. 
 
 ```{r}
 #| label: create-Final-Patients
 
 Final_Patients <- All_Patients %>% 
-  filter(Patient %in% Final_Visits$Patient) 
+  filter(Patient %in% Final_Visits$Patient) %>% 
+  left_join(x = ., y = Visit_Counts, by = join_by(Patient))
 ```
 
 There are `r nrow(Final_Patients)` rows in `Final_Patients`. 
@@ -632,7 +646,8 @@ selection.
 #| tbl-cap: Amount of Data Available By Step in Case Selection
 
 bind_rows(Step0, Step1, Step2, Step3, Step4) %>% 
-  kable() %>% 
+  mutate(Mean_Obs_Per_Dog = N_Observations/N_Dogs) %>% 
+  kable(digits = 1) %>% 
   kable_styling()
 ```
 
