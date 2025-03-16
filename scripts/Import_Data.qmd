@@ -643,7 +643,7 @@ Final_Patients <- All_Patients %>%
 
 There are `r nrow(Final_Patients)` rows in `Final_Patients`. 
 
-## Summarize Amount of Data Remaining
+# Summarize Amount of Data Remaining
 Now @tbl-amt-data summarizes how much data there was at each step of record 
 selection. 
 
