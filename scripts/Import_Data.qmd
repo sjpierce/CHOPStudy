@@ -119,7 +119,9 @@ We also created log transformed versions of both `Total_Bands` and
 `Total_Bands_Rescaled` for use in graphing data. Because `log(0) = -Infinity`, 
 we recode the `-Infinity` values for `log_Total_Bands` to -5 and the `-Infinity` 
 values for `log_Total_Bands_Rescaled` to -3 so that we can make compact graphs 
-of the distributions. 
+of the distributions. Do not use those two variables for descriptive statistics 
+or models because they don't correctly represent the infinite values properly
+for other purposes. 
 
 ```{r}
 #| label: create-All-Visits
@@ -142,6 +144,7 @@ All_Visits <- Raw_Visits %>%
          Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
          Weeks = Days_Since_Start/7,
          Total_Bands_Rescaled = Total_Bands*10,
+         # Special recoded log variables for use only in graphs! 
          log_Total_Bands = if_else(Total_Bands == 0, 
                                    true = -5, 
                                    false = log(Total_Bands)),
