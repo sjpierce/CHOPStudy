@@ -105,8 +105,9 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 
 # Results {#sec-Results}
 @tbl-patient-describe shows patient-level descriptive statistics for weight 
-and surface area, while @tbl-visit-describe-cont shows visit-level descriptive 
-statistics for biomarkers. 
+surface area, and number of visits, while @tbl-visit-describe-cont and 
+@tbl-visit-describe-cat respectively show visit-level descriptive statistics 
+for continuous and catgegorical biomarker variables. 
 
 ```{r}
 #| label: tbl-patient-describe
