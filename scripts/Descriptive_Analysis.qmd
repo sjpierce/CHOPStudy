@@ -233,6 +233,22 @@ Final_Visits %>%
   kable_styling()
 ```
 
+@tbl-visit-freq shows the number of times each drug was used. 
+
+```{r}
+#| label: tbl-visit-freq
+#| tbl-cap: !expr paste0("Frequency Distribution for Visit Number (N = ", 
+#|                       nrow(Final_Visits), " Visits)")
+
+Final_Visits %>% 
+  count(Visit_Number) %>% 
+  rename(N_Obs = n) %>% 
+  mutate(Percent = 100*(N_Obs/nrow(Final_Visits))) %>% 
+  select(Visit_Number, N_Obs, Percent) %>% 
+  kbl(digits = 1) %>%
+  kable_styling()
+```
+
 ## Total bands
 
 ### Summary of total bands
