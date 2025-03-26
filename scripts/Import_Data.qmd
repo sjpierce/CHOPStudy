@@ -55,12 +55,6 @@ Medicine Clinic (VMC) between 2016 and 2022. This file does some data cleaning
 and management, then saves out revised data files that will be used for the 
 analyses in other scripts. 
 
-::: {.callout-note}
-The data file we received was called `Vinc Cases 1.9.23.xlsx`, but we renamed it 
-to `Vinc Cases 1.9.24.xlsx` before using it because that was the date we 
-received it. 
-:::
-
 # Setup
 
 This section documents some setup tasks that are useful to the statistician on 
@@ -102,7 +96,7 @@ here::i_am(path = "scripts/Import_Data.qmd")
 ```{r}
 #| label: import-data
 
-Raw_Visits <- read_xlsx(here("../Data/Vinc Cases 1.9.24.xlsx")) 
+Raw_Visits <- read_xlsx(here("scripts/extdata/Vinc_Cases_2025-03-26.xlsx")) 
 names(Raw_Visits)
 ```
 
@@ -127,19 +121,6 @@ for other purposes.
 #| label: create-All-Visits
 
 All_Visits <- Raw_Visits %>% 
-  rename(Patient = `Patient Number`,
-         Visit_Number = `Visit #`,
-         CHOP_Start_Date = `CHOP start date`,
-         Phase_of_Treatment = `Phase of treatment`,
-         CHOP_Number = `CHOP number`,
-         CBC_Date = `CBC date`,
-         Total_WBC = `Total WBC (x10.e3/uL)`,
-         Total_Neutrophil = `Total neutrophil`,
-         Total_Bands = `Total bands`, 
-         Bandemia_Grade = `Bandemia grade`,
-         Weight_kg = kg,
-         Surface_Area_m2 = `m^2`,
-         Notes = `...15`) %>% 
   mutate(Patient = factor(Patient),
          Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
          Weeks = Days_Since_Start/7,
@@ -189,15 +170,13 @@ tibble(Patients_N = All_Visits %>% select(Patient) %>% n_distinct(),
                        true = TRUE, false = FALSE))
 ```
 
-## Fix Negative Values for Weeks Since CHOP Started
+## Check for Negative Values of Weeks Since CHOP Started
 Here, we examine when a CBC lab sample was collected via the `Weeks` variable, 
 which measures how many weeks had elapsed between the start of the CHOP protocol 
 and collection of the CBC sample. This should always be a positive number, so 
 any negative values are implausible and should be corrected if possible. 
 
-@tbl-negative-weeks shows that there are two patients with `Weeks < 0`. The 
-`CBC_Date` values are clearly implausible. Therefore we will examine data for 
-those two patients more closely in @tbl-patient55 and @tbl-patient80. 
+@tbl-negative-weeks shows that there are no patients with `Weeks < 0`. 
 
 ```{r}
 #| label: tbl-negative-weeks
@@ -210,58 +189,12 @@ All_Visits %>%
   kable_styling()
 ```
 
-```{r}
-#| label: tbl-patient55
-#| tbl-cap: Visit Dates for Patient 55 (Before Corrections)
-
-All_Visits %>% 
-  filter(Patient == 55) %>%
-  select(Patient, CHOP_Number, Visit_Number, CHOP_Start_Date, CBC_Date, Weeks) %>% 
-  kable(digits = 2) %>%
-  kable_styling()
-```
-
-```{r}
-#| label: tbl-patient80
-#| tbl-cap: Visit Dates for Patient 80 (Before Corrections)
-
-All_Visits %>% 
-  filter(Patient == 80) %>%
-  select(Patient, CHOP_Number, Visit_Number, CHOP_Start_Date, CBC_Date, Weeks) %>% 
-  kable(digits = 2) %>%
-  kable_styling()
-```
-
-::: {.callout-caution}
-Both patients 55 (@tbl-patient55) and 80 (@tbl-patient80) each have one visit 
-with a clearly inaccurate date where the year was entered as 1930 instead of 
-2020. For both dates, correcting the year while leaving the month and day 
-portions of the date alone will correct the error and yield dates that make 
-sense given the sequence and temporal spacing of other visits for that patient. 
-:::
-
-Below we fix the `CBC_Date` and then re-calculate variables that depended on it. 
-
-```{r}
-#| label: fix-patient55_80
-All_Visits <- All_Visits %>% 
-  mutate(CBC_Date = case_when(Patient == 55 & CBC_Date == as.POSIXct("1930-08-03", tz = "UTC") 
-                              ~ as.POSIXct("2020-08-03", tz = "UTC"), 
-                              Patient == 80 & CBC_Date == as.POSIXct("1930-01-30", tz = "UTC") 
-                              ~ as.POSIXct("2020-01-30", tz = "UTC"),
-                              .default = CBC_Date),
-         # Re-compute variables that depend on CBC_Date. 
-         Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
-         Weeks = Days_Since_Start/7)
-```
-
-## Fix Extreme Positive Values for Weeks Since CHOP Started
-We've fixed negative values for `Weeks`, but still need to look for any other 
-outlier values that may be data quality problems. So, we look at a summary by
-visit number. We're looking for aggregate statistics that don't make sense and 
-could be caused by data entry errors in the `CBC_Date` variable. 
-@tbl-Visit-Timing1 shows descriptive statistics for the visit timing broken down 
-by visit number. 
+## Check for Extreme Positive Values of Weeks Since CHOP Started
+We still need to look for any other outlier values that may be data quality 
+problems. So, we look at a summary by visit number. We're looking for aggregate
+statistics that don't make sense and could be caused by data entry errors in the
+`CBC_Date` variable. @tbl-Visit-Timing1 shows descriptive statistics for the 
+visit timing broken down by visit number.
 
 ```{r}
 #| label: tbl-Visit-Timing1 
@@ -277,87 +210,10 @@ All_Visits %>%
   kable_styling()
 ```
 
-:::{.callout-caution}
-Note: The mean, SD, and maximum number of weeks since CHOP started are all 
-unexpectedly large at visit 3 and don't make sense given the expected timing of 
-events under the CHOP protocol. That implies a data problem we need to 
-investigate and fix. 
-:::
-
-@tbl-outlier-weeks shows the records for patient visits where `Weeks > 34`, 
-which was just a bit higher than the the maximum number of weeks seen at any 
-other visit number. We can see that Patient = 62 is a very clear outlier, with a 
-`CBC_Date` in the future. That's clearly a data entry error. So, now we inspect 
-data for `Patient = 62` more closely to determine if we can fix the anomalous 
-date. @tbl-patient62 shows all the records for that patient. 
-
-```{r}
-#| label: tbl-outlier-weeks
-#| tbl-cap: Visit 3 Records with Implausible Visit Timing (Weeks > 34)
-
-All_Visits %>% 
-  filter(Visit_Number == 3 & Weeks > 34) %>% 
-  select(Patient, MRN, Visit_Number, CHOP_Start_Date, CBC_Date, Weeks) %>% 
-  kable(digits = 2) %>% 
-  kable_styling()
-```
-
-```{r}
-#| label: tbl-patient62
-#| tbl-cap: Visit Dates for Patient 62 (Before Corrections)
-
-All_Visits %>% 
-  filter(Patient == 62) %>%
-  select(Patient, CHOP_Number, Visit_Number, CHOP_Start_Date, CBC_Date, Weeks) %>% 
-  kable(digits = 2) %>%
-  kable_styling()
-```
-
-::: {.callout-caution}
-It is clear that for `Patient = 62`, visit 3 should have occurred in the year
-2018 instead of 2028. We assume the month and day are accurate because after
-correcting the year, the `CBC_Date` for visit 3 would fall between those for
-visits 2 and 4. The sequence would then be sensible.
-:::
-
-Below we fix the `CBC_Date` and then re-calculate variables that depended on it. 
-
-```{r}
-#| label: fix-patient62
-All_Visits <- All_Visits %>% 
-  mutate(CBC_Date = if_else(Patient == 62 & CBC_Date == as.POSIXct("2028-05-25", 
-                                                                   tz = "UTC"), 
-                            true =  as.POSIXct("2018-05-25", tz = "UTC"), 
-                            false = CBC_Date),
-         # Re-compute variables that depend on CBC_Date. 
-         Days_Since_Start = as.numeric(CBC_Date - CHOP_Start_Date, units = "days"),
-         Weeks = Days_Since_Start/7)
-```
-
-## Recheck for Outlier Values for Weeks Since CHOP Started
-We've fixed negative values for Weeks, but still need to look for any other 
-outlier values that may be data quality problems. So, we look at a summary by
-visit number. We're looking for aggregate statistics that don't make sense and 
-could be caused by data entry errors in the `CBC_Date` variable. 
-@tbl-Visit-Timing2 shows descriptive statistics for the visit timing broken down 
-by visit number. 
-
-```{r}
-#| label: tbl-Visit-Timing2 
-#| tbl-cap: Updated Descriptive Statistics for Visit Timing (Weeks Since CHOP Started)
-
-All_Visits %>% 
-  group_by(Visit_Number) %>% 
-  summarise(mean_weeks = mean(Weeks, na.rm = TRUE),
-            sd_weeks = sd(Weeks, na.rm = TRUE),
-            min_weeks = min(Weeks, na.rm = TRUE),
-            max_weeks = max(Weeks, na.rm = TRUE)) %>% 
-  kable(digits = 2) %>% 
-  kable_styling()
-```
-
 :::{.callout-tip}
-Note: The descriptive statistics now look much more sensible. 
+Note: The mean, SD, and maximum number of weeks since CHOP started are all 
+reasonable and make sense given the expected timing of events under the CHOP 
+protocol. 
 :::
 
 @fig-visualize-weeks is a boxplot that visualizes the distribution of `Weeks` 
@@ -544,7 +400,7 @@ phase of treatment
 #| label: create-CHOP1-Start2W-Phase1
 
 CHOP1_Start2W_Phase1 <- CHOP1_Start2W %>% 
-  filter(Phase_of_Treatment == 1)
+  filter(Phase_of_Trt == 1)
 
 Step3 <- CHOP1_Start2W_Phase1 %>% 
   count(Patient) %>% 
@@ -563,8 +419,8 @@ happened there.
 #| tbl-cap: Records Dropped in Step 3 Subsetting
 
 CHOP1_Start2W %>% 
-  filter(Phase_of_Treatment != 1) %>% 
-  group_by(Patient, MRN, Phase_of_Treatment) %>% 
+  filter(Phase_of_Trt != 1) %>% 
+  group_by(Patient, MRN, Phase_of_Trt) %>% 
   summarise(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
