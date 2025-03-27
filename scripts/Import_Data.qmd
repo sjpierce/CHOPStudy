@@ -179,25 +179,6 @@ and collection of the CBC sample. This should always be a positive number, so
 any negative values are implausible and should be corrected if possible. Any 
 extreme positive values would also be a problem.
 
-@tbl-negative-weeks shows that there are no patients with `Weeks < 0`. 
-
-```{r}
-#| label: tbl-negative-weeks
-#| tbl-cap: Records with Implausible Visit Timing (Weeks < 0)
-
-All_Visits %>% 
-  filter(Weeks < 0) %>% 
-  select(Patient, MRN, Visit_Number, CHOP_Start_Date, CBC_Date, Weeks) %>% 
-  kable(digits = 2) %>% 
-  kable_styling()
-```
-
-## Check for Extreme Positive Values of Weeks Since CHOP Started
-We still need to look for any other outlier values that may be data quality 
-problems. So, we look at a summary by visit number. We're looking for aggregate
-statistics that don't make sense and could be caused by data entry errors in the
-`CBC_Date` variable. @tbl-Visit-Timing1 shows descriptive statistics for the 
-visit timing broken down by visit number.
 
 ```{r}
 #| label: tbl-Visit-Timing1 
@@ -214,9 +195,6 @@ All_Visits %>%
 ```
 
 :::{.callout-tip}
-Note: The mean, SD, and maximum number of weeks since CHOP started are all 
-reasonable and make sense given the expected timing of events under the CHOP 
-protocol. 
 :::
 
 @fig-visualize-weeks is a boxplot that visualizes the distribution of `Weeks` 
