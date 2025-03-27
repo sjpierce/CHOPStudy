@@ -114,7 +114,6 @@ for continuous and catgegorical biomarker variables.
 #| tbl-cap: !expr paste0("Descriptive Statistics for Patient-Level Variables ", 
 #|                       "(N = ", nrow(Final_Patients), " Patients)")
 #| message: false
-#| results: asis
 
 VNames <- c("Weight_kg", "Surface_Area_m2", "N_Visits")
 
@@ -138,8 +137,7 @@ Final_Patients %>%
   kable(., format = "html", digits = 2, 
         col.names = CNames, row.names = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
-                fixed_thead = T) %>% 
-  cat()
+                fixed_thead = T)
 ```
 
 
@@ -148,7 +146,6 @@ Final_Patients %>%
 #| tbl-cap: !expr paste0("Descriptive Statistics for Continuous Biomarker ", 
 #|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
-#| results: asis
 
 VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", 
             "Total_Bands_Rescaled", "BN_Ratio")
@@ -182,8 +179,7 @@ Final_Visits %>%
   kable(., format = "html", digits = 1, 
         col.names = CNames, row.names = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
-                fixed_thead = T) %>% 
-  cat()
+                fixed_thead = T) 
 ```
 
 ```{r}
@@ -191,7 +187,6 @@ Final_Visits %>%
 #| tbl-cap: !expr paste0("Descriptive Statistics for Categorical Biomarker ", 
 #|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
-#| results: asis
 
 VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio")
 
@@ -210,8 +205,7 @@ Final_Visits %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T) %>% 
   collapse_rows(., columns = 1, valign = "top", 
-                row_group_label_position = "stack") %>% 
-  cat()
+                row_group_label_position = "stack") 
 ```
 
 @tbl-drug-freq shows the number of times each drug was used. 
