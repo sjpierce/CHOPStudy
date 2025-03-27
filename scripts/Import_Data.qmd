@@ -179,6 +179,9 @@ and collection of the CBC sample. This should always be a positive number, so
 any negative values are implausible and should be corrected if possible. Any 
 extreme positive values would also be a problem.
 
+@tbl-Visit-Timing1 shows descriptive statistics for the visit timing broken down
+by visit number. We're looking for aggregate statistics that don't make sense
+and could be caused by data entry errors in the `CBC_Date` variable.
 
 ```{r}
 #| label: tbl-Visit-Timing1 
@@ -195,6 +198,9 @@ All_Visits %>%
 ```
 
 :::{.callout-tip}
+Note: The mean, SD, minimum and maximum number of weeks since CHOP started are
+all reasonable and make sense given the expected timing of events under the CHOP
+protocol.
 :::
 
 @fig-visualize-weeks is a boxplot that visualizes the distribution of `Weeks` 
