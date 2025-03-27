@@ -188,11 +188,11 @@ Final_Visits %>%
 #|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
 
-VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio")
+VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio", "Toxic_Change")
 
 Final_Visits %>% 
-  select(Bands_Present, Bandemia, High_BN_Ratio) %>% 
-  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio), 
+  select(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change) %>% 
+  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change), 
                names_to = "Variable", values_to = "Value") %>% 
   group_by(Variable, Value, .drop = FALSE) %>% 
   summarise(N = n()) %>% 
