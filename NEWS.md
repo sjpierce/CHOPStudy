@@ -1,6 +1,31 @@
 # CHOPStudy News
 
-## 0.5.0, 2025-03-07
+## 0.6.0, 2025-03-26
+* `scripts/Descriptive_Analysis.qmd` 
+    * Rename some chunks. 
+    * Update patient descriptive table to show number of visits.
+    * Remove obsolete tables. 
+    * Fix table captions.
+    * Improve narrative text. 
+    * Improve table structure and labeling. 
+    * Add frequency table of categorical biomarker variables.
+    * Update heading structure.
+    * Move and improve table for drug frequency distribution.
+    * Add frequency table for visit number.
+    * Simplify table code. 
+    * Add table of continuous biomarkers broken down by bandemia.
+    * Change table order and add another table.
+* `scripts/Import_Data.qmd`
+    * Improved narrative text and code comments.
+    * Add some binary variables. 
+    * Improved heading structure. 
+    * Updated data file being read in. This one has additional variables, plus 
+      it corrected a couple inaccurate CBC_Date values. Removed code no longer 
+      required because of that.
+    * Recoded toxic change variable. 
+    * Remove obsolete output.
+
+## 0.5.0, 2025-03-09
 * `scripts/Descriptive_Analysis.qmd` 
     * Load additional packages. 
     * Add patient and visit-level descriptive tables. 
