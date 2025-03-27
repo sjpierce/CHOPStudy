@@ -105,9 +105,7 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 
 # Results {#sec-Results}
 @tbl-patient-describe shows patient-level descriptive statistics for weight 
-surface area, and number of visits, while @tbl-visit-describe-cont and 
-@tbl-visit-describe-cat respectively show visit-level descriptive statistics 
-for continuous and catgegorical biomarker variables. 
+surface area, and number of visits, 
 
 ```{r}
 #| label: tbl-patient-describe
@@ -140,6 +138,82 @@ Final_Patients %>%
                 fixed_thead = T)
 ```
 
+@tbl-visit-describe-cat shows univariate frequency distributions for 
+cateogrical biomarker variables, while tbl-visit-bands-toxic shows the bivariate 
+crosstabulation of whether bands were present in the CBC sample and whether 
+toxic change was observed. 
+
+```{r}
+#| label: tbl-visit-describe-cat
+#| tbl-cap: !expr paste0("Descriptive Statistics for Categorical Biomarker ", 
+#|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
+#| message: false
+
+VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio", "Toxic_Change")
+
+Final_Visits %>% 
+  select(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change) %>% 
+  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change), 
+               names_to = "Variable", values_to = "Value") %>% 
+  group_by(Variable, Value, .drop = FALSE) %>% 
+  summarise(N = n()) %>% 
+  mutate(Variable = factor(Variable, levels = VNames),
+         Value = factor(Value, levels=0:1, labels = c("No", "Yes")),
+         Percent = 100*(N/nrow(Final_Visits))) %>% 
+  arrange(Variable, desc(Value)) %>% 
+  mutate(Variable = factor(Variable, levels = VNames)) %>% 
+  kable(., format = "html", digits = 1, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) %>% 
+  collapse_rows(., columns = 1, valign = "top", 
+                row_group_label_position = "stack") 
+```
+
+:::{.callout-caution}
+@tbl-visit-describe-cat shows that a very large portion of toxic change values 
+are missing. Why is that? Let's take a closer look with an additional analysis.
+:::
+
+```{r}
+#| label: tbl-visit-bands-toxic
+#| tbl-cap: !expr paste0("Crosstab of Bands Present by Toxic Change ", 
+#|                       "(N = ", nrow(Final_Visits), " Visits)")
+
+Final_Visits %>% 
+  mutate(Bands_Present = factor(Bands_Present, levels = 0:1, 
+                                labels = c("No", "Yes")),
+         Toxic_Change = factor(Toxic_Change, levels = 0:1, 
+                                labels = c("No", "Yes"))) %>% 
+  xtabs(~Toxic_Change + Bands_Present , addNA = TRUE, data = .) %>% 
+  addmargins() %>% 
+  as.data.frame() %>% 
+  pivot_wider(names_from = Bands_Present, values_from = Freq) %>% 
+  kable(., format = "html", digits = 1, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) %>% 
+  row_spec(row = 4, italic = TRUE) %>% 
+  column_spec(column = 4, italic = TRUE) %>% 
+  add_header_above(header = c(" ", "Bands_Present" = 2, " "))
+```
+
+:::{.callout-caution}
+@tbl-visit-bands-toxic shows that nearly all of the missing data in toxic change 
+is for CBC samples where there were no bands present. 
+
+* Is toxic change assessing a property of band cells such that it and can't be 
+  observed when there are none? Ask Caitlin & Alison for clarification!
+* If so, we may need to simply recode the missing toxic change values to No when 
+  there are no bands. 
+* Why are there a few missing toxic change values when there are bands present? 
+  This could be either a data entry omission or real missing data in the 
+  clinical records. Ask Caitlin & Alison for clarification!
+
+:::
+
+@tbl-visit-describe-cont shows visit-level descriptive statistics for continuous 
+biomarker variables, while @tbl-visit-describe-cont-by-Bandemia repeats the same 
+summary broken down by whether banedmia was absent versus present at the time of 
+the CBC sample. 
 
 ```{r}
 #| label: tbl-visit-describe-cont
@@ -181,36 +255,6 @@ Final_Visits %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T) 
 ```
-
-```{r}
-#| label: tbl-visit-describe-cat
-#| tbl-cap: !expr paste0("Descriptive Statistics for Categorical Biomarker ", 
-#|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
-#| message: false
-
-VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio", "Toxic_Change")
-
-Final_Visits %>% 
-  select(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change) %>% 
-  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change), 
-               names_to = "Variable", values_to = "Value") %>% 
-  group_by(Variable, Value, .drop = FALSE) %>% 
-  summarise(N = n()) %>% 
-  mutate(Variable = factor(Variable, levels = VNames),
-         Value = factor(Value, levels=0:1, labels = c("No", "Yes")),
-         Percent = 100*(N/nrow(Final_Visits))) %>% 
-  arrange(Variable, desc(Value)) %>% 
-  mutate(Variable = factor(Variable, levels = VNames)) %>% 
-  kable(., format = "html", digits = 1, row.names = FALSE) %>% 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
-                fixed_thead = T) %>% 
-  collapse_rows(., columns = 1, valign = "top", 
-                row_group_label_position = "stack") 
-```
-
-@tbl-visit-describe-cont-by-Bandemia shows the descriptive statistics for 
-continuous biomarker variables broeken down by whether banedmia was absent 
-versus present at the time of the CBC sample. 
 
 ```{r}
 #| label: tbl-visit-describe-cont-by-Bandemia
@@ -257,7 +301,8 @@ Final_Visits %>%
   collapse_rows(., columns = 1, valign = "top", row_group_label_position = "stack") 
 ```
 
-@tbl-drug-freq shows the number of times each drug was used. 
+@tbl-drug-freq shows the univariate frequency distribution for drug (i.e., the 
+number of times each drug was used). 
 
 ```{r}
 #| label: tbl-drug-freq
@@ -276,7 +321,7 @@ Final_Visits %>%
   kable_styling()
 ```
 
-@tbl-visit-freq shows the number of times each drug was used. 
+@tbl-visit-freq shows the univariate frequency distribution for visit number. 
 
 ```{r}
 #| label: tbl-visit-freq
