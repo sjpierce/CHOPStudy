@@ -172,11 +172,12 @@ tibble(Patients_N = All_Visits %>% select(Patient) %>% n_distinct(),
                        true = TRUE, false = FALSE))
 ```
 
-## Check for Negative Values of Weeks Since CHOP Started
+## Check Weeks Since CHOP Started
 Here, we examine when a CBC lab sample was collected via the `Weeks` variable, 
 which measures how many weeks had elapsed between the start of the CHOP protocol 
 and collection of the CBC sample. This should always be a positive number, so 
-any negative values are implausible and should be corrected if possible. 
+any negative values are implausible and should be corrected if possible. Any 
+extreme positive values would also be a problem.
 
 @tbl-negative-weeks shows that there are no patients with `Weeks < 0`. 
 
