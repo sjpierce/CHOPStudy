@@ -208,6 +208,55 @@ Final_Visits %>%
                 row_group_label_position = "stack") 
 ```
 
+@tbl-visit-describe-cont-by-Bandemia shows the descriptive statistics for 
+continuous biomarker variables broeken down by whether banedmia was absent 
+versus present at the time of the CBC sample. 
+
+```{r}
+#| label: tbl-visit-describe-cont-by-Bandemia
+#| tbl-cap: !expr paste0("Descriptive Statistics for Continuous Biomarker ", 
+#|                       "Variables by Bandemia (N = ", nrow(Final_Visits), 
+#|                       " Visits)")
+#| message: false
+
+VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", 
+            "Total_Bands_Rescaled", "BN_Ratio")
+VNamesUnits <- c("Total_WBC (x1000/ul)", 
+                 "Total_Neutrophil (x1000/ul)", 
+                 "Total_Bands (x1000/ul)", 
+                 "Total_Bands_Rescaled (x100/ul)", 
+                 "BN_Ratio")
+
+CNames <- c("Bandemia", "Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", 
+            "Q75", "Max")
+
+Final_Visits %>% 
+  select(Bandemia, Total_WBC, Total_Neutrophil, Total_Bands, 
+         Total_Bands_Rescaled, BN_Ratio) %>% 
+  pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, 
+                        Total_Bands_Rescaled, BN_Ratio), 
+               names_to = "Variable", values_to = "Value") %>% 
+  mutate(Variable = factor(Variable, levels = VNames)) %>% 
+  # Aggregate to one row per variable.
+  group_by(Bandemia, Variable) %>% 
+  summarise(N = sum(!is.na(Value)), 
+            Mean = mean(Value, na.rm = TRUE),
+            SD = sd(Value, na.rm = TRUE),
+            Min = min(Value, na.rm = TRUE),
+            Q25 = quantile(Value, probs = .25, na.rm = TRUE),
+            Q50 = quantile(Value, probs = .50, na.rm = TRUE),
+            Q75 = quantile(Value, probs = .75, na.rm = TRUE),
+            Max = max(Value, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Bandemia = factor(Bandemia, levels = 0:1, labels = c("No", "Yes")),
+         Variable = factor(Variable, levels = VNames, labels = VNamesUnits)) %>% 
+  kable(., format = "html", digits = 1, 
+        col.names = CNames, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) %>% 
+  collapse_rows(., columns = 1, valign = "top", row_group_label_position = "stack") 
+```
+
 @tbl-drug-freq shows the number of times each drug was used. 
 
 ```{r}
