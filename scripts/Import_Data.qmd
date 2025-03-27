@@ -135,6 +135,8 @@ All_Visits <- Raw_Visits %>%
          # Binary transformations of Total_Bands. 
          Bands_Present = if_else(Total_Bands > 0, true = 1, false = 0),
          Bandemia = if_else(Total_Bands >= 0.2, true = 1, false = 0),
+         # Recode Toxic_Change
+         Toxic_Change = if_else(Toxic_Change == "yes", true = 1, false = 0),
          # Band:Neutrophil ratio transformations. 
          BN_Ratio = Total_Bands/Total_Neutrophil,
          High_BN_Ratio = if_else(BN_Ratio >= 1, true = 1, false = 0)) %>% 
