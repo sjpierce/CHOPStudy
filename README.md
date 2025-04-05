@@ -16,10 +16,10 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 status](https://www.r-pkg.org/badges/version/CHOPStudy.png)](https://CRAN.R-project.org/package=CHOPStudy)
 <!-- badges: end -->
 
-This package is a research compendium for a study examining the
-incidence of bandemia in canine patients undergoing chemotherapy
-treatment. The research team is led by Dr. Alison Masyr (PI) at Michigan
-State University.
+This package (Pierce, 2025) is a research compendium for a study
+examining the incidence of bandemia in canine patients undergoing
+chemotherapy treatment. The research team is led by Dr. Alison Masyr
+(PI) at Michigan State University.
 
 ## Assumptions
 
@@ -52,9 +52,9 @@ committed and pushed to the main branch of the remote *CHOPStudy*
 repository on GitHub. See Bryan (2018) for a short introduction to why
 this is good practice.
 
-We assume you are using the most recent stable release versions of the
-software packages discussed below and also frequently updating your
-installed R packages.
+Unless otherwise directed below, we assume you are using the most recent
+stable release versions of the software packages discussed below and
+also frequently updating your installed R packages.
 
 ## Installation
 
@@ -84,7 +84,7 @@ repository is stored on GitHub. You will need to be able to use Git and
 GitHub to synchronize changes between your local copy of the repository
 and GitHub.
 
-### Install R 4.4.2 or later.
+### Install R 4.4.3 or later.
 
 You can get the most recent version of R from the [Comprehensive R
 Archive Network (CRAN)](https://cran.r-project.org/).
@@ -112,7 +112,7 @@ below.
 
 We rely on [Quarto](https://quarto.org) (Allaire et al., 2025) scripts
 to enhance reproducibility because they provide excellent support for
-generating dynamic reports (Mair, 2016). Install Quarto version 1.7.13
+generating dynamic reports (Mair, 2016). Install Quarto version 1.7.21
 or later. Although RStudio bundles a version of Quarto, we want the most
 recent stable release instead. Quarto also includes a copy of
 [Pandoc](https://pandoc.org/).
@@ -355,7 +355,7 @@ check()
 install()
 ```
 
-## Understanding the Repository Structure and Contents
+## Repository Structure and Contents
 
 The structure for the package is shown in the outline below, where
 folder names and file names are `highlighted like this` and comments are
@@ -388,6 +388,7 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     meta-data files, `.qmd` scripts, and files used by the scripts.
     - `extdata/`: This subfolder is where you will need to put any raw
       data files mentioned in the Obtaining Data Files section below.
+      - `Vinc_Cases_2025-03-26.xlsx`: This is the current raw data set.
     - `output/`: This subfolder holds rendered output files
     - `.gitignore`: This was auto-created by Quarto. Don’t edit or
       delete it.
@@ -399,6 +400,8 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `_quarto.yml`: This is a Quarto metadata file containing
       project-level YAML code that will be inherited by Quarto scripts
       in this folder or its subfolders.  
+    - `Analyze_Data.qmd`: This script runs logistic regression models to
+      be used in the manuscript.
     - `apa.csl`: This is a citation style language file for the
       Publication Manual of the American Psychological Association, 7th
       ed. It is used by Quarto to format reference sections.
@@ -409,6 +412,8 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `Delete_nul_file.bat`: This is a Windows batch file that automates
       removing a nuisance file sometimes left over when rendering a
       Quarto or R Markdown script doesn’t work right.
+    - `Descriptive_Analysis.qmd`: This file runs some descriptive
+      analyses we plant o use in our manuscript.
     - `Development_Tools.R`: This contains some examples of R commands I
       use interactively when working on the package.
     - `Example_Render_to_HTML.qmd`: This is just an example script that
@@ -417,6 +422,7 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `Example_Render_to_PDF.qmd`: This is just an example script that
       you can copy to start a new script that will produce a PDF output
       file.
+    - `Import_Data.qmd`: This scrip imports the raw data
     - `references.bib`: This is a BibTeX file containing the citation
       data for references mentioned in various scripts. Quarto uses it
       to get the data needed to insert reference lists.
@@ -497,9 +503,9 @@ files, you will need to put them all in the `scripts/extdata` subfolder
 of your local repository.
 
 Members of our research team should not distribute the data files to
-other parties outside the research team without Dr. Cunningham’s
-approval. They should not put them on servers not controlled or approved
-for use by MSU without her approval either.
+other parties outside the research team without Dr. Masyr’s approval.
+They should not put them on servers not controlled or approved for use
+by MSU without her approval either.
 
 The PI will decide later whether to add the data to the repository or
 archive them separately for reproducibility purposes.
@@ -549,7 +555,7 @@ entry-spacing="0" line-spacing="2">
 <div id="ref-Allaire-RN8427" class="csl-entry">
 
 Allaire, J. J., Dervieux, C., Scheidegger, C., Teague, C., & Xie, Y.
-(2025). *Quarto* (Version 1.7.13) \[Computer Program\]. Posit Software,
+(2025). *Quarto* (Version 1.7.21) \[Computer Program\]. Posit Software,
 PBC. <https://quarto.org>
 
 </div>
@@ -607,7 +613,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.3.0) \[Computer Program, R package, Private
+study* (Version 0.7.0) \[Computer Program, R package, Private
 Repository\]. GitHub. <https://github.com/sjpierce/CHOPStudy>
 
 </div>
@@ -623,7 +629,7 @@ Software, PBC. <https://posit.co>
 <div id="ref-Torvalds-RN3929" class="csl-entry">
 
 Torvalds, L., Hamano, J. C., & other contributors to the Git Project.
-(2025). *Git for Windows* (Version 2.48.1(1)) \[Computer Program\].
+(2025). *Git for Windows* (Version 2.49.0(1)) \[Computer Program\].
 Software Freedom Conservancy. <https://git-scm.com>
 
 </div>

@@ -33,9 +33,9 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/CHOPStudy)](https://CRAN.R-project.org/package=CHOPStudy)
 <!-- badges: end -->
 
-This package is a research compendium for a study examining the incidence of 
-bandemia in canine patients undergoing chemotherapy treatment. The research team 
-is led by Dr. Alison Masyr (PI) at Michigan State University. 
+This package [@Pierce-RN8714] is a research compendium for a study examining the
+incidence of bandemia in canine patients undergoing chemotherapy treatment. The
+research team is led by Dr. Alison Masyr (PI) at Michigan State University.
 
 ## Assumptions
 We eventually expect two different types of users of this package: collaborators
@@ -63,8 +63,9 @@ Changes made to files in a local copy of the repository should be committed
 and pushed to the main branch of the remote *CHOPStudy* repository on GitHub. 
 See @Bryan-RN3900 for a short introduction to why this is good practice. 
 
-We assume you are using the most recent stable release versions of the software
-packages discussed below and also frequently updating your installed R packages.
+Unless otherwise directed below, we assume you are using the most recent stable 
+release versions of the software packages discussed below and also frequently 
+updating your installed R packages.
 
 ## Installation
 This package is only available from a *private* repository available on the 
@@ -89,7 +90,7 @@ necessary because the main branch of the package repository is stored on GitHub.
 You will need to be able to use Git and GitHub to synchronize changes between 
 your local copy of the repository and GitHub. 
 
-### Install R 4.4.2 or later. 
+### Install R 4.4.3 or later. 
 You can get the most recent version of R from the 
 [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/). 
 
@@ -110,7 +111,7 @@ built-in support for using some of the other software discussed below.
 ### Install Quarto
 We rely on [Quarto](https://quarto.org) [@Allaire-RN8427] scripts to enhance 
 reproducibility because they provide excellent support for generating dynamic 
-reports [@Mair-RN3387]. Install Quarto version 1.7.13 or later. Although 
+reports [@Mair-RN3387]. Install Quarto version 1.7.21 or later. Although 
 RStudio bundles a version of Quarto, we want the most recent stable release 
 instead. Quarto also includes a copy of [Pandoc](https://pandoc.org/).
 
@@ -350,7 +351,7 @@ check()
 install()
 ```
 
-## Understanding the Repository Structure and Contents
+## Repository Structure and Contents
 The structure for the package is shown in the outline below, where folder names 
 and file names are `highlighted like this` and comments are in normal text.
 The folder structure is largely determined by the conventions governing the 
@@ -381,6 +382,7 @@ an
       meta-data files, `.qmd` scripts, and files used by the scripts. 
         * `extdata/`: This subfolder is where you will need to put any raw data
           files mentioned in the Obtaining Data Files section below.
+            * `Vinc_Cases_2025-03-26.xlsx`: This is the current raw data set. 
         * `output/`: This subfolder holds rendered output files 
         * `.gitignore`: This was auto-created by Quarto. Don't edit or delete 
           it. 
@@ -392,6 +394,8 @@ an
         * `_quarto.yml`: This is a Quarto metadata file containing project-level 
           YAML code that will be inherited by Quarto scripts in this folder or 
           its subfolders.  
+        * `Analyze_Data.qmd`: This script runs logistic regression models to be 
+          used in the manuscript. 
         * `apa.csl`: This is a citation style language file for the Publication 
           Manual of the American Psychological Association, 7th ed. It is used 
           by Quarto to format reference sections. 
@@ -402,12 +406,15 @@ an
         * `Delete_nul_file.bat`: This is a Windows batch file that automates 
           removing a nuisance file sometimes left over when rendering a Quarto 
           or R Markdown script doesn't work right. 
+        * `Descriptive_Analysis.qmd`: This file runs some descriptive analyses 
+          we plant o use in our manuscript. 
         * `Development_Tools.R`: This contains some examples of R commands I use 
           interactively when working on the package. 
         * `Example_Render_to_HTML.qmd`: This is just an example script that you 
           can copy to start a new script that will produce an HTML output file. 
         * `Example_Render_to_PDF.qmd`: This is just an example script that you 
           can copy to start a new script that will produce a PDF output file. 
+        * `Import_Data.qmd`: This scrip imports the raw data 
         * `references.bib`: This is a BibTeX file containing the citation data 
           for references mentioned in various scripts. Quarto uses it to get the 
           data needed to insert reference lists. 
@@ -480,7 +487,7 @@ can find the data files on CSTAT's secure network drive at
 need to put them all in the `scripts/extdata` subfolder of your local repository.
 
 Members of our research team should not distribute the data files to other
-parties outside the research team without Dr. Cunningham's approval. They should 
+parties outside the research team without Dr. Masyr's approval. They should 
 not put them on servers not controlled or approved for use by MSU without her 
 approval either. 
 
