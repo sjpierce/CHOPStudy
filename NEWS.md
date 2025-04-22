@@ -1,5 +1,18 @@
 # CHOPStudy News
 
+## 0.7.0, 2025-04-21
+* `DESCRIPTION`
+    * Updated Depends field to require newer version of R. 
+* `README.qmd` and `README.md`
+    * Improved narrative text. 
+    * Updated software version info & references. 
+* `scripts/Example_Script.Rmd` 
+    * Deleted file because this project uses Quarto instead of R Markdown. 
+* `scripts/Import_Data.qmd`
+    * Read a newer data file. 
+* `scripts/references.bib`
+    * Updated software version info & references. 
+
 ## 0.6.0, 2025-03-26
 * `scripts/Descriptive_Analysis.qmd` 
     * Rename some chunks. 
