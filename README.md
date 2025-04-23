@@ -168,8 +168,7 @@ You may also want to read GitHub documentation about managing PATs
 
 Visit https://github.com/settings/tokens to create a PAT that has the
 `gist`, `repo`, `user`, and `workflow` scopes. Once you have it, you’ll
-need to store it in two places so your computer can find your PAT
-automatically.
+need to store it so your computer can find your PAT automatically.
 
 #### Store your GitHub PAT in the Git Credential Manager
 
@@ -189,7 +188,7 @@ install.packages("credentials")
 Then, run the following function call.
 
 ``` r
-credentials::git_credential_ask("https://gitlab.msu.edu")
+credentials::git_credential_ask("https://github.com")
 ```
 
 If this prompts you for username and password, use the PAT as the
@@ -198,7 +197,7 @@ your PAT, run the code below then enter your GitHub username and use
 your PAT as the password.
 
 ``` r
-credentials::git_credential_update("https://gitlab.msu.edu")
+credentials::git_credential_update("https://github.com")
 ```
 
 ### Install *devtools* Package
