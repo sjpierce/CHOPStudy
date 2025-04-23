@@ -1,5 +1,12 @@
 # CHOPStudy News
 
+## 0.8.0, 2025-04-23
+* `README.qmd` and `README.md`
+    * Improved narrative text. 
+    * Updated software version info & references. 
+* `scripts/references.bib`
+    * Updated software version info & references. 
+    
 ## 0.7.0, 2025-04-21
 * `DESCRIPTION`
     * Updated Depends field to require newer version of R. 
