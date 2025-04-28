@@ -38,7 +38,7 @@ execute:
   echo: fenced
   output: true
   message: true
-  warning: false
+  warning: true
   error: true
   include: true
 knitr:
