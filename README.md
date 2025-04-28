@@ -113,7 +113,7 @@ below.
 
 We rely on [Quarto](https://quarto.org) (Allaire et al., 2025) scripts
 to enhance reproducibility because they provide excellent support for
-generating dynamic reports (Mair, 2016). Install Quarto version 1.7.28
+generating dynamic reports (Mair, 2016). Install Quarto version 1.7.29
 or later. Although RStudio bundles a version of Quarto, we want the most
 recent stable release instead. Quarto also includes a copy of
 [Pandoc](https://pandoc.org/).
@@ -555,7 +555,7 @@ entry-spacing="0" line-spacing="2">
 <div id="ref-Allaire-RN8427" class="csl-entry">
 
 Allaire, J. J., Dervieux, C., Scheidegger, C., Teague, C., & Xie, Y.
-(2025). *Quarto* (Version 1.7.28) \[Computer Program\]. Posit Software,
+(2025). *Quarto* (Version 1.7.29) \[Computer Program\]. Posit Software,
 PBC. <https://quarto.org>
 
 </div>
@@ -613,8 +613,9 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.7.0) \[Computer Program, R package, Private
-Repository\]. GitHub. <https://github.com/sjpierce/CHOPStudy>
+study* (Version 0.8.0) \[Reproducible Research Materials, Computer
+Program, R package, Private Repository\]. GitHub.
+<https://github.com/sjpierce/CHOPStudy>
 
 </div>
 
