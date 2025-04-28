@@ -48,11 +48,11 @@ knitr:
 
 # Purpose
 
-This file imports raw data provided by Alison Masyr and Caitlin Eliason that 
-contains observations of dogs receiving CHOP chemotherapy at MSU Veterinary 
-Medicine Clinic (VMC) between 2016 and 2022. This file does some data cleaning 
-and management, then saves out revised data files that will be used for the 
-analyses in other scripts. 
+This file is part of a research compendium [@Pierce-RN8714]. It imports raw 
+data provided by Alison Masyr and Caitlin Eliason that contains observations of
+dogs receiving CHOP chemotherapy at MSU Veterinary Medicine Clinic (VMC) between
+2016 and 2022. This file does some data cleaning and management, then saves out
+revised data files that will be used for the analyses in other scripts.
 
 # Setup
 
