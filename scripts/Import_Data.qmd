@@ -46,8 +46,6 @@ knitr:
     message: true
 ---
 
-\FloatBarrier
-
 # Purpose
 
 This file imports raw data provided by Alison Masyr and Caitlin Eliason that 

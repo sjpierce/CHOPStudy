@@ -45,8 +45,6 @@ knitr:
     message: true 
 ---
 
-\FloatBarrier
-
 # Purpose
 
 This file provides some descriptive analyses of data provided by Alison Masyr 
