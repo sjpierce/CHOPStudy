@@ -71,14 +71,16 @@ Load R packages that we need to get additional functions.
 
 ```{r}
 #| label: load-packages
+library(devtools)     # for session_info()
 library(here)       # for here(), i_am()
 library(dplyr)      # for filter(), group_by(), mutate(), rename(), summarise()
 library(tidyr)      # for pivot_longer()
 library(ggplot2)    # for ggplot()
 library(knitr)      # for kable()
 library(kableExtra) # for kable_styling 
-library(gtsummary)  # for 
+library(gtsummary)  # for ?
 library(readxl)     # for read_xlsx()
+library(piercer)    # for git_report()
 library(quarto)     # for quarto_version()
 library(CHOPStudy)  # for version info 
 ```
