@@ -1,5 +1,8 @@
 ---
 title: "Render CHOPStudy Scripts"
+subtitle: | 
+          | CSTAT Case: C1358
+          | Client: Masyr, Alison
 author: 
   - name: Steven J. Pierce
     orcid: 0000-0002-0679-3019
