@@ -12,119 +12,35 @@ author:
 params: 
   SourceDir: "scripts/" 
   SourceFile: "Render_Scripts.qmd" 
-  LogFile: "Render_Scripts.pdf"
-execute-dir: file
+  LogFile: "Render_Scripts.html"
+date: now
+date-modified: last-modified
+date-format: YYYY-MM-DD HH:mm:ss z
 format: 
-  pdf:
-    output-file: "Render_Scripts.pdf"
-    output-ext: "pdf"
-    documntclass: scrartcl
-    papersize: letter
-    geometry: 
-      - top=1in
-      - bottom=1in
-      - left=1in
-      - right=1in
+  html:
+    output-file: "Render_Scripts.html"
     toc: true
-    toc-depth: 3
+    toc-depth: 4
+    toc-location: left
     number-sections: true
     number-depth: 3
-    colorlinks: true
-    template-partials: 
-      - title.tex
-    include-in-header: 
-      - file: compact-title.tex
-      - text: | 
-          \usepackage{fancyhdr}
-          \usepackage[noblocks]{authblk}
-          \renewcommand*{\Authsep}{, }
-          \renewcommand*{\Authand}{, }
-          \renewcommand*{\Authands}{, }
-          \renewcommand\Affilfont{\small}
-          \usepackage[yyyymmdd,hhmmss]{datetime}
-          \usepackage{lastpage}         %% For pageref command
-          \usepackage{fontspec}
-          \defaultfontfeatures{Ligatures=TeX}
-          \usepackage[font={small}, margin=1cm, skip=2pt]{caption}
-          \usepackage{url}
-          \usepackage{floatrow}         %% Enable controlling float placement
-          \floatsetup[table]{capposition=top} % Caption table top.
-          \floatsetup[longtable]{margins=centering} % Longtable tables centered.
-          \floatplacement{figure}{!ht}
-          \floatplacement{table}{!ht}
-          \usepackage{verbatim}         %% For the comment command
-          \usepackage{placeins}         %% For FloatBarrier command
-          \usepackage{booktabs}         %% Used by kableExtra
-          \usepackage{longtable}        %% Used by kableExtra
-          \usepackage{array}            %% Used by kableExtra
-          \usepackage{multirow}         %% Used by kableExtra
-          \usepackage{wrapfig}          %% Used by kableExtra
-          \usepackage{float}            %% Used by kableExtra
-          \usepackage{colortbl}         %% Used by kableExtra
-          \usepackage{pdflscape}        %% Used by kableExtra
-          \usepackage{tabu}             %% Used by kableExtra
-          \usepackage[normalem]{ulem}   %% Used by kableExtra
-          \usepackage{makecell}         %% Used by kableExtra
-          \usepackage{xcolor}           %% Used by kableExtra
-          \usepackage{threeparttable}   %% Used by kableExtra
-          \usepackage{threeparttablex}  %% Used by kableExtra
-          \usepackage[labelfont=bf, textfont=bf]{caption}  %% For bolded table/figure captions
-          \usepackage{dcolumn}
-          \usepackage{titling}
-          \pretitle{\begin{center}\LARGE\bfseries}
-          \posttitle{\end{center}}
-          \pagestyle{fancy}
-          \lhead{Render TEACHPilot Scripts}
-          \rhead{\today\ \currenttime}
-          \cfoot{ }
-          \fancyfoot[R]{\thepage\ of \pageref*{LastPage}}
-          \renewcommand{\headrulewidth}{0.4pt}
-          \renewcommand{\footrulewidth}{0.4pt}
-          \fancypagestyle{plain}{\pagestyle{fancy}}
-execute: 
-  eval: true 
-  echo: fenced 
-  output: true 
-  message: true 
-  warning: true 
-  error: true 
-  include: true 
+    code-fold: true
+    code-tools: true
+    code-line-numbers: false
+    embed-resources: true 
+    anchor-sections: true
+execute:
+  eval: true
+  echo: fenced
+  output: true
+  message: true
+  warning: false
+  error: true
+  include: true
 knitr:
   opts_chunk: 
     message: true
-    cfsize: "scriptsize"
 ---
-
-\begin{comment}
-# Hidden: Notes for User
-This script makes use of the LaTeX `verbatim` package's `\comment` command to
-build in hidden headings and text that are here for the team preparing the
-report but will be omitted from the knitted PDF output file. This makes it
-easier to put important comments directly in the file while still creating fully
-formatted output that only shows the desired content. Text inside a comment
-block will be omitted from the PDF output.
-
-We can also use code chunks with chunk options such as `#| include: false`, 
-`#| echo: false`, `#| message: false`, `#| warning: false` and so on to 
-precisely control what R output shows up in the final PDF file. Thus, a script 
-file can both serve as process documentation and efficiently generate the final 
-version of a report output by applying the reproducible research and literate
-programming concepts and tools. 
-
-The `\lfoot` command just below sets the left footer to match the script's 
-`LofgFile` parameter value, which we can pass along when rendering the script. 
-Ideally it would be in the YAML `include-in-header:` with other pieces, but
-I can't get inline code to work if I do it that way. This is the only way I 
-could get the filename-based footer to work. 
-
-The LaTeX `placeins` package provides the `\FloatBarrier` command. Using that 
-before section headings help keep the figures and tables in their respective 
-sections. 
-\end{comment}
-
-\lfoot{\texttt{\small \detokenize{`r params$LogFile`}}} 
-
-\FloatBarrier
 
 # Purpose
 This Quarto script is a convenient way to render various scripts in a sensible 
@@ -132,13 +48,9 @@ order and with useful parameter values. It can be used interactively to render
 selected scripts, or you can just render this entire file to automate rendering 
 all the scripts shown below. 
 
-\FloatBarrier
-
 # Assumptions
 All the assumptions built into the various scripts being rendered must be 
 satisfied.
-
-\FloatBarrier
 
 # Setup
 This section contains chunks that you must run before trying to use the code 
@@ -146,26 +58,7 @@ chunks below it to interactively render a specific script.
 
 Global R chunk options are defined in the YAML header but local chunk options 
 will over-ride global options. We can temporarily disable an individual chunk by 
-inserting `#| eval: false` on a line at the top of the chunk. The method for
-creating a `cfsize` option that controls font size in code chunks and their text
-output is based on an answer to a question posted on
-[stackoverflow.com](https://stackoverflow.com/a/46526740).
-
-``` {r}
-#| label: global-options
-#| message: true
-
-# Create a custom chunk hook/option for controlling font size in chunk & output.
-def.chunk.hook  <- knitr::knit_hooks$get("chunk")
-knitr::knit_hooks$set(chunk = function(x, options) {
-  x <- def.chunk.hook(x, options)
-  ifelse(options$cfsize != "normalsize", 
-         paste0("\n \\", options$cfsize,"\n\n", x, "\n\n \\normalsize"), 
-         x)
-  })
-```
-
-\FloatBarrier
+inserting `#| eval: false` on a line at the top of the chunk. 
 
 ## Declare Path
 This next chunk declares the path to this script relative to the project-level 
@@ -180,8 +73,6 @@ as expected.
 here::i_am(path = paste0(params$SourceDir, params$SourceFile))
 ```
 
-\FloatBarrier
-
 ## Load Packages & Set Package Options
 Next we load R packages required for this script to work. 
 
@@ -193,7 +84,7 @@ library(here)         # for here()
 library(rmarkdown)    # for pandoc_version()
 library(quarto)       # for quarto_render(), quarto_version()
 library(CHOPStudy)    # for package version information
-library(piercer)      # for all_classes(), git_report(), which_latex()
+library(piercer)      # for all_classes(), git_report()
 # Packages loaded below here were used in other scripts rendered below. Loading 
 # them here just makes the Software Information section output from this script 
 # more complete. 
@@ -203,11 +94,9 @@ library(tidyverse)    # loads dplyr, ggplot2, lubridate, stringr, tidyr all at o
 library(knitr)        # for kable()
 options(kableExtra.latex.load_packages = FALSE)
 library(kableExtra)   # for kable_styling(), add_header_above(), column_spec(),collapse_rows()
-library(haven)        # for ymd(), mdy() and %within% operator.
+library(readxl)       # for read_xlsx()
 library(labelled)     # for set_value_labels(), set_variable_labels(), etc.
 ```
-
-\FloatBarrier
 
 # Import Data
 
@@ -227,22 +116,15 @@ quarto_render(input = here("scripts/Import_Data.qmd"),
               output_format = "html",
               output_file = OutFile, 
               execute_params = list(
-                    SourceDir = params$SourceDir, 
                     SourceFile = "Import_Data.qmd", 
                     LogFile = OutFile),
               execute_dir = here::here("scripts/"),
               as_job = "auto")
 
-# Now copy it to the desired path and delete the original file
-move_file(from = OutFile, 
-          to = "output/", overwrite = TRUE) 
-
 # End chunk timer
 chunk.end <- proc.time()
 chunk.end - chunk.start
 ```
-
-\FloatBarrier
 
 # Analyze Data
 
@@ -262,15 +144,10 @@ quarto_render(input = here("scripts/Analyze_Data.qmd"),
               output_format = "html",
               output_file = OutFile, 
               execute_params = list(
-                    SourceDir = params$SourceDir, 
                     SourceFile = "Analyze_Data.qmd", 
                     LogFile = OutFile),
               execute_dir = here::here("scripts/"),
               as_job = "auto")
-
-# Now copy it to the desired path and delete the original file
-move_file(from = OutFile, 
-          to = "output/", overwrite = TRUE) 
 
 # End chunk timer
 chunk.end <- proc.time()
@@ -278,26 +155,24 @@ chunk.end - chunk.start
 ```
 
 # Software Information
-We used [R](https://www.r-project.org/) as our main computing environment and 
-[Quarto](https://quarto.org/) scripts to enhance reproducibility. We used 
-[RStudio](www.rstudio.org) as the editor to interface with R and Quarto. 
+This section documents information that is important for reproducibility. Most
+users will not need to read it. It is primarily here for use by the statistician
+on the team.
 
-- Software chains: 
-    - **qmd file > RStudio > Quarto > R > knitr > md file > Pandoc > html file**.
-    - **qmd file > RStudio > Quarto > R > knitr > md file > Pandoc > tex file > TinyTeX > PDF file**.
-- Source file: `r params$SourceFile`
-- Output file: `r params$LogFile` 
+We used [R](https://www.r-project.org/) as our main computing environment and
+[Quarto](https://quarto.org/) scripts to enhance reproducibility. We used
+[RStudio](www.rstudio.org) as the editor to interface with R and Quarto.
+
+- Software chain:
+  **qmd file > RStudio > Quarto > R > knitr > md file > Pandoc > HTML file**.
+- Source file: **`r params$SourceFile`**
+- Output file: **`r params$LogFile`**
 - [Quarto `r quarto_version()`](https://quarto.org/) runs `*.qmd` files through 
   [R](https://www.r-project.org/) and [knitr](https://yihui.org/knitr/) to 
   produce `*.md` markdown files.
 - [Pandoc `r rmarkdown::pandoc_version()`](https://pandoc.org) converts markdown 
   files (`*.md`) to other formats, including LaTeX (`*.tex`) and HTML (`*.html`) 
   among others.
-- [TinyTeX](https://yihui.org/tinytex/) compiles LaTeX files (`*.tex`) into PDF 
-  files. It should be viable to use [MiKTeX](https://miktex.org) or another 
-  LaTeX distribution instead. 
-
-\FloatBarrier
 
 ## Versions
 This document was generated using the following computational environment and 
@@ -305,24 +180,17 @@ dependencies:
 
 ``` {r}
 #| label: show-version
-#| cfsize: scriptsize
 #| echo: true
-
-# Check and report whether we used TinyTex or other LaTeX software. 
-which_latex()
 
 # Get R and R package version numbers in use.
 devtools::session_info()
 ```
-
-\FloatBarrier
 
 ## Git Details
 The current Git commit details and status are:
 
 ``` {r}
 #| label: git-details
-#| cfsize: scriptsize
 #| echo: true
 
 git_report()
