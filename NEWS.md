@@ -1,5 +1,24 @@
 # CHOPStudy News
 
+## 0.9.0, 2025-04-28
+* `README.qmd` and `README.md`
+    * Updated software version info & references. 
+* `scripts/Descriptive_Analysis.qmd` 
+    * Added default output file name.
+    * Enabled global chunk option for warnings.
+    * Removed FloatBarrier commands (only need those for PDF output).
+* `scripts/Import_Data.qmd`
+    * Added default output file name.
+    * Enabled global chunk option for warnings.
+    * Removed FloatBarrier commands (only need those for PDF output).
+    * Improved narrative text.
+    * Update load-packages chunk. 
+* `scripts/Render_scripts.qmd`
+    * Add a subtitle.
+    * Convert from PDF to html output.
+* `scripts/references.bib`
+    * Updated software version info & references. 
+
 ## 0.8.0, 2025-04-23
 * `README.qmd` and `README.md`
     * Improved narrative text. 
