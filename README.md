@@ -386,15 +386,15 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
       creating package level help files. Do not edit it manually.
   - `scripts/` The folder is configured as a Quarto project. It holds
     meta-data files, `.qmd` scripts, and files used by the scripts.
-    - `extdata/`: This subfolder is where you will need to put any raw
-      data files mentioned in the Obtaining Data Files section below.
-      - `Vinc_Cases_2025-03-26.xlsx`: This is the current raw data set.
-    - `output/`: This subfolder holds rendered output files
-    - `.gitignore`: This was auto-created by Quarto. Don’t edit or
-      delete it.
     - `.quarto/`: This hidden folder may be created by Quarto to hold
       temporary files. Do not edit or delete any of these files unless
       you know what you are doing! This folder is not tracked by Git.
+    - `extdata/`: This subfolder is where you will need to put any raw
+      data files mentioned in the Obtaining Data Files section below.
+      - `Vinc_Cases_2025-03-26.xlsx`: This is the current raw data set.
+    - `output/`: This subfolder holds rendered output files.
+    - `.gitignore`: This was auto-created by Quarto. Don’t edit or
+      delete it.
     - `_brand.yml`: This file specifies color, font, and logo settings
       for using an MSU/CSTAT branding scheme for HTML output.
     - `_quarto.yml`: This is a Quarto metadata file containing
@@ -408,12 +408,12 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `compact-title.tex`: This LaTeX file can be called from an .qmd
       file’s YAML header via the in_header option. It just formats the
       title of the rendered PDF file so it uses less vertical white
-      space. It is used by multiple other scripts.
+      space. It may be used by other scripts.
     - `Delete_nul_file.bat`: This is a Windows batch file that automates
       removing a nuisance file sometimes left over when rendering a
       Quarto or R Markdown script doesn’t work right.
     - `Descriptive_Analysis.qmd`: This file runs some descriptive
-      analyses we plant o use in our manuscript.
+      analyses we plant to use in our manuscript.
     - `Development_Tools.R`: This contains some examples of R commands I
       use interactively when working on the package.
     - `Example_Render_to_HTML.qmd`: This is just an example script that
@@ -422,7 +422,9 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `Example_Render_to_PDF.qmd`: This is just an example script that
       you can copy to start a new script that will produce a PDF output
       file.
-    - `Import_Data.qmd`: This scrip imports the raw data
+    - `Import_Data.qmd`: This script imports the raw data from Excel,
+      prepares it for use, and saves an R data file that will be used by
+      other scripts.
     - `references.bib`: This is a BibTeX file containing the citation
       data for references mentioned in various scripts. Quarto uses it
       to get the data needed to insert reference lists.
@@ -438,7 +440,7 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
       of how to rapidly do various parts of turning a new repository
       into an R package. It’s only really used once.
     - `title.tex`: This LaTeX file enables better handling of author
-      affiliations in PDF outputs. It is used by multiple other scripts.
+      affiliations in PDF outputs. It may be used by other scripts.
   - `.gitignore`: This file tells Git what files to ignore and omit from
     synchronizing with the main repository on GitHub.
   - `.Rbuildignore`: This file tells R what files to ignore when
