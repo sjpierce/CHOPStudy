@@ -445,13 +445,13 @@ par(mfrow=c(1,1))
 @fig-chop1_phase1_total_bands_log above becomes Figure 1 in the manuscript. 
 :::
 
-@tbl-Numbers_of_zero_and_proportion shows the frequency distribution for Total 
-Bands, which highlights the large proportion of zero values. The table also 
-shows the rescaled Total Bands values used in count models, and log transformed
-values for both original and recscaled Total Bands values. 
+@tbl-freq-Total-Bands shows the frequency distribution for Total Bands, which 
+highlights the large proportion of zero values. The table also shows the 
+rescaled Total Bands values used in count models, and log transformed values for 
+both original and recscaled Total Bands values. 
 
 ```{r}
-#| label: tbl-Numbers_of_zero_and_proportion
+#| label: tbl-freq-Total-Bands
 #| tbl-cap: "Frequency Distribution of Total Bands"
 
 Final_Visits %>% 
