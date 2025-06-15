@@ -76,6 +76,7 @@ Load R packages that we need to get additional functions.
 library(devtools)     # for session_info()
 library(here)       # for here(), i_am()
 library(dplyr)      # for filter(), group_by(), mutate(), rename(), summarise()
+library(forcats)    # for fct_recode()
 library(tidyr)      # for pivot_longer()
 library(ggplot2)    # for ggplot()
 library(knitr)      # for kable()
@@ -795,6 +796,7 @@ Final_Visits %>%
 
 ```{r}
 #| label: drug
+
 drug1 <- Final_Visits %>% filter(Drug==1)
 drug2 <- Final_Visits %>% filter(Drug==2)
 drug3 <- Final_Visits %>% filter(Drug==3)
@@ -1055,25 +1057,33 @@ Final_Visits %>%
   kable_styling() 
 ```
 
-## Bandemia grade  
+## Bandemia Grade  
 
 ```{r}
-A=matrix(0,nrow = 6,ncol=4)
-colnames(A)=c("Bandemia grade","Value according to MSUVDL reference range (k/uL)","Numbers","Proportion")
-A[,1]=c(0:5)
-A[,2]=c("0.0-0.10","0.11-0.29","0.30-0.59","0.60-1.00",">1.00","death")
-A[,3]=c(sum(Final_Visits$Total_Bands_Rescaled<=1),
-        sum(Final_Visits$Total_Bands_Rescaled>1&Final_Visits$Total_Bands_Rescaled<3),
-        sum(Final_Visits$Total_Bands_Rescaled>=3&Final_Visits$Total_Bands_Rescaled<6),
-        sum(Final_Visits$Total_Bands_Rescaled>=6&Final_Visits$Total_Bands_Rescaled<=10),
-        sum(Final_Visits$Total_Bands_Rescaled>10),0)
-A=as.data.frame(A)
-A$Numbers=as.numeric(A$Numbers)
-A[,4]=A[,3]/609
-A %>% 
-  kable(digits = 3) %>%
-  kable_styling()
+#| label: tbl-Bandemia-Grade
+#| tbl-cap: Frequency Distribution of Bandemia Grade
+#| warning: false
+
+Final_Visits %>% 
+  mutate(Bandemia_Grade = factor(Bandemia_Grade, levels = 0:5)) %>% 
+  group_by(Bandemia_Grade, .drop = FALSE) %>% 
+  summarize(Min = min(Total_Bands),
+            Max = max(Total_Bands),
+            N = n(),
+            Proportion = N/nrow(Final_Visits)) %>% 
+  ungroup() %>% 
+  mutate(MSUVDL_Range = fct_recode(Bandemia_Grade, "0.00-0.10" = "0", 
+                                   "0.11-0.29" = "1", "0.30-0.59" = "2", 
+                                   "0.60-0.99" = "3", ">= 1.00" = "4", 
+                                   "death" = "5" )) %>% 
+  select(Bandemia_Grade, MSUVDL_Range, Min, Max, N, Proportion) %>% 
+  kable(digits = 3, col.names = c("Bandemia Grade", 
+                                  "MSUVDL Reference Range (k/ul)", "Min", "Max",
+                                  "N", "Proportion")) %>%
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "Observed Total_Bands (k/ul)" = 2, " " = 2))
 ```
+
 
 # References
 ::: {#refs}
