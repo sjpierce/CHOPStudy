@@ -14,6 +14,8 @@ author:
     email: shiruxin@msu.edu
     affiliations: 
       - name: Michigan State University, Center for Statistical Training and Consulting
+bibliography: references.bib
+csl: apa.csl
 params:
   SourceFile: "Descriptive_Analysis.qmd"
   LogFile: "Descriptive_Analysis.html"
@@ -1079,6 +1081,10 @@ A %>%
   kable(digits = 3) %>%
   kable_styling()
 ```
+
+# References
+::: {#refs}
+:::
 
 # Software Information
 This section documents information that is important for reproducibility. Most
