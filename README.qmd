@@ -35,7 +35,7 @@ knitr::opts_chunk$set(
 
 This package [@Pierce-RN8714] is a research compendium for a study examining the
 incidence of bandemia in canine patients undergoing chemotherapy treatment. The
-research team is led by Dr. Alison Masyr (PI) at Michigan State University. 
+research team is led by Dr. Alison Masyr (PI) at Michigan State University.  
 
 ## Assumptions
 We eventually expect two different types of users of this package: collaborators
