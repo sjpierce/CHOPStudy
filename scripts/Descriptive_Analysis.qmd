@@ -195,7 +195,7 @@ Final_Visits %>%
   kable(., format = "html", digits = 1, row.names = FALSE) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T) %>% 
-  row_spec(row = 4, italic = TRUE) %>% 
+  row_spec(row = 3, italic = TRUE) %>% 
   column_spec(column = 4, italic = TRUE) %>% 
   add_header_above(header = c(" ", "Bands_Present" = 2, " "))
 ```
