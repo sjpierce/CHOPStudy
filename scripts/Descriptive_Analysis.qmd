@@ -173,10 +173,10 @@ Final_Visits %>%
                 row_group_label_position = "stack") 
 ```
 
-:::{.callout-caution}
-@tbl-visit-describe-cat shows that a very large portion of toxic change values 
-are missing. Why is that? Let's take a closer look with an additional analysis.
-:::
+@tbl-visit-bands-toxic shows the crosstabulation of whether bands were present 
+and whether toxic change was observed in the CBC sample in the visit-level data. 
+This was initially used to investigate missing data issues that we have 
+subsequently fixed. 
 
 ```{r}
 #| label: tbl-visit-bands-toxic
@@ -200,18 +200,11 @@ Final_Visits %>%
   add_header_above(header = c(" ", "Bands_Present" = 2, " "))
 ```
 
-:::{.callout-caution}
-@tbl-visit-bands-toxic shows that nearly all of the missing data in toxic change 
-is for CBC samples where there were no bands present. 
-
-* Is toxic change assessing a property of band cells such that it and can't be 
-  observed when there are none? Ask Caitlin & Alison for clarification!
-* If so, we may need to simply recode the missing toxic change values to No when 
-  there are no bands. 
-* Why are there a few missing toxic change values when there are bands present? 
-  This could be either a data entry omission or real missing data in the 
-  clinical records. Ask Caitlin & Alison for clarification!
-
+:::{.callout-tip}
+@tbl-visit-bands-toxic shows that all of the instances of toxic change are for 
+CBC samples where bands were present. Per Dr. Masyr, toxic change is a 
+description given to mature neutrophils, not bands (though both can be 
+simultaneously present). 
 :::
 
 @tbl-visit-describe-cont shows visit-level descriptive statistics for continuous 
