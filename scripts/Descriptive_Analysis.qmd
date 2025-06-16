@@ -24,7 +24,7 @@ date-modified: last-modified
 date-format: YYYY-MM-DD HH:mm:ss z
 format: 
   html:
-    output-file: "Descriptive_Analysis_Draft.qmd"
+    output-file: "Descriptive_Analysis_Draft.html"
     toc: true
     toc-depth: 4
     toc-location: left
