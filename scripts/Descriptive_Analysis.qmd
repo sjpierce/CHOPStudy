@@ -110,7 +110,9 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 
 # Results {#sec-Results}
 @tbl-patient-describe shows patient-level descriptive statistics for weight 
-surface area, and number of visits, 
+surface area, and number of visits, while @tbl-patient-Leukemic gives the 
+univariate frequency distribution for leukemic status, which was a 
+time-invariant patient-level characteristic within the CHOP cycle.
 
 ```{r}
 #| label: tbl-patient-describe
@@ -139,6 +141,21 @@ Final_Patients %>%
             Max = max(Value, na.rm = TRUE)) %>% 
   kable(., format = "html", digits = 2, 
         col.names = CNames, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Leukemic
+#| tbl-cap: !expr paste0("Frequency Distribution for Patient-Level Leukemic ", 
+#|                       " Status (N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Leukemic, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T)
 ```
