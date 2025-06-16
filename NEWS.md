@@ -1,5 +1,25 @@
 # CHOPStudy News
 
+## 0.10.0, 2025-06-15
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Update repository contents section.
+* `scripts/Descriptive_Analysis.qmd` 
+    * Add references section.
+    * Improved marrative text and chunk labels. 
+    * Fixed a table that was broken by solving missing data. 
+    * Fixed a warning about using outdated code for histograms.
+    * Fix Bandemia Grade table.
+    * Add table for leukemic status.
+* `scripts/Import_Data.qmd`
+    * Read an updated data file that fixed some missing data issues, clarified 
+      that Leukemia and steroid variabkles are time-invariant within a CHOP 
+      cycle, standardarized steroid names, and confirmed some date corrections.
+    * Add references section.
+    * Add Leukemic to FInal_Patients data. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+
 ## 0.9.0, 2025-04-28
 * `README.qmd` and `README.md`
     * Updated software version info & references. 
