@@ -475,6 +475,19 @@ Visit_Counts <- Final_Visits %>%
 
 There are `r nrow(Visit_Counts)` rows in `Visit_Counts`. 
 
+Next, we need to merge in a patient-level version of `Leukemic` because that 
+should be time-invariant within a CHOP cycle.
+
+```{r}
+#| label: create-Leukemic
+
+Leukemic <- Final_Visits %>% 
+  select(Patient, Leukemic) %>% 
+  unique() 
+```
+
+There are `r nrow(Leukemic)` rows in `Leuklemic`. 
+
 Now we trim the `All_Patients` data down to just the patients included in the 
 `Final_Visits` data frame and merge it with `Visit_Counts`. 
 
@@ -483,7 +496,8 @@ Now we trim the `All_Patients` data down to just the patients included in the
 
 Final_Patients <- All_Patients %>% 
   filter(Patient %in% Final_Visits$Patient) %>% 
-  left_join(x = ., y = Visit_Counts, by = join_by(Patient))
+  left_join(x = ., y = Visit_Counts, by = join_by(Patient)) %>% 
+  left_join(x = ., y = Leukemic, by = join_by(Patient))
 ```
 
 There are `r nrow(Final_Patients)` rows in `Final_Patients`. 
