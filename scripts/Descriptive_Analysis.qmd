@@ -174,10 +174,8 @@ Final_Patients %>%
                 fixed_thead = T)
 ```
 
-@tbl-visit-describe-cat shows univariate frequency distributions for 
-cateogrical biomarker variables, while tbl-visit-bands-toxic shows the bivariate 
-crosstabulation of whether bands were present in the CBC sample and whether 
-toxic change was observed. 
+@tbl-visit-describe-cat shows univariate frequency distributions for cateogrical
+biomarker variables.
 
 ```{r}
 #| label: tbl-visit-describe-cat
@@ -647,7 +645,7 @@ Final_Visits %>%
 #### Total
 
 @tbl-total_bands_by_visit provides the mean and standard deviation of 
-**Total bands** for each visit time. From this data, we can observe that the 
+**Total Bands** for each visit time. From this data, we can observe that the 
 mean value of Total bands tends to decrease over time.
 
 ```{r}
