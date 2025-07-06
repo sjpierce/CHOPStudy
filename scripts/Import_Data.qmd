@@ -110,6 +110,9 @@ file_details(RawFile) %>%
   kable_styling()
 ```
 
+Below we read in the data file and then list the names of all variables in that 
+file. 
+
 ```{r}
 #| label: import-data
 
@@ -119,7 +122,7 @@ names(Raw_Visits)
 
 # Data Management {#sec-Data-Mgt}
 The first task is just renaming variables. After that, we also need to convert 
-some to factors and compute some additional variables. 
+some variables to factors and compute some additional variables. 
 
 The units of measurement for `Total_Bands` are 1000/ul and some are not integers 
 (they have non-zero digits to the right of the decimal place). Therefore, we 
@@ -133,6 +136,9 @@ values for `log_Total_Bands_Rescaled` to -3 so that we can make compact graphs
 of the distributions. Do not use those two variables for descriptive statistics 
 or models because they don't correctly represent the infinite values properly
 for other purposes. 
+
+The code below does the data management, then lists the names of variables 
+again. 
 
 ```{r}
 #| label: create-All-Visits
@@ -172,12 +178,12 @@ to source data file if we don't do that.
 :::
 
 ## Check Patient and MRN Variables
-I assumed that that `Patient` and `MRN` variables were created such that these 
-two variables have a one-to-one correspondence. Each `Patient` value should 
-always be paired with the same `MRN` value and vice versa. If that is true, 
-then the number of unique combinations will be the same as the number of unique 
-values for each variable separately and then it doesn't matter which of those 
-two variables we use to identify a given dog. 
+I assumed that `Patient` and `MRN` variables were created such that these two
+variables have a one-to-one correspondence. Each `Patient` value should always
+be paired with the same `MRN` value and vice versa. If that is true, then the
+number of unique combinations will be the same as the number of unique values
+for each variable separately and then it doesn't matter which of those two
+variables we use to identify a given dog.
 
 ```{r}
 #| label: check-Patient-MRN
@@ -188,6 +194,12 @@ tibble(Patients_N = All_Visits %>% select(Patient) %>% n_distinct(),
        Match = if_else(Patients_N == MRNs_N & Patients_N == Combinations_N, 
                        true = TRUE, false = FALSE))
 ```
+
+::: {.callout-tip}
+If `Match = TRUE` in the result immediately above, that confirms `Patient` and 
+`MRN` variables are both unique identifiers for a dog and have a one-to-one 
+correspondence. 
+:::
 
 ## Check Weeks Since CHOP Started
 Here, we examine when a CBC lab sample was collected via the `Weeks` variable, 
@@ -249,6 +261,11 @@ tibble(All_Visits_N = nrow(All_Visits),
        Matching_N = All_Visits_N == Unique_Visits_N)
 ```
 
+::: {.callout-tip}
+If `Matching_N = TRUE` in the result immediately above, that confirms the 
+uniqueness of each visit record. 
+:::
+
 ## Create Patient-Level Dataset
 The `All_Visits` dataset has multiple rows per patient because the CHOP protocol 
 involves multiple visits, each of which is recorded as a separate visit number. 
@@ -276,6 +293,11 @@ tibble(All_MRNs_N = All_Visits %>% select(MRN) %>% n_distinct(),
        All_Patients_N = nrow(All_Patients),
        Matching_N = All_MRNs_N == All_Patients_N)
 ```
+
+::: {.callout-tip}
+If `Matching_N = TRUE` in the result immediately above, that confirms number of 
+rows in `All_Patients` is equal to the number of unique MRNs in `All_Visits`. 
+:::
 
 ## Create More Variables
 After reading peer review feedback on a manuscript that got rejected, the team 
