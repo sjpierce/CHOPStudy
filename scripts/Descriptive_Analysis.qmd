@@ -102,6 +102,20 @@ here::i_am(path = "scripts/Descriptive_Analysis.qmd")
 Render the `scripts/Import_Data.qmd` file to create the data file loaded below. 
 :::
 
+@tbl-imported-data-file shows meta-data about the data file we will load.
+
+```{r}
+#| label: tbl-imported-data-file
+#| tbl-cap: "Meta-Data About the Imported Data File Loaded"
+
+DataFile <- here("data/Imported_CHOP_Data.RData")
+
+file_details(DataFile) %>% 
+  kable(, format = "html", 
+        col.names = c("File Name", "Size", "Last Modified")) %>% 
+  kable_styling() 
+```
+
 ```{r}
 #| label: load-data
 
