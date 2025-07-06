@@ -84,7 +84,7 @@ repository is stored on GitHub. You will need to be able to use Git and
 GitHub to synchronize changes between your local copy of the repository
 and GitHub.
 
-### Install R 4.5.0 or later.
+### Install R 4.5.1 or later.
 
 You can get the most recent version of R (R Development Core Team, 2025)
 from the [Comprehensive R Archive Network
@@ -104,7 +104,7 @@ package to work.
 
 Install [RStudio
 Desktop](https://posit.co/products/open-source/rstudio/) version
-2025.05.0+496 (or later). We recommend using RStudio to interact with
+2025.05.1+513 (or later). We recommend using RStudio to interact with
 the files for this package. RStudio is both a good interface to R and
 has built-in support for using some of the other software discussed
 below.
@@ -113,7 +113,7 @@ below.
 
 We rely on [Quarto](https://quarto.org) (Allaire et al., 2025) scripts
 to enhance reproducibility because they provide excellent support for
-generating dynamic reports (Mair, 2016). Install Quarto version 1.7.31
+generating dynamic reports (Mair, 2016). Install Quarto version 1.7.32
 or later. Although RStudio bundles a version of Quarto, we want the most
 recent stable release instead. Quarto also includes a copy of
 [Pandoc](https://pandoc.org/).
@@ -557,7 +557,7 @@ entry-spacing="0" line-spacing="2">
 <div id="ref-Allaire-RN8427" class="csl-entry">
 
 Allaire, J. J., Dervieux, C., Scheidegger, C., Teague, C., & Xie, Y.
-(2025). *Quarto* (Version 1.7.31) \[Computer Program\]. Posit Software,
+(2025). *Quarto* (Version 1.7.32) \[Computer Program\]. Posit Software,
 PBC. <https://quarto.org>
 
 </div>
@@ -615,7 +615,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.10.0) \[Reproducible Research Materials, Computer
+study* (Version 0.11.0) \[Reproducible Research Materials, Computer
 Program, R package, Private Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 
@@ -624,7 +624,7 @@ Program, R package, Private Repository\]. GitHub.
 <div id="ref-R-Devel-Core-RN8182" class="csl-entry">
 
 R Development Core Team. (2025). *R: A language and environment for
-statistical computing* (Version 4.5.0) \[Computer Program\]. R
+statistical computing* (Version 4.5.1) \[Computer Program\]. R
 Foundation for Statistical Computing. http://www.R-project.org.
 
 </div>
@@ -640,7 +640,7 @@ Software, PBC. <https://posit.co>
 <div id="ref-Torvalds-RN3929" class="csl-entry">
 
 Torvalds, L., Hamano, J. C., & other contributors to the Git Project.
-(2025). *Git for Windows* (Version 2.49.0(1)) \[Computer Program\].
+(2025). *Git for Windows* (Version 2.50.0(2)) \[Computer Program\].
 Software Freedom Conservancy. <https://git-scm.com>
 
 </div>
