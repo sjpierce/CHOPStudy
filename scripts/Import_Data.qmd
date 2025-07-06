@@ -80,7 +80,7 @@ library(here)       # for here(), i_am()
 library(knitr)      # for kable()
 library(kableExtra) # for kable_styling 
 library(readxl)     # for read_xlsx()
-library(piercer)    # for git_report()
+library(piercer)    # for file_details(), git_report()
 library(quarto)     # for quarto_version()
 library(CHOPStudy)  # for version info 
 ```
@@ -95,10 +95,25 @@ here::i_am(path = "scripts/Import_Data.qmd")
 
 ## Read Data {#sec-Read-Data}
 
+@tbl-raw-data-file shows meta-data about the raw data file we will import.
+
+```{r}
+#| label: tbl-raw-data-file
+#| tbl-cap: "Meta-Data About Raw Data File"
+
+# Store path to raw data file. 
+RawFile <- here("scripts/extdata/Vinc_Cases_2025-05-20.xlsx")
+
+file_details(RawFile) %>% 
+  kable(, format = "html", 
+        col.names = c("File Name", "Size", "Last Modified")) %>% 
+  kable_styling()
+```
+
 ```{r}
 #| label: import-data
 
-Raw_Visits <- read_xlsx(here("scripts/extdata/Vinc_Cases_2025-05-20.xlsx")) 
+Raw_Visits <- read_xlsx(RawFile) 
 names(Raw_Visits)
 ```
 
@@ -550,8 +565,21 @@ save_what <- c("Raw_Visits", "All_Visits", "All_Patients", "Final_Visits",
 #| label: save-data
 #| execute: true
 
-save(list = save_what, 
-     file=here("data/Imported_CHOP_Data.RData"))
+DataFile <- here("data/Imported_CHOP_Data.RData")
+
+save(list = save_what, file = DataFile)
+```
+
+@tbl-imported-data-file shows meta-data about the data file we just saved.
+
+```{r}
+#| label: tbl-imported-data-file
+#| tbl-cap: "Meta-Data About the Imported Data File Saved Out"
+
+file_details(DataFile) %>% 
+  kable(, format = "html", 
+        col.names = c("File Name", "Size", "Last Modified")) %>% 
+  kable_styling() 
 ```
 
 ::: {.callout-tip}
