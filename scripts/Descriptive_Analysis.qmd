@@ -1114,7 +1114,7 @@ Final_Visits %>%
   add_header_above(header = c(" " = 2, "Observed Total_Bands (k/ul)" = 2, " " = 2))
 ```
 
-## Visit Sequences
+## Drug Sequences
 @tbl-visit-patterns shows the frequency of occurrence for each unique sequence 
 of drug use observed. Each row represents a group of dogs who got the same
 sequence of drugs across the 10 visits of interest. Ideally, the most common
@@ -1128,7 +1128,7 @@ other drug was administered.
 
 ```{r}
 #| label: tbl-visit-patterns
-#| tbl-cap: !expr paste0("Frequency Distribution of Patterns of Drug Sequence ", 
+#| tbl-cap: !expr paste0("Frequency Distribution of Drug Sequence ", 
 #|                       "(N = ", length(unique(Final_Visits$Patient)), 
 #|                       " Patients)")
 #| warning: false
@@ -1147,11 +1147,11 @@ Final_Visits %>%
   mutate(N_Visits = sum(!is.na(c_across(V1:V10)))) %>% 
   ungroup() %>% 
   arrange(desc(N_Dogs), desc(N_Visits)) %>% 
-  rowid_to_column(var = "Sequence") %>% 
-  relocate(Sequence, N_Dogs, N_Visits) %>% 
+  rowid_to_column(var = "SequenceID") %>% 
+  relocate(SequenceID, N_Dogs, N_Visits) %>% 
   kable() %>%
   kable_styling() %>% 
-  add_header_above(header = c(" " = 2, "Sequence Description (Drug by Visit Number)" = 11))
+  add_header_above(header = c(" " = 3, "Drug Sequence (Drug Used by Visit Number)" = 10))
 ```
 
 # References
