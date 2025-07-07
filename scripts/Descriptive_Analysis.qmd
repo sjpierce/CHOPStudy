@@ -532,7 +532,6 @@ par(mfrow=c(1,1))
 
 ### Summary of each drug
 
-
 @fig-total_bands_rescaled_by_drugs shows the boxplot of 
 **Total bands (x100/ul)**, categorized by drugs, while @fig-total_bands_by_drugs 
 shows the boxplot of **Total bands (x1000/ul)**, categorized by drugs.
@@ -621,24 +620,55 @@ boxplot(Final_Visits$log_Total_Bands_Rescaled[Final_Visits$log_Total_Bands_Resca
 
 ```
 
-@tbl-total_bands_by_drugs_zero shows the number and proportion of instances 
-where total bands equal 0 for each drug used.
+@tbl-drug-Band-Category and @fig-drug-Band-Category show the number and percent 
+of CBCs by band neutrophil category for each drug used. 
 
 ```{r}
-#| label: tbl-total_bands_by_drugs_zero
-#| tbl-cap: Number and proportion of instances where total bands equal 0 for each drug used.
+#| label: tbl-drug-Band-Category
+#| tbl-cap: Band Category Frequency by Drug
 
-Final_Visits %>% 
-  mutate(Name = factor(Drug, levels = 1:3, labels = DrugNames),
-         Zero_Bands = Total_Bands == 0) %>% 
-  group_by(Drug, Name) %>% 
-  summarize(n = n(),
-            Zero_Bands_N = sum(Zero_Bands),
-            Zero_Bands_Proportion = mean(Zero_Bands)) %>% 
-  kable(digits = 3, 
-        col.names = c("Drug", "Name", "Total N", "N", "Proportion")) %>% 
-  kable_styling() %>% 
-  add_header_above(header = c(" " = 3, "Total Bands = 0" = 2))
+Drug1_N <- Final_Visits %>% filter(Drug == 1) %>% nrow()
+Drug2_N <- Final_Visits %>% filter(Drug == 2) %>% nrow()
+Drug3_N <- Final_Visits %>% filter(Drug == 3) %>% nrow()
+
+Drug_Band_Category <- Final_Visits %>% 
+  xtabs(~Band_Category + Drug, data = .) %>% 
+  addmargins(margin = 1) %>% 
+  as.data.frame() %>% 
+  rename(N = Freq) %>% 
+  mutate(Name = factor(Drug, labels = DrugNames), 
+         Percent = case_when(Drug == 1 ~ 100*N/Drug1_N,
+                             Drug == 2 ~ 100*N/Drug2_N,
+                             Drug == 3 ~ 100*N/Drug3_N)) %>% 
+  relocate(Drug, Name, Band_Category) 
+
+Drug_Band_Category %>% 
+  kable(digits = 1, 
+        col.names = c("Drug", "Name", "Band Category", "N", "Percent")) %>% 
+  kable_styling() 
+```
+
+```{r}
+#| label: fig-drug-Band-Category
+#| fig-cap: Band Category Distribution by Prior Drug Administered
+#| fig-width: 7
+#| fig-height: 4
+#| message: false
+
+Drug_Band_Category %>% 
+  filter(Band_Category != "Sum") %>% 
+ggplot(., aes(x = Band_Category, y = Percent, fill = Band_Category)) + 
+  geom_bar(stat = "identity", col = "black") +
+  scale_fill_brewer(name = "Band Neutrophil Category", palette = "Greys") +
+  xlab("Band Neutrophil Category") +
+  scale_x_discrete(labels=c("Absent (0.0 k/ul)" = "Absent", 
+                            "Present (< 0.2 k/ul)" = "Present",
+                            "Bandemia (>= 0.2 k/ul)" = "Bandemia")) +
+  ylab("Percent of CBCs") +
+  scale_y_continuous(limits=c(0, 100)) +
+  facet_wrap(~ Name) + 
+  theme_bw()+
+  theme(legend.position = "bottom")
 ```
 
 ### Summary of total bands by visit time
