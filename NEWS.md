@@ -1,5 +1,22 @@
 # CHOPStudy News
 
+## 0.11.0, 2025-07-06
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`     
+    * Added meta-data details about data file loaded.
+    * Improve narrative text.
+    * Improve table formatting. 
+    * Add table of drug sequences. 
+    * Updated table of band category distribution by drug and added a figure 
+      of those results.
+* `scripts/Import_Data.qmd`
+    * Added meta-data details about files read in and saved out.
+    * Improve narrative text. 
+    * Added Band_Category and Name variables.
+* `scripts/references.bib`
+    * Update software version & citation info.
+
 ## 0.10.0, 2025-06-15
 * `README.qmd` and `README.md`
     * Update software version & citation info.
@@ -16,7 +33,7 @@
       that Leukemia and steroid variabkles are time-invariant within a CHOP 
       cycle, standardarized steroid names, and confirmed some date corrections.
     * Add references section.
-    * Add Leukemic to FInal_Patients data. 
+    * Add Leukemic to Final_Patients data. 
 * `scripts/references.bib`
     * Update software version & citation info.
 
