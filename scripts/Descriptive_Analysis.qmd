@@ -80,6 +80,7 @@ library(forcats)    # for fct_recode()
 library(tibble)     # for rowid_to_column()
 library(tidyr)      # for pivot_longer()
 library(ggplot2)    # for ggplot()
+library(ggpmisc)    # for stat_correlation()
 library(knitr)      # for kable()
 library(kableExtra) # for kable_styling 
 library(gtsummary)  # for ?
