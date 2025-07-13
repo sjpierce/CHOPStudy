@@ -482,6 +482,7 @@ distribution among the non-zero values.
 
 ggplot(Final_Visits, aes(x = Total_Bands)) + 
   geom_histogram(aes(y=after_stat(count)), colour="black", fill="grey70") +
+  theme_bw() +
   scale_x_continuous(limits = c(-0.2,7), n.breaks = 8, oob = function(x, limits) x) +
   scale_y_continuous(limits=c(-0.2, 500)) +
   xlab("Total Bands (x1000/ul)") +
@@ -497,6 +498,7 @@ ggplot(Final_Visits, aes(x = Total_Bands)) +
 
 ggplot(Final_Visits, aes(x = Total_Bands_Rescaled)) + 
   geom_histogram(aes(y=after_stat(count)), colour="black", fill="grey70") +
+  theme_bw() +
   scale_x_continuous(limits = c(-2,70), n.breaks = 8, oob = function(x, limits) x) +
   scale_y_continuous(limits=c(-0.2, 500)) +
   xlab("Rescaled Total Bands (x100/ul)") +
