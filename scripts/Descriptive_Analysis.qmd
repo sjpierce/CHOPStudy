@@ -124,6 +124,38 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 ```
 
 # Results {#sec-Results}
+
+## Patient-Level Summaries
+@tbl-patient-cvv-missing and @tbl-patient-var-missing show summaries of missing 
+data in the patient-level dataset. 
+
+
+```{r}
+#| label: tbl-patient-cvv-missing
+#| tbl-cap: "Missingness Overview for Patient-Level Dataset (`Final_Patients`): 
+#|          Cases, Variables, and Values"
+
+Final_Patients %>% 
+  cvv_missingness() %>% 
+  kable(format = "html", digits = 1,
+          col.names = c("Subset", rep(c("n", "%"), times = 3))) %>%
+    kable_styling() %>%
+    add_header_above(header = c(" " = 1, "Cases" = 2, "Variables" = 2, "Values" = 2))
+```
+
+```{r}
+#| label: tbl-patient-var-missing
+#| tbl-cap: Misssingness Assessment for Variables in Patient-Level Dataset 
+#|          (`Final_Patients`)
+
+Final_Patients %>% 
+var_missingness(.) %>% 
+  kable(format = "html", digits = 1) %>%
+  kable_styling() %>%
+  add_header_above(header = c(" " = 3, "Observed Values" = 2, 
+                              "Missing Values" = 2))
+```
+
 @tbl-patient-describe shows patient-level descriptive statistics for weight 
 surface area, and number of visits, while @tbl-patient-Leukemic gives the 
 univariate frequency distribution for leukemic status, which was a 
@@ -173,6 +205,38 @@ Final_Patients %>%
   kable(., format = "html", digits = 0) %>% 
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T)
+```
+
+## Visit-Level Summaries
+@tbl-visit-cvv-missing and @tbl-visit-var-missing show summaries of missing 
+data in the visit-level dataset. 
+
+
+```{r}
+#| label: tbl-visit-cvv-missing
+#| tbl-cap: "Missingness Overview for Visit-Level Dataset (`Final_visits`): 
+#|          Cases, Variables, and Values"
+
+Final_Visits %>% 
+  cvv_missingness() %>% 
+  kable(format = "html", digits = 1,
+          col.names = c("Subset", rep(c("n", "%"), times = 3))) %>%
+    kable_styling() %>%
+    add_header_above(header = c(" " = 1, "Cases" = 2, "Variables" = 2, "Values" = 2))
+```
+
+```{r}
+#| label: tbl-visit-var-missing
+#| tbl-cap: Misssingness Assessment for Variables in Visit-Level Dataset 
+#|          (`Final_Visits`)
+
+Final_Visits %>% 
+var_missingness(.) %>% 
+  #arrange(desc(Pct_Missing)) %>%   # Sort by % missing
+  kable(format = "html", digits = 1) %>%
+  kable_styling() %>%
+  add_header_above(header = c(" " = 3, "Observed Values" = 2, 
+                              "Missing Values" = 2))
 ```
 
 @tbl-visit-describe-cat shows univariate frequency distributions for cateogrical
