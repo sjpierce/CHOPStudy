@@ -615,7 +615,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.11.0) \[Reproducible Research Materials, Computer
+study* (Version 0.12.0) \[Reproducible Research Materials, Computer
 Program, R package, Private Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 
@@ -640,7 +640,7 @@ Software, PBC. <https://posit.co>
 <div id="ref-Torvalds-RN3929" class="csl-entry">
 
 Torvalds, L., Hamano, J. C., & other contributors to the Git Project.
-(2025). *Git for Windows* (Version 2.50.0(2)) \[Computer Program\].
+(2025). *Git for Windows* (Version 2.50.1(1)) \[Computer Program\].
 Software Freedom Conservancy. <https://git-scm.com>
 
 </div>
