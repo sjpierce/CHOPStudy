@@ -350,6 +350,37 @@ Final_Visits %>%
 ```
 
 ```{r}
+#| label: fig-visit-bands-neuts
+#| fig-cap: !expr paste0("Scatterplot of Total Bands and Total Neutrophils ", 
+#|                       "With Linear and Loess Smoothing Curves ",
+#|                       "(N = ", nrow(Final_Visits), " Visits)")
+#| fig-width: 6
+#| fig-height: 4
+#| warning: false
+
+Final_Visits %>% 
+  ggplot(., aes(x = Total_Neutrophil, y = Total_Bands)) + 
+  geom_point() +
+  stat_correlation(method = "pearson", small.r = TRUE, r.conf.level = 0.95, 
+                   use_label("method", "R", "R.CI", "n")) +
+  geom_smooth(method="loess", se = TRUE, fullrange = FALSE, level = 0.95) +
+  geom_smooth(method="lm", se = TRUE, fullrange = FALSE, level = 0.95, 
+              col = "red") +
+  theme_bw() +
+  coord_cartesian(xlim = c(0, 50), ylim = c(0, 7), ) +
+  scale_x_continuous(breaks = seq(from = 0, to = 50, by = 10)) +
+  scale_y_continuous(breaks = seq(from = 0, to = 7, by = 1)) +
+  xlab("Total Neutrophils (k/ul)") +
+  ylab("Total Bands (k/ul)") 
+```
+
+::: {.callout-tip}
+In @fig-visit-bands-neuts, one visit with missing data for neutrophils was 
+omitted from the plot and the estimation of the correlation. Also, the Pearson 
+correlation is specifically a measure of linear association. 
+:::
+
+```{r}
 #| label: tbl-visit-describe-cont-by-Bandemia
 #| tbl-cap: !expr paste0("Descriptive Statistics for Continuous Biomarker ", 
 #|                       "Variables by Bandemia (N = ", nrow(Final_Visits), 
