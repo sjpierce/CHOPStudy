@@ -754,86 +754,105 @@ ggplot(., aes(x = Band_Category, y = Percent, fill = Band_Category)) +
 @fig-drug-Band-Category is a new piece of output requested by Dr. Masyr. 
 :::
 
-@tbl-total_bands_by_visit provides the mean and standard deviation of 
-**Total Bands** for each visit time. From this data, we can observe that the 
+### Total Bands by Visit Number
+@tbl-bands-visit provides the mean and standard deviation of 
+**Total Bands** for each visit. From this data, we can observe that the 
 mean value of Total bands tends to decrease over time.
 
 ```{r}
-#| label: tbl-total_bands_by_visit
-#| tbl-cap: Summary of total bands (x100/ul) for each visit time.
-Total_Bands_Rescaled_counts <- Final_Visits %>%
+#| label: tbl-bands-visit
+#| tbl-cap: Summary of Total Bands (k/ul) By VIsit Number
+
+Total_Bands_counts <- Final_Visits %>%
   group_by(Visit_Number) %>%
-   summarise(
-    mean = round(mean(Total_Bands_Rescaled, na.rm = TRUE),4),
-    sd= round(sd(Total_Bands_Rescaled, na.rm = TRUE),4),
-    min = min(Total_Bands_Rescaled, na.rm = TRUE),
-    max= max(Total_Bands_Rescaled, na.rm = TRUE)
-  )
-Total_Bands_Rescaled_counts%>%kable()%>%kable_styling() 
+   summarise(N = sum(!is.na(Total_Bands)),
+    Mean = round(mean(Total_Bands, na.rm = TRUE),4),
+    SD= round(sd(Total_Bands, na.rm = TRUE),4),
+    Min = min(Total_Bands, na.rm = TRUE),
+    Q25 = quantile(Total_Bands, probs = .25, na.rm = TRUE),
+    Q50 = quantile(Total_Bands, probs = .50, na.rm = TRUE),
+    Q75 = quantile(Total_Bands, probs = .75, na.rm = TRUE),
+    Max= max(Total_Bands, na.rm = TRUE))
+
+Total_Bands_counts %>%
+  kable(digits = 1) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) 
 ```
 
-@fig-total_bands_by_visit shows the boxplot of total bands (x100/ul) for each 
-visit time.
+@fig-bands-visit shows the boxplot of total bands (k/ul) for each visit, 
+@fig-log-bands-visit shows the corresponding boxplots for log-transformed 
+values both for all visits and the subset of visits with total bands > 0. In the 
+log scale, -Inf corresponds to total bands = 0 k/ul.
 
 ```{r}
-#| label: fig-total_bands_by_visit
-#| fig-cap: Boxplot of total bands (x100/ul) for each visit time.
-boxplot(Total_Bands_Rescaled~Visit_Number,data=Final_Visits,xlab="Visit number",ylab="Total bands (x100/ul)")
-```
+#| label: fig-bands-visit
+#| fig-cap: Boxplot of Total Bands (k/ul) by Visit Number
+#| fig-width: 6
+#| fig-height: 2.5
 
-@fig-total_bands_rescaled_by_visit_log shows the boxplot of 
-**log(total bands x100/ul)** for each visit time, where -Inf means total bands = 
-0. @fig-total_bands_by_visit_log shows the boxplot of 
-**log(total bands x1000/ul)** for each visit time, where -Inf means total bands = 
-0.
-
-```{r}
-#| label: fig-total_bands_rescaled_by_visit_log
-#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time.
-boxplot(log_Total_Bands_Rescaled ~ Visit_Number, data=Final_Visits,
-        xlab="Visit number",
-        ylab="log(Total bands [x100/ul])",ylim = c(-3, 5), yaxt = "n")
-axis_positions <- c(-3, seq(-1, 5, length.out = 7))
-axis_labels <- c("-Inf", formatC(seq(-1, 5, length.out = 7), 
-                                 format = "f", digits = 0))
-axis(2, at = axis_positions, labels = axis_labels)
+Final_Visits %>% 
+  ggplot(., aes(x = factor(Visit_Number), y = Total_Bands, 
+                group = Visit_Number)) +
+  geom_jitter(alpha = .3, width = .25, height = .05) +
+  geom_boxplot(outliers = FALSE, alpha = .5) +
+  theme_bw() +
+  coord_cartesian(ylim = c(0, 7)) +
+  scale_y_continuous(limits = c(-.1, 7), breaks = c(0:7)) +
+  xlab("Visit Number") +
+  ylab("Total Bands (k/ul)")
 ```
 
 ```{r}
-#| label: fig-total_bands_by_visit_log
-#| fig-cap: Boxplot of log(total bands [x1000/ul]) for each visit time.
-boxplot(log_Total_Bands ~ Visit_Number, data=Final_Visits,
-        xlab="Visit number",
-        ylab="log(Total bands [x1000/ul])",ylim = c(-5, 2), yaxt = "n")
-axis_positions <- c(-5, seq(-3, 2, length.out = 6))
-axis_labels <- c("-Inf", formatC(seq(-3, 2, length.out = 6), 
-                                 format = "f", digits = 0))
-axis(2, at = axis_positions, labels = axis_labels)
+#| label: fig-log-bands-visit
+#| fig-cap: Boxplot of Total Bands (k/ul) by Visit Number for (A) All Visits and 
+#|          (B) Visits with Total Bands > 0 k/ul. 
+#| fig-width: 6
+#| fig-height: 5
+
+p1 <- Final_Visits %>% 
+  ggplot(., aes(x = factor(Visit_Number), y = log_Total_Bands, 
+                group = Visit_Number)) +
+  geom_jitter(alpha = .3, width = .25, height = .05) +
+  geom_boxplot(outliers = FALSE, alpha = .5) +
+  theme_bw() +
+  coord_cartesian(ylim = c(-5, 2)) +
+  scale_y_continuous(limits = c(-5.1, 2), breaks = c(-5, -3:2), 
+                     labels = c("-Inf", as.character(-3:2))) +
+  xlab("Visit Number") +
+  ylab("log(Total Bands [k/ul])")
+
+p2 <- Final_Visits %>% 
+  filter(Total_Bands > 0) %>% 
+  ggplot(., aes(x = factor(Visit_Number), y = log_Total_Bands, 
+                group = Visit_Number)) +
+  geom_jitter(alpha = .3, width = .25, height = .05) +
+  geom_boxplot(outliers = FALSE, alpha = .5) +
+  theme_bw() +
+  # coord_cartesian(ylim = c(-5, 2)) +
+  # scale_y_continuous(limits = c(-5.1, 2), breaks = c(-5, -3:2), 
+  #                    labels = c("-Inf", as.character(-3:2))) +
+  coord_cartesian(ylim = c(-3, 2)) +
+  scale_y_continuous(limits = c(-3, 2), breaks = c(-3:2)) +
+  xlab("Visit Number") +
+  ylab("log(Total Bands [k/ul])")
+
+p1 + p2 +
+ plot_layout(nrow = 2) + 
+ plot_annotation(tag_levels = "A")
 ```
 
 ::: {.callout-note}
-@fig-total_bands_by_visit_log above becomes Figure 3a in the manuscript. 
+@fig-log-bands-visit (or either of its panels alone) may become a figure 
+in the manuscript. We used a variation of panel A as Figure 3 in the prior 
+manuscript, which we are now revising for submission to another journal. 
 :::
 
-
-@fig-total_bands_by_visit_log_part shows the boxplot of log(total bands x100/ul)
-for each visit time and only include those with total bands \> 0.
-
-```{r}
-#| label: fig-total_bands_by_visit_log_part
-#| fig-cap: Boxplot of log(total bands [x100/ul]) for each visit time (only include those with total bands \> 0).
-boxplot(log_Total_Bands_Rescaled[Total_Bands_Rescaled > 0] ~ 
-          Visit_Number[Total_Bands_Rescaled > 0],
-        data=Final_Visits,
-        xlab="Visit number",
-        ylab="log(Total bands [x100/ul])")
-```
-
-@tbl-total_bands_by_visit_zero shows the number and proportion of instances 
-where total bands equal 0 for each drug used.
+@tbl-bands-eq0-visit shows the number and proportion of instances where total
+bands equal 0 for each drug used.
 
 ```{r}
-#| label: tbl-total_bands_by_visit_zero
+#| label: tbl-bands-eq0-visit
 #| tbl-cap: Number and Proportion of Visits With Total Bands = 0 k/ul by Visit.
 
 Final_Visits %>% 
