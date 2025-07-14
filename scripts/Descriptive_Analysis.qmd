@@ -1178,13 +1178,12 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
   theme_minimal()
 ```
 
-## Total white blood cells (WBC) 
-@tbl-total_WBC_by_visit provides the mean and standard deviation of 
-**Total WBC** for each visit time. From this data, we can observe that the mean 
-value of Total bands tends to decrease over time.
+## Total White Blood Cells (WBC) 
+@tbl-WBC-visit provides the mean and standard deviation of total WBC for each 
+visit number. 
 
 ```{r}
-#| label: tbl-total_WBC_by_visit
+#| label: tbl-WBC-visit
 #| tbl-cap: Summary of total white blood cells (x1000/uL) for each visit time.
 Final_Visits %>%
   group_by(Visit_Number) %>%
