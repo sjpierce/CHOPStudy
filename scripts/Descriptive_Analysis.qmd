@@ -464,7 +464,7 @@ distribution among the non-zero values.
 
 ```{r}
 #| label: fig-total-bands
-#| fig-cap: Distribution of Total Bands (x1000/ul)
+#| fig-cap: Distribution of Total Bands (k/ul)
 #| fig-width: 6
 #| fig-height: 4
 #| message: false
@@ -474,7 +474,7 @@ ggplot(Final_Visits, aes(x = Total_Bands)) +
   theme_bw() +
   scale_x_continuous(limits = c(-0.2,7), n.breaks = 8, oob = function(x, limits) x) +
   scale_y_continuous(limits=c(-0.2, 500)) +
-  xlab("Total Bands (x1000/ul)") +
+  xlab("Total Bands (k/ul)") +
   ylab("No. of Patients")
 ```
 
