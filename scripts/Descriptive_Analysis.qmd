@@ -842,7 +842,7 @@ where total bands equal 0 for each drug used.
 
 ```{r}
 #| label: tbl-total_bands_by_visit_zero
-#| tbl-cap: Number and proportion of instances where total bands equal 0 for each visit time.
+#| tbl-cap: Number and Proportion of Visits With Total Bands = 0 k/ul by Visit.
 
 Final_Visits %>% 
   mutate(Zero_Bands = Total_Bands == 0) %>% 
