@@ -314,21 +314,17 @@ the CBC sample.
 #|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
 
-VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", 
-            "Total_Bands_Rescaled", "BN_Ratio")
-VNamesUnits <- c("Total_WBC (x1000/ul)", 
-                 "Total_Neutrophil (x1000/ul)", 
-                 "Total_Bands (x1000/ul)", 
-                 "Total_Bands_Rescaled (x100/ul)", 
+VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", "BN_Ratio")
+VNamesUnits <- c("Total_WBC (k/ul)", 
+                 "Total_Neutrophil (k/ul)", 
+                 "Total_Bands (k/ul)", 
                  "BN_Ratio")
 
 CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
 
 Final_Visits %>% 
-  select(Total_WBC, Total_Neutrophil, Total_Bands, Total_Bands_Rescaled, 
-         BN_Ratio) %>% 
-  pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, 
-                        Total_Bands_Rescaled, BN_Ratio), 
+  select(Total_WBC, Total_Neutrophil, Total_Bands, BN_Ratio) %>% 
+  pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, BN_Ratio), 
                names_to = "Variable", values_to = "Value") %>% 
   mutate(Variable = factor(Variable, levels = VNames)) %>% 
   # Aggregate to one row per variable.
@@ -387,22 +383,18 @@ correlation is specifically a measure of linear association.
 #|                       " Visits)")
 #| message: false
 
-VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", 
-            "Total_Bands_Rescaled", "BN_Ratio")
-VNamesUnits <- c("Total_WBC (x1000/ul)", 
-                 "Total_Neutrophil (x1000/ul)", 
-                 "Total_Bands (x1000/ul)", 
-                 "Total_Bands_Rescaled (x100/ul)", 
+VNames <- c("Total_WBC", "Total_Neutrophil", "Total_Bands", "BN_Ratio")
+VNamesUnits <- c("Total_WBC (k/ul)", 
+                 "Total_Neutrophil (k/ul)", 
+                 "Total_Bands (k/ul)", 
                  "BN_Ratio")
 
 CNames <- c("Bandemia", "Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", 
             "Q75", "Max")
 
 Final_Visits %>% 
-  select(Bandemia, Total_WBC, Total_Neutrophil, Total_Bands, 
-         Total_Bands_Rescaled, BN_Ratio) %>% 
-  pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, 
-                        Total_Bands_Rescaled, BN_Ratio), 
+  select(Bandemia, Total_WBC, Total_Neutrophil, Total_Bands, BN_Ratio) %>% 
+  pivot_longer(cols = c(Total_WBC, Total_Neutrophil, Total_Bands, BN_Ratio), 
                names_to = "Variable", values_to = "Value") %>% 
   mutate(Variable = factor(Variable, levels = VNames)) %>% 
   # Aggregate to one row per variable.
@@ -466,11 +458,8 @@ Final_Visits %>%
 ### Summary of total bands
 
 @fig-total-bands shows the histogram (left) and the boxplot (right) 
-of **Total bands** in the original units (x10.e3/uL=1000/uL), while 
-@fig-total-bands-rescaled shows the same data after rescaling to 
-units of (x100/ul) to obtain integer values usable in count models. This makes 
-it more convenient for us when fitting models. Both these figures show that 
-there are lots of zero values, which makes it hard to see the shape of the 
+of **Total bands** in the original units (x10.e3/uL=k/uL). It shows that there 
+are lots of zero values, which makes it hard to see the shape of the 
 distribution among the non-zero values. 
 
 ```{r}
