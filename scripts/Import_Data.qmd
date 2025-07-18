@@ -79,6 +79,7 @@ library(dplyr)      # for filter(), group_by(), mutate(), rename(), summarise()
 library(here)       # for here(), i_am()
 library(knitr)      # for kable()
 library(kableExtra) # for kable_styling 
+library(labelled)   # for set_variable_labels()
 library(readxl)     # for read_xlsx()
 library(piercer)    # for file_details(), git_report()
 library(quarto)     # for quarto_version()
@@ -501,6 +502,7 @@ CHOP1_Start2W_Phase1 %>%
 ```
 
 ### Rename Data Frame
+Here we rename the data object to keep the object name shorter. 
 
 ```{r}
 #| label: create-Final-Visits
@@ -583,6 +585,38 @@ xtabs(~Visit_Number + Drug, data = CHOP1_Start2W_Phase1_Drug123) %>%
                       "3 doxorubicin", "Sum")) %>% 
   kable_styling() %>% 
   add_header_above(., header = c(" ", "Drug" = 3, " "))
+```
+
+# Update Visit-Level Data
+Here we finally add some derived variables we will need for the planned GLMM 
+analyses. 
+
+```{r}
+#| label: update-Final-Visits
+
+Final_Visits <- Final_Visits %>% 
+  # Dummy-code Drug (using Drug = 1 (vincristine) as reference level)
+  mutate(DrugC = if_else(Drug == 2, true = 1, false = 0),
+         DrugD = if_else(Drug == 3, true = 1, false = 0)) %>% 
+  # Turn on grouping by patient so we can easily get patient-level means.
+  group_by(Patient) %>% 
+  # Aggregate dummy codes to patient-level means for use in GLMM analyses. 
+  mutate(M_DrugC = mean(DrugC),
+         M_DrugD = mean(DrugD)) %>% 
+  # Turn off grouping by patient (no longer need it)
+  ungroup() %>% 
+  # Create centered L1 predictors for use in GLMM analyses.
+  mutate(DrugC_C = DrugC - M_DrugC,
+         DrugD_C = DrugD - M_DrugD) %>% 
+  # Center the L2 predictor for use in GLMM analyses.
+  mutate(BSA_m2_C = Surface_Area_m2 - mean(Final_Patients$Surface_Area_m2)) %>% 
+  set_variable_labels(DrugC = "Dummy code, Drug = Cyclophosphamide (L1, uncentered)",
+                      DrugD = "Dummy code, Drug = Doxorubicin (L1, uncentered)",
+                      M_DrugC = "Mean dummy code, Drug = Cyclophosphamide (L2, aggregated)",
+                      M_DrugD = "Mean dummy code, Drug = Doxorubicin (L2, aggregated)",
+                      DrugC_C = "Dummy code, Drug = Cyclophosphamide (L1, group mean centered)",
+                      DrugD_C = "Dummy code, Drug = Doxorubicin (L1, group mean centered)",
+                      BSA_m2_C = "Body surface area in m^2 (L2, grand-mean centered)") 
 ```
 
 # Save Data
