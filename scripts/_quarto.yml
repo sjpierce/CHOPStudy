@@ -6,4 +6,4 @@ project:
   render:
     - Import_Data.qmd
     - Descriptive_Analysis.qmd
-    - Logistic_Regression_Models.qmd
+    - GLMM_Analysis.qmd
