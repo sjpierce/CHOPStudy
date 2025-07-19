@@ -1,9 +1,35 @@
 # CHOPStudy News
 
+## 0.12.0, 2025-07-18
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Load another R package. 
+    * Add missing data summaries. 
+    * Add a plot of total bands vs total neutrophils.
+    * Switch to black & white theme for figures. 
+    * Remove output for Total_Bands_rescaled.
+    * Improve figure caption and labeling.
+    * Improve table caption.
+    * Reorganize and improve total bands section. 
+    * Reorganize and improve total bands by drug section. 
+    * Reorganize and improve total bands by visit section. 
+    * Extensively renamed chunks
+    * Switched to ggplot for several figures to make code clearer. 
+* `scripts/GLMM_Analysis.qmd`
+    * Added file. 
+* `scripts/Import_Data.qmd`
+    * Added centered variables needed for GLMM analyses.
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Added references. 
+* `scripts/_quarto.yml`
+    * Updated Render key to include modeling script. 
+    
 ## 0.11.0, 2025-07-06
 * `README.qmd` and `README.md`
     * Update software version & citation info.
-* `scripts/Descriptive_Analysis.qmd`     
+* `scripts/Descriptive_Analysis.qmd`
     * Added meta-data details about data file loaded.
     * Improve narrative text.
     * Improve table formatting. 
