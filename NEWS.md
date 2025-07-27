@@ -1,5 +1,16 @@
 # CHOPStudy News
 
+## 0.13.0, 2025-07-26
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/GLMM_Analysis.qmd`
+    * Load more packages. 
+    * Improve narrative text. 
+    * Improve model output and diagnostic checks. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Add references.
+    
 ## 0.12.0, 2025-07-18
 * `README.qmd` and `README.md`
     * Update software version & citation info.
