@@ -84,6 +84,8 @@ library(DHARMa)      # for plotQQunif(), plotResiduals(), simulateResiduals(),
                      # testDispersion()
 library(emmeans)     # for contrast(), emmeans(), pairs()
 library(glmmTMB)     # for diagnose(), glmmTMB()
+library(marginaleffects)  # for predictions(), comparisons(), slopes(), etc. 
+library(modelsummary) # for modelsummary()
 library(performance) # for model_performance(), r2()
 library(knitr)       # for kable()
 library(kableExtra)  # for kable_styling 
