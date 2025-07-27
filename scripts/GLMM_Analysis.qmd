@@ -272,52 +272,220 @@ values (e.g., $p < 0.05$) indicate violation of model assumptions.
 
 # Results {#sec-Results}
 
+## Model 0 (No Predictors)
+
 ```{r}
-#|label: fit-models
+#| label: tbl-m0 
+#| tbl-cap: Model 0 Parameters
+#| results: asis
 
 # Null model.
 m0 <- glmmTMB(Bandemia ~ 1 + (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
               ziformula = ~ 0, dispformula = ~ 1)
 
-# Add L1 predictors. 
+FN = paste0("Log Likelihood = ", round(logLik(m0), digits = 3),
+            ". Deviance = ", round(-2*logLik(m0), digits = 3),
+            ". Model df = ", length(m0$fit$par), 
+            ". Residual df = ", nobs(m0) - length(m0$fit$par),
+            ". 95% CIs reported.")
+
+modelsummary(list("Model 0" = m0), output = "kableExtra", 
+             align = "llrrrrr", escape = FALSE,
+             col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int", "statistic", "p.value"), 
+             notes = FN) %>% 
+  cat()
+```
+
+```{r}
+#| label: tbl-m0-OR 
+#| tbl-cap: Model 0 Odds-Ratios
+
+FN = paste0("95% CIs reported.")
+
+modelsummary(list("Model 0" = m0), output = "kableExtra", 
+             align = "llrrr", escape = FALSE, exponentiate = TRUE,
+             col.names = c("Component", "Term", "OR", "OR.LL", "OR.UL"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int"), 
+             gof_map = "none",
+             notes = list(FN)) 
+```
+
+```{r}
+#| label: diag-m0
+
+diagnose(m0)
+```
+
+```{r}
+#| label: fig-check-m0
+#| fig-cap: Diagnostic Checks on Model 0
+#| fig-height: 7
+#| fig-width: 8
+
+check_model(m0, type = "discrete_both", residual_type = "simulated",
+            check = c("pp_check", "binned_residuals", "qq", "reqq"),
+            base_size = 9)
+```
+
+## Model 1 (L1 Predictors)
+
+```{r}
+#| label: tbl-m1 
+#| tbl-cap: Model 1 Parameters
+#| results: asis
+
+# Add L1 predictors.
 m1 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
               ziformula = ~ 0, dispformula = ~ 1)
+
+FN = paste0("Log Likelihood = ", round(logLik(m1), digits = 3),
+            ". Deviance = ", round(-2*logLik(m1), digits = 3),
+            ". Model df = ", length(m1$fit$par), 
+            ". Residual df = ", nobs(m1) - length(m1$fit$par),
+            ". Drug reference level is Vincristine",
+            ". 95% CIs reported.")
+
+modelsummary(list("Model 1" = m1), output = "kableExtra", 
+             align = "llrrrrr", escape = FALSE,
+             col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int", "statistic", "p.value"), 
+             notes = FN) %>% 
+  cat()
+```
+
+```{r}
+#| label: tbl-m1-OR 
+#| tbl-cap: Model 1 Odds-Ratios
+
+FN = paste0("95% CIs reported.")
+
+modelsummary(list("Model 1" = m1), output = "kableExtra", 
+             align = "llrrr", escape = FALSE, exponentiate = TRUE,
+             col.names = c("Component", "Term", "OR", "OR.LL", "OR.UL"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int"), 
+             gof_map = "none",
+             notes = list(FN)) 
+```
+
+```{r}
+#| label: diag-m1
+
+diagnose(m1)
+check_collinearity(m1)
+```
+
+```{r}
+#| label: fig-check-m1
+#| fig-cap: Diagnostic Checks on Model 1
+#| fig-height: 7
+#| fig-width: 8
+
+check_model(m1, type = "discrete_both", residual_type = "simulated",
+            check = c("pp_check", "binned_residuals", "qq", "reqq"),
+            base_size = 9)
+```
+
+```{r}
+#|label: compare-m0-m1
+
+#compare_performance(m1, m2)
+
+test_lrt(m0, m1) %>% 
+  mutate(Model = case_when(Name == "m0" ~ "No Predictors",
+                           Name == "m1" ~ "L1 Predictors")) %>% 
+  kable(digits = 3, row.names = FALSE) %>% 
+  kable_styling() 
+```
+
+
+## Model 2 (L1 & L2 Predictors)
+
+```{r}
+#| label: tbl-m2 
+#| tbl-cap: Model 2 Parameters
+#| results: asis
 
 # Add L2 predictors
 m2 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + BSA_m2_C + 
                 (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
               ziformula = ~ 0, dispformula = ~ 1)
+
+FN = paste0("Log Likelihood = ", round(logLik(m2), digits = 3),
+            ". Deviance = ", round(-2*logLik(m2), digits = 3),
+            ". Model df = ", length(m2$fit$par), 
+            ". Residual df = ", nobs(m2) - length(m2$fit$par),
+            ". Drug reference level is Vincristine",
+            ". 95% CIs reported.")
+
+modelsummary(list("Model 2" = m2), output = "kableExtra", 
+             align = "llrrrrr", escape = FALSE,
+             col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int", "statistic", "p.value"), 
+             notes = list(FN, paste("95% CIs reported.")),
+             footnote_as_chunk = TRUE) %>% 
+  cat()
+```
+
+```{r}
+#| label: tbl-m2-OR 
+#| tbl-cap: Model 2 Odds-Ratios
+
+FN = paste0("95% CIs reported.")
+
+modelsummary(list("Model 2" = m2), output = "kableExtra", 
+             align = "llrrr", escape = FALSE, exponentiate = TRUE,
+             col.names = c("Component", "Term", "OR", "OR.LL", "OR.UL"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int"), 
+             gof_map = "none",
+             notes = FN) 
 ```
 
 
 ```{r}
-#|label: model-perf
-
-compare_performance(m0, m1, m2)
-test_lrt(m0, m1, m2)
-
-diagnose(m0)
-check_model(m0)
-
-diagnose(m1)
-check_model(m1)
-check_collinearity(m1)
+#| label: diag-m2
 
 diagnose(m2)
-check_model(m2)
 check_collinearity(m2)
 ```
 
+```{r}
+#| label: fig-check-m2
+#| fig-cap: Diagnostic Checks on Model 2
+#| fig-height: 7
+#| fig-width: 8
 
-#### Results
+check_model(m2, type = "discrete_both", residual_type = "simulated",
+            check = c("pp_check", "binned_residuals", "qq", "reqq"),
+            base_size = 9)
+```
+
 
 ```{r}
-#|label: summary_model_logistic
-summary(m1)
+#|label: compare-m0-m1-m2
+
+#compare_performance(m1, m2)
+
+bind_rows(test_lrt(m0, m2), 
+          test_lrt(m1, m2)) %>% 
+  mutate(Model = case_when(Name == "m0" ~ "No Predictors",
+                           Name == "m1" ~ "L1 Predictors",
+                           Name == "m2" ~ "L1 & L2 Predictors")) %>% 
+  kable(digits = 3, row.names = FALSE) %>% 
+  kable_styling() %>% 
+  group_rows(., group_label = "Model 0 vs Model 2", start_row = 1, end_row = 2) %>% 
+  group_rows(., group_label = "Model 1 vs Model 2", start_row = 3, end_row = 4) 
 ```
+
 
 In the model, Drug 1 is set as the baseline. Drug 2 is found to significantly
 decrease the probability of causing Bandemia compared to the baseline (Drug 1).
