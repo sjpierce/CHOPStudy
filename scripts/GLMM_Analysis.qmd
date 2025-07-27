@@ -138,13 +138,13 @@ administered at each visit, but there are deviations from the protocol based on
 clinical circumstances and professional judgement. At each visit, a CBC sample 
 was collected and analyzed to measure the outcome. 
 
-The dataset includes `r nrow(Final_Patients)` dogs and `r nrow(Final_Visits)`, 
-with the number of visits per dog varying from `r min(Final_Patients$N_Visits)` 
-to `r max(Final_Patients$N_Visits)` (
-mean = `r round(mean(Final_Patients$N_Visits), digits = 1)`, 
-SD = `r round(sd(Final_Patients$N_Visits), digits = 1)`) . Thus we have a 
-multilevel data structure: with visits (and the associated CBC samples) at level
-1 (L1) nested within dogs at level 2 (L2).
+We have a multilevel data structure with `r nrow(Final_Visits)` visits and the 
+associated CBC samples (level 1 [L1] units) nested within 
+`r nrow(Final_Patients)` dogs (level 2 [L2] units). The number of visits per dog 
+varying from `r min(Final_Patients$N_Visits)` to 
+`r max(Final_Patients$N_Visits)` (mean = 
+`r round(mean(Final_Patients$N_Visits), digits = 1)`, SD = 
+`r round(sd(Final_Patients$N_Visits), digits = 1)`). 
 
 Due to the high correlation between weight and body surface area (BSA), we have 
 included only BSA in the model. 
@@ -152,7 +152,7 @@ included only BSA in the model.
 ## Measures
 There are no missing data in the measures used in this analysis (see descriptive
 analysis output file). We centered the predictors to facilitate obtaining 
-unconflated estiamtes of the effects of variables at each level of analysis
+unconflated estimates of the effects of variables at each level of analysis
 [@Rights-RN8274; @Rights-RN8755; @Schielzeth-RN1814; @Yaremych-RN8330]. 
 
 ### Bandemia (`Bandemia`)
@@ -164,10 +164,10 @@ the incidence rate of bandemia.
 
 ### Body Surface Area (`BSA_m2_C`)
 Body surface area at the start of CHOP (`Surface_Area_m2`) was measured in 
-square meters ($m^2$). This is a patient-level (L2) measure that was invariant 
-across visits. Prior to modeling, we grand-mean centered this variable to 
-improve interpretatibility of model coefficients [@Schielzeth-RN1814], yielding 
-`BSA_m2_C`.
+square meters ($m^2$) at the beginning of the CHOP cycle. This is a
+patient-level (L2) measure that was invariant across visits. Prior to modeling,
+we grand-mean centered this variable to improve interpretatibility of model
+coefficients [@Schielzeth-RN1814], yielding `BSA_m2_C`.
 
 ### Prior Drug Administered (`DrugC_C`, `DrugD_C`, `M_DrugC_C`, `M_DrugD_C`)
 The drug administered prior to CBC sample collection (`Drug`) was treated as a 
@@ -186,14 +186,15 @@ While the practice is unfamiliar to many researchers, centering L1 dummy-coded
 categorical predictors around their group means is necessary for obtaining 
 unconflated estimates of their effects in multilevel models [@Yaremych-RN8330].
 Accordingly, we computed L1 group-mean centered versions of the L1 predictors, 
-yielding `DrugC_C = DrugC - M_DrugC` and `DrugD_C = DrugD - M_DrugD`. 
+yielding `DrugC_C = DrugC - M_DrugC` and `DrugD_C = DrugD - M_DrugD`. The 
+centered variables were used in the models. 
 
 ## Statistical Analysis
 Generalized linear mixed models (GLMMs) with a logit link function were employed
-to assess the effects of each drug, BSA, and visit number on presence of
-bandemia. This model was chosen to capture the random effects pertaining to
-repeated observations from each dog while dealing with the binary outcome. We
-set the Type I error rate at $\alpha = 0.05$.
+to assess the effects of each drug and BSA on presence of bandemia. This model
+was chosen to capture the random effects pertaining to repeated observations
+from each dog while dealing with the binary outcome. We set the Type I error
+rate at $\alpha = 0.05$.
 
 The basic modeling strategy involved fitting a set of three nested models. 
 
@@ -206,9 +207,9 @@ The basic modeling strategy involved fitting a set of three nested models.
   still includes both fixed and random intercepts. 
 * Model 2 (`m2`): This model expands on Model 1 by adding the fixed effect 
   slopes for the L2 predictors. The aggregated means of the L1 drug dummy codes 
-  allow us to control for drug effects while testing the effect of centrerd BSA. 
-  The model retails L1 effects for the centered drug dummy codes plus the fixed 
-  and random intercept terms. 
+  (`M_DrugC` and `M_DrugD`) allow us to control for drug effects while testing 
+  the effect of centrerd BSA. The model retains L1 effects for the centered drug 
+  dummy codes plus the fixed and random intercept terms. 
 
 We use likelihood ratio tests to compare models in sequence. 
 
@@ -218,11 +219,11 @@ model fit indices for GLMMs, including AIC, BIC, ICC, and RMSE. In addition, we
 it also reports the conditional and marginal $R^2$ [@Nakagawa-RN3697].
 
 ### Effect Size Estimates
-Interpretation was facilitated by using the emmeans package [@Lenth-RN8188] to 
-obtain estimated marginal means for bandemia incidence associated with each drug 
-along with relevant 95% confidence intervals, and by examining the odds ratios 
-for pairwise comparisons of the drugs and for the BSA effects along with 95% 
-confidence intervals. 
+Interpretation was facilitated by using the `marginaleffects` package 
+[@Arel-Bundock-RN8812] to obtain estimated marginal means for bandemia incidence
+associated with each drug along with relevant 95% confidence intervals, and by
+examining the odds ratios for pairwise comparisons of the drugs and for the BSA
+effects along with 95% confidence intervals.
 
 ### Collinearity
 The `performance` package [@Lüdecke-RN8788] provides a function for examining 
