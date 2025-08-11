@@ -596,27 +596,55 @@ analyses.
 
 Final_Visits <- Final_Visits %>% 
   # Dummy-code Drug (using Drug = 1 (vincristine) as reference level)
-  mutate(DrugC = if_else(Drug == 2, true = 1, false = 0),
+  mutate(DrugV = if_else(Drug == 1, true = 1, false = 0), 
+         DrugC = if_else(Drug == 2, true = 1, false = 0),
          DrugD = if_else(Drug == 3, true = 1, false = 0)) %>% 
   # Turn on grouping by patient so we can easily get patient-level means.
   group_by(Patient) %>% 
   # Aggregate dummy codes to patient-level means for use in GLMM analyses. 
-  mutate(M_DrugC = mean(DrugC),
+  mutate(M_DrugV = mean(DrugV), 
+         M_DrugC = mean(DrugC),
          M_DrugD = mean(DrugD)) %>% 
   # Turn off grouping by patient (no longer need it)
   ungroup() %>% 
   # Create centered L1 predictors for use in GLMM analyses.
-  mutate(DrugC_C = DrugC - M_DrugC,
+  mutate(DrugV_C = DrugV - M_DrugV,
+         DrugC_C = DrugC - M_DrugC,
          DrugD_C = DrugD - M_DrugD) %>% 
   # Center the L2 predictor for use in GLMM analyses.
   mutate(BSA_m2_C = Surface_Area_m2 - mean(Final_Patients$Surface_Area_m2)) %>% 
-  set_variable_labels(DrugC = "Dummy code, Drug = Cyclophosphamide (L1, uncentered)",
+  set_variable_labels(DrugV = "Dummy code, Drug = Vincristine (L1, uncentered)",
+                      DrugC = "Dummy code, Drug = Cyclophosphamide (L1, uncentered)",
                       DrugD = "Dummy code, Drug = Doxorubicin (L1, uncentered)",
+                      M_DrugV = "Mean dummy code, Drug = Vincristine (L2, aggregated)",
                       M_DrugC = "Mean dummy code, Drug = Cyclophosphamide (L2, aggregated)",
                       M_DrugD = "Mean dummy code, Drug = Doxorubicin (L2, aggregated)",
+                      DrugV_C = "Dummy code, Drug = Vincristine (L1, group mean centered)",
                       DrugC_C = "Dummy code, Drug = Cyclophosphamide (L1, group mean centered)",
                       DrugD_C = "Dummy code, Drug = Doxorubicin (L1, group mean centered)",
                       BSA_m2_C = "Body surface area in m^2 (L2, grand-mean centered)") 
+```
+
+# Update Patient-Level Data
+We want the add the means for the dummy-coded drug variables to the patient data 
+for use in some graphs later. 
+
+```{r}
+#| label: create-Drug-Means
+
+Drug_Means <- Final_Visits %>% 
+  select(Patient, M_DrugV, M_DrugC, M_DrugD) %>% 
+  unique() %>% 
+  set_variable_labels(M_DrugV = "Mean dummy code, Drug = Vincristine (L2, aggregated)",
+                      M_DrugC = "Mean dummy code, Drug = Cyclophosphamide (L2, aggregated)",
+                      M_DrugD = "Mean dummy code, Drug = Doxorubicin (L2, aggregated)") 
+```
+
+```{r}
+#| label: update-Final-Patients
+
+Final_Patients <- Final_Patients %>% 
+  left_join(x = ., y = Drug_Means, by = join_by(Patient))
 ```
 
 # Save Data
