@@ -86,7 +86,8 @@ library(emmeans)     # for contrast(), emmeans(), pairs()
 library(glmmTMB)     # for diagnose(), glmmTMB()
 library(marginaleffects)  # for predictions(), comparisons(), slopes(), etc. 
 library(modelsummary) # for modelsummary()
-library(performance) # for model_performance(), r2()
+library(performance) # for check_model(), icc(), model_performance(), r2(), 
+                     # test_lrt()
 library(knitr)       # for kable()
 library(kableExtra)  # for kable_styling 
 library(piercer)     # for for brier(), display_num(), file_details(), 
