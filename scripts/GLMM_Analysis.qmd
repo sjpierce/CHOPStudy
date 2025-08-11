@@ -202,17 +202,23 @@ The basic modeling strategy involved fitting a set of three nested models.
 * Model 0 (`m0`): The null model includes only a fixed intercept and a random 
   intercept. The ICC for this model shows us what proportion of variability in 
   bandemia is attributable to individual differences between dogs rather than 
-  to differences between visits within dogs. 
+  to differences between visits for the same dog. 
 * Model 1 (`m1`): This model expands on Model 0 by adding fixed effect slopes 
-  for the L1 predictors (centered dummy codes for the drug administered). It 
-  still includes both fixed and random intercepts. 
+  for the L1 predictors (centered dummy codes for the drug administered, named 
+  `DrugC_C` for cyclophosphamide and `DrugD_C` for doxorubicin). It still 
+  includes both fixed and random intercepts. 
 * Model 2 (`m2`): This model expands on Model 1 by adding the fixed effect 
   slopes for the L2 predictors. The aggregated means of the L1 drug dummy codes 
-  (`M_DrugC` and `M_DrugD`) allow us to control for drug effects while testing 
-  the effect of centrerd BSA. The model retains L1 effects for the centered drug 
-  dummy codes plus the fixed and random intercept terms. 
+  (`M_DrugC` and `M_DrugD`) allow us to control for the fact that there was 
+  variability in the proportion visits at which each dog was exposed to each 
+  drug. We want to control for that when testing the effect of centered BSA. The 
+  model retains L1 effects for the centered drug dummy codes plus the fixed and 
+  random intercept terms. 
 
-We use likelihood ratio tests to compare models in sequence. 
+I expect that our manuscript will only report selected statistics about Model 0
+(e.g., the ICC) and then focus on Model 2, but Model 1 is useful to me as part 
+of a model building process. We use likelihood ratio tests to compare models in 
+sequence. 
 
 ### Model Fit Indices
 We used the performance package [@Lüdecke-RN8788] report a variety of common 
@@ -222,9 +228,11 @@ it also reports the conditional and marginal $R^2$ [@Nakagawa-RN3697].
 ### Effect Size Estimates
 Interpretation was facilitated by using the `marginaleffects` package 
 [@Arel-Bundock-RN8812] to obtain estimated marginal means for bandemia incidence
-associated with each drug along with relevant 95% confidence intervals, and by
-examining the odds ratios for pairwise comparisons of the drugs and for the BSA
-effects along with 95% confidence intervals.
+associated with each drug along with relevant 95% confidence intervals, 
+relative risk (RR) for bandemia when comparing pairs of drugs, and graphing 
+average predicted bandemia incidence as a function of each continuous predictor. 
+We also estimated the odds ratio (OR) for each predictor along with 95% 
+confidence intervals.
 
 ### Collinearity
 The `performance` package [@Lüdecke-RN8788] provides a function for examining 
@@ -236,35 +244,23 @@ $GVIF^{(1/(2*df))}$ to cutoffs defined for $\sqrt{VIF}$. Some suggested cutoffs
 indicating potential problems are $\sqrt{VIF} \ge 2$ or $\sqrt{VIF} \ge 3$. We 
 applied the latter cutoff, so hope to see $GVIF^{(1/(2*df))} < 3$ in our models.
 
-### Residual Distributions 
+### Model Diagnostics 
+We used the `performance` package to do several model diagnostics. First, we 
+used a posterior predictive check comparing model predictions to the observed 
+data. Second, we examined binned residuals by plotting the average residual 
+within a bin against the estimated probability of bandemia. Ideally, all points 
+on that plot should fall within the model's error bounds. 
+
 The `DHARMa` package in R uses simulation-based methods to compute scaled
 residuals that should follow a uniform distribution if the data are consistent
 with the actual distribution used to model the outcome, making it easier to
-check for deviations from model assumptions [@Hartig-RN8668]. We used those 
-residuals to run several tests of model assumptions. 
+check for deviations from model assumptions [@Hartig-RN8668]. Third, we examined  
+quantile-quantile plots of those residuals to check uniformity. As usual with a 
+Q-Q plot, data points should lay close to the reference line for the theoretical 
+distribution. 
 
-First, we conducted a Kolmogorov-Smirnov (K-S) test of overall uniformity of the 
-residual distribution, pairing it with a quantile-quantile (Q-Q) plot of the 
-observed versus expected residual values. As usual with a Q-Q plot, data points 
-should lay close to the reference line for the theoretical distribution. 
-
-Second, we split the data by threshold and used both a K-S test of within group
-deviation from uniformity and a Levene test for homogeneity of variance, pairing
-the result with a a set of box plots showing the residual distribution within a
-specific level of threshold. That plot should show the upper and lower edges of
-the boxes laying close to the dashed lines for the 25th and 75th quantiles, and
-the median bar of the box laying at the 50th quantile. Heterogeneity of variance
-would be evident if the boxes associated with different thresholds vary
-substantially in height.
-
-Third, we conducted two-sided binomial tests for outliers on either end of the
-residual distribution. The accompanying plot is a histogram of the residual 
-distribution, annotated with red lines for any outliers detected. 
-
-Finally, we ran a simulation-based a test for over- or under-dispersion in the
-the scaled residuals. This is paired with a histogram of the distribution of 
-simulated dispersion values, with a red line marking the position of the 
-observed dispersion parameter value. 
+Finally, we examined a Q-Q plot of the random effects to see whether they 
+followed a normal distribution. 
 
 We applied all of these `DHARMa` tests to the models below, summarizing the
 results in figures. For all of the `DHARMa` tests, good models should produce
