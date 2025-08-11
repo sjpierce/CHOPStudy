@@ -270,6 +270,7 @@ values (e.g., $p < 0.05$) indicate violation of model assumptions.
 # Results {#sec-Results}
 
 ## Model 0 (No Predictors)
+@tbl-m0  shows the parameter estimates for Model 0. 
 
 ```{r}
 #| label: tbl-m0 
@@ -279,7 +280,7 @@ values (e.g., $p < 0.05$) indicate violation of model assumptions.
 # Null model.
 m0 <- glmmTMB(Bandemia ~ 1 + (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
-              ziformula = ~ 0, dispformula = ~ 1)
+              ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
 
 FN = paste0("Log Likelihood = ", round(logLik(m0), digits = 3),
             ". Deviance = ", round(-2*logLik(m0), digits = 3),
@@ -292,30 +293,26 @@ modelsummary(list("Model 0" = m0), output = "kableExtra",
              col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
              shape = component + term ~ model + statistic, 
              statistic = c("conf.int", "statistic", "p.value"), 
+             gof_omit = "R2 Marg.|R2 Cond.|ICC",
              notes = FN) %>% 
   cat()
 ```
 
-```{r}
-#| label: tbl-m0-OR 
-#| tbl-cap: Model 0 Odds-Ratios
-
-FN = paste0("95% CIs reported.")
-
-modelsummary(list("Model 0" = m0), output = "kableExtra", 
-             align = "llrrr", escape = FALSE, exponentiate = TRUE,
-             col.names = c("Component", "Term", "OR", "OR.LL", "OR.UL"),
-             shape = component + term ~ model + statistic, 
-             statistic = c("conf.int"), 
-             gof_map = "none",
-             notes = list(FN)) 
-```
+Before we do much to interpret the model, we do some quick diagnostic checks. 
+The chunk below should return text describing the result of some checks. The 
+warning it provides is a result of the fact that bandemia generally has low 
+incidence in this sample. 
 
 ```{r}
 #| label: diag-m0
 
 diagnose(m0)
 ```
+
+@fig-check-m0 displays some additional graphs used to check model assumptions. 
+While the binned residuals do indicate minor issues with the model especially 
+for situations where the probability of bandemia is very low or very high, the 
+other panels don't show any cause for major concern. 
 
 ```{r}
 #| label: fig-check-m0
@@ -328,7 +325,73 @@ check_model(m0, type = "discrete_both", residual_type = "simulated",
             base_size = 9)
 ```
 
+@tbl-m0-icc shows the intraclass correlation (ICC). This is actually the main 
+reason we ran Model 0. Focus on the adjusted ICC. It shows the proportion of 
+variance in the bandemia that is attributable to individual differences between 
+dogs. 
+
+```{r}
+#| label: tbl-m0-icc
+#| tbl-cap: Model 0 Intraclass Correlations
+
+# Set random number seed to ensure reproducibility of bootstrap result. 
+set.seed(26485) 
+
+# Bootstrapped 95% CIs via lme4::bootMer()
+icc(m0, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  data.frame() %>% 
+  rename(ICC = X1, LL = X2, UL = X3) %>% 
+  head(n = 2) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2))
+```
+Because Model 0 does not use any substantive predictors, we do not expect its 
+fixed effects to explain any variance. Thus, an marginal R2 of 0 is expected. 
+The conditional R2 includes variance explained by both fixed and random effects,
+so we expect it to be higher than the marginal R2 (usually by an amount 
+equal to the adjusted ICC). 
+
+```{r}
+#| label: tbl-m0-r2
+#| tbl-cap: Model 0 R2 Measures
+
+# Set random number seed to ensure reproducibility of bootstrap result. 
+set.seed(44512) 
+
+# Bootstrapped 95% CIs via lme4::bootMer()
+r2(m0, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  data.frame() %>% 
+  rename(R2 = X1, LL = X2, UL = X3) %>% 
+  head(n = 2) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2))
+```
+
+Another thing to examine is the population marginal mean for bandemia incidence 
+for a typical dog (random effect of 0), which is shown in @tbl-m0-emm-intercept.
+
+```{r}
+#| label: tbl-m0-emm-intercept
+#| tbl-cap: Model 0 Population-Average Estimated Marginal Mean (EMM) for Grand Mean
+
+avg_predictions(m0, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>% 
+  mutate(p.value = display_num(p.value)) %>% 
+  select(estimate, std.error, conf.low, conf.high, statistic, p.value, s.value) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2), align = "r",
+        col.names = c("EMM", "SE", "LL", "UL", "z", "p", "s")) %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2, "Wald Test" = 2, " "))
+```
+
 ## Model 1 (L1 Predictors)
+@tbl-m1  shows the parameters for Model 1 and @tbl-m1-OR shows the corresponding 
+odds-ratios. 
 
 ```{r}
 #| label: tbl-m1 
@@ -336,9 +399,14 @@ check_model(m0, type = "discrete_both", residual_type = "simulated",
 #| results: asis
 
 # Add L1 predictors.
-m1 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + (1 | Patient), 
-              data = Final_Visits, family = binomial(link = "logit"), 
-              ziformula = ~ 0, dispformula = ~ 1)
+m1 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + (1 | Patient),
+              data = Final_Visits, family = binomial(link = "logit"),
+              ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
+
+# m1 <- glmmTMB(Bandemia ~ Name + (1 | Patient), 
+#               data = Final_Visits, family = binomial(link = "logit"), 
+#               ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
+
 
 FN = paste0("Log Likelihood = ", round(logLik(m1), digits = 3),
             ". Deviance = ", round(-2*logLik(m1), digits = 3),
@@ -352,6 +420,7 @@ modelsummary(list("Model 1" = m1), output = "kableExtra",
              col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
              shape = component + term ~ model + statistic, 
              statistic = c("conf.int", "statistic", "p.value"), 
+             gof_omit = "R2 Marg.|R2 Cond.|ICC",
              notes = FN) %>% 
   cat()
 ```
@@ -371,12 +440,24 @@ modelsummary(list("Model 1" = m1), output = "kableExtra",
              notes = list(FN)) 
 ```
 
+Before we do much to interpret the model, we do some quick diagnostic checks. 
+The chunk below should return text describing the result of some checks. The 
+warning it provides is a result of the fact that bandemia generally has low 
+incidence in this sample. Because we only added predictors that are dummy codes 
+for drug (a categorical variable), there is no need to check for 
+multicollinearity. 
+
 ```{r}
 #| label: diag-m1
 
 diagnose(m1)
-check_collinearity(m1)
+#check_collinearity(m1)
 ```
+
+@fig-check-m1 displays some additional graphs used to check model assumptions. 
+While the binned residuals do indicate minor issues with the model especially 
+for situations where the probability of bandemia is very low or very high, the 
+other panels don't show any cause for major concern. 
 
 ```{r}
 #| label: fig-check-m1
@@ -389,8 +470,13 @@ check_model(m1, type = "discrete_both", residual_type = "simulated",
             base_size = 9)
 ```
 
+Before we interpret the model further, we want to see whether Model 1 fit the 
+data better than Model 0. The resulting LRT in @tbl-compare-m0-m1 shows that 
+accounting for which drug was used prior to the visit improves the model. 
+
 ```{r}
-#|label: compare-m0-m1
+#| label: tbl-compare-m0-m1
+#| tbl-cap: Likelihood Ratio Test Comparing Models 0 vs 1.
 
 #compare_performance(m1, m2)
 
@@ -401,8 +487,95 @@ test_lrt(m0, m1) %>%
   kable_styling() 
 ```
 
+@tbl-m1-icc shows that we still have a similar level of unexplained variability 
+between dogs. That is expected because the visit-level drug predictors were 
+group-mean centered. They can explain variance between visits for the same dog 
+but cannot explain any between-dog variance. 
+
+```{r}
+#| label: tbl-m1-icc
+#| tbl-cap: Model 1 Intraclass Correlations
+
+# Set random number seed to ensure reproducibility of bootstrap result. 
+set.seed(99487) 
+
+# Bootstrapped 95% CIs via lme4::bootMer()
+icc(m1, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  data.frame() %>% 
+  rename(ICC = X1, LL = X2, UL = X3) %>% 
+  head(n = 2) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2))
+```
+
+@tbl-m1-r2 Shows the R2 measures. The marginal R2 tells us how much of the 
+overall variance in bandemia is explained by which drug the dog received prior 
+to the visit's CBC sample being taken. 
+
+```{r}
+#| label: tbl-m1-r2
+#| tbl-cap: Model 1 R2 Measures
+
+# Set random number seed to ensure reproducibility of bootstrap result. 
+set.seed(32156) 
+
+# Bootstrapped 95% CIs via lme4::bootMer()
+r2(m1, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  data.frame() %>% 
+  rename(R2 = X1, LL = X2, UL = X3) %>% 
+  head(n = 2) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2))
+```
+
+Another thing to examine is the population marginal mean for bandemia incidence 
+for a typical dog (random effect of 0), which is shown in @tbl-m1-emm-intercept. 
+We should see a similar value to that observed in Model 0. 
+
+```{r}
+#| label: tbl-m1-emm-intercept
+#| tbl-cap: Model 1 Population-Average Estimated Marginal Mean (EMM) for Grand Mean
+
+avg_predictions(m1, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>% 
+  mutate(p.value = display_num(p.value)) %>% 
+  select(estimate, std.error, conf.low, conf.high, statistic, p.value, s.value) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2), align = "r",
+        col.names = c("EMM", "SE", "LL", "UL", "z", "p", "s")) %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2, "Wald Test" = 2, " "))
+```
+
+@tbl-m1-emm-name shows the population average estimated marginal means for 
+bandemia incidence associated with each drug. The estimates assume a typical dog 
+(i.e., one with a random intercept of 0). 
+
+```{r}
+#| label: tbl-m1-emm-name
+#| tbl-cap: Model 1 Population-Average Estimated Marginal Mean (EMM) by Drug 
+#|          Main Effect at Level 1
+
+avg_predictions(m1, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                by = c("Name"))  %>% 
+  mutate(p.value = display_num(p.value)) %>% 
+  select(Name, estimate, std.error, conf.low, conf.high, statistic, p.value, 
+         s.value) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2), align = "r",
+        col.names = c("Name","EMM", "SE", "LL", "UL", "z", "p", "s")) %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(header = c(" " = 3, "95% CI" = 2, "Wald Test" = 2, " "))
+```
+
+
 
 ## Model 2 (L1 & L2 Predictors)
+@tbl-m2 shows the parameters for Model 2, which includes all the variables 
+we intend to test and @tbl-m2-OR shows the corresponding odds-ratios. 
 
 ```{r}
 #| label: tbl-m2 
@@ -413,7 +586,7 @@ test_lrt(m0, m1) %>%
 m2 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + BSA_m2_C + 
                 (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
-              ziformula = ~ 0, dispformula = ~ 1)
+              ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
 
 FN = paste0("Log Likelihood = ", round(logLik(m2), digits = 3),
             ". Deviance = ", round(-2*logLik(m2), digits = 3),
@@ -427,6 +600,7 @@ modelsummary(list("Model 2" = m2), output = "kableExtra",
              col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
              shape = component + term ~ model + statistic, 
              statistic = c("conf.int", "statistic", "p.value"), 
+             gof_omit = "R2 Marg.|R2 Cond.|ICC",
              notes = list(FN, paste("95% CIs reported.")),
              footnote_as_chunk = TRUE) %>% 
   cat()
@@ -447,6 +621,11 @@ modelsummary(list("Model 2" = m2), output = "kableExtra",
              notes = FN) 
 ```
 
+Before we do much to interpret the model, we do some quick diagnostic checks. 
+The chunk below should return text describing the result of some checks. The 
+warning it provides is a result of the fact that bandemia generally has low 
+incidence in this sample. We also check for multicollinearity, but find it is 
+not a problem in this model. 
 
 ```{r}
 #| label: diag-m2
@@ -454,6 +633,11 @@ modelsummary(list("Model 2" = m2), output = "kableExtra",
 diagnose(m2)
 check_collinearity(m2)
 ```
+
+@fig-check-m1 displays some additional graphs used to check model assumptions. 
+While the binned residuals do indicate minor issues with the model especially 
+for situations where the probability of bandemia is very low or very high, the 
+other panels don't show any cause for major concern. 
 
 ```{r}
 #| label: fig-check-m2
@@ -466,11 +650,11 @@ check_model(m2, type = "discrete_both", residual_type = "simulated",
             base_size = 9)
 ```
 
+@tbl-compare-m0-m1-m2 shows comparisons between Models 0, 1, and 2. 
 
 ```{r}
-#|label: compare-m0-m1-m2
-
-#compare_performance(m1, m2)
+#| label: tbl-compare-m0-m1-m2
+#| tbl-cap: Likelihood Ratio Tests Comparing Models 0, 1, and 2.
 
 bind_rows(test_lrt(m0, m2), 
           test_lrt(m1, m2)) %>% 
@@ -483,97 +667,161 @@ bind_rows(test_lrt(m0, m2),
   group_rows(., group_label = "Model 1 vs Model 2", start_row = 3, end_row = 4) 
 ```
 
-
-In the model, Drug 1 is set as the baseline. Drug 2 is found to significantly
-decrease the probability of causing Bandemia compared to the baseline (Drug 1).
-
-@fig-EMMs_with_CI_logit shows the estimated means of logit(Bandemia) for each
-drug. And it is calculated assuming the Surface_area equals the mean of
-Surface_area ($0.9470$), and the visit number is 1.
+@tbl-m2-icc shows that we still have a similar level of unexplained variability 
+between dogs. This is unexpected given that BSA appears to be a meaningful 
+predictor of bandemia in @tbl-m2. 
 
 ```{r}
-#| label: fig-EMMs_with_CI_logit
-#| fig-cap: Estimated Marginal Means of logit(Bandemia) for each drug
+#| label: tbl-m2-icc
+#| tbl-cap: Model 2 Intraclass Correlations
 
-m1.emm <- emmeans(m1, ~ Drug)
+# Set random number seed to ensure reproducibility of bootstrap result. 
+set.seed(74156) 
 
-emm_df <- as.data.frame(m1.emm)
-
-emm_df %>% 
-  ggplot(., aes(x = Drug, y = emmean)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
-  xlab("Drug") +
-  ylab("Estimated Marginal Means:logit(Bandemia)") +
-  ggtitle("EMMs with Confidence Intervals")
+# Bootstrapped 95% CIs via lme4::bootMer()
+icc(m2, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  data.frame() %>% 
+  rename(ICC = X1, LL = X2, UL = X3) %>% 
+  head(n = 2) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
-
-@tbl-logit_bandemia lists the values used to generate the figure above.
 
 ```{r}
-#| label: tbl-logit_bandemia
-#| tbl-cap: Estimated Means of logit(bandemia) for each Drug
+#| label: tbl-m2-r2
+#| tbl-cap: Model 2 R2 Measures
 
-emm_df[,c(2,3,5,6)]=round(emm_df[,c(2,3,5,6)],4)
+# Set random number seed to ensure reproducibility of bootstrap result. 
+set.seed(84361) 
 
-emm_df%>%kable()%>%kable_styling()
+# Bootstrapped 95% CIs via lme4::bootMer()
+r2(m2, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  data.frame() %>% 
+  rename(R2 = X1, LL = X2, UL = X3) %>% 
+  head(n = 2) %>% 
+  kable(digits = 2) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
-
-@fig-Estimated_Marginal_Proportions shows the estimated means of proportion of
-Bandemia for each drug. And it is calculated assuming the Surface_area equals
-the mean of Surface_area ($0.9470$), and the visit number is 1.
 
 ```{r}
-#| label: fig-Estimated_Marginal_Proportions
-#| fig-cap: Estimated Marginal Proportions of Bandemia
-emm <- emmeans(model, ~ Drug,type="response")
-emm_df <- as.data.frame(emm)
-ggplot(emm_df, aes(x = Drug, y = prob)) +
-  geom_point() +
-  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
-  xlab("Drug") +
-  ylab("Estimated Marginal Proportions: Bandemia") +
-  ggtitle("Estimated values with Confidence Intervals")
-```
+#| label: tbl-m2-emm-intercept
+#| tbl-cap: Model 2 Population-Average Estimated Marginal Mean (EMM) for Grand Mean
 
-@tbl-bandemia lists the values used to generate the figure above.
+avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>% 
+  mutate(p.value = display_num(p.value)) %>% 
+  select(estimate, std.error, conf.low, conf.high, statistic, p.value, s.value) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2), align = "r",
+        col.names = c("EMM", "SE", "LL", "UL", "z", "p", "s")) %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(header = c(" " = 2, "95% CI" = 2, "Wald Test" = 2, " "))
+```
 
 ```{r}
-#| label: tbl-bandemia
-#| tbl-cap: Estimated Proportions of Bandemia for each Drug
+#| label: tbl-m2-emm-name
+#| tbl-cap: Model 2 Population-Average Estimated Marginal Mean (EMM) by Drug 
+#|          Main Effect at Level 1
 
-emm_df[,c(2,3,5,6)]=round(emm_df[,c(2,3,5,6)],4)
-emm_df%>%kable()%>%kable_styling()
+avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                by = c("Name"))  %>% 
+  mutate(p.value = display_num(p.value)) %>% 
+  select(Name, estimate, std.error, conf.low, conf.high, statistic, p.value, 
+         s.value) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2), align = "r",
+        col.names = c("Name","EMM", "SE", "LL", "UL", "z", "p", "s")) %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(header = c(" " = 3, "95% CI" = 2, "Wald Test" = 2, " "))
 ```
-
-@tbl-odds_ratio presents the odds ratios comparing between the drugs. The odds
-ratio of 3.2610 indicates that Drug 1 is significant (pvalue=0.003<0.5)
-associated with a higher likelihood of the outcome compared to Drug 2, while
-Drug 2 has an odds ratio of 0.2987, suggesting a significant (pvalue=0.018<0.5)
-lower likelihood of the outcome as compared to Drug 3.
 
 ```{r}
-#| label: tbl-odds_ratio
-#| tbl-cap: odds ratios comparing between the drugs
-emm <- emmeans(model, ~ Drug)
+#| label: fig-m2-emm-name
+#| tbl-cap: Model 2 Population-Average Estimated Marginal Means (EMMs) by Drug 
+#|          Main Effect at Level 1
 
-pairwise <- pairs(emm)
-contrast <- contrast(emm, method = "revpairwise")
-
-rr <- summary(pairwise, infer = c(TRUE, TRUE), type = "response")
-rr=rr[,-4]
-rr=rr[,-6]
-colnames(rr)=c("contrast","rate ratio","SE","lower CI","upper CI","z.ratio","p.value")
-rr[,c(2:7)]=round(rr[,c(2:7)],4)
-
-rr%>%kable()%>%kable_styling()
+plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                by = c("Name"), vcov = TRUE) +
+  theme_bw() +
+  labs(x = "Drug Name", Y = "Estimated Marginal Proportions: Bandemia Incidence") 
 ```
 
-We get similar results from these two models. In summary, the likelihood of
-Bendemia occurrence with drug 2 is significantly lower compared to its
-occurrence with drugs 1 and 3. Additionally, a negative association was found
-between surface area and the total bands value, with this association being
-statistically significant.
+
+```{r}
+#| label: tbl-m2-RR-name
+#| tbl-cap: Model 2 Population-Average Relative Risk of Bandemia Between 
+#|          Different Drugs
+
+avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                hypothesis = ratio ~ revpairwise, by = "Name")  %>% 
+  mutate(p.value = display_num(p.value)) %>% 
+  select(hypothesis, estimate, std.error, conf.low, conf.high, statistic, p.value, 
+         s.value) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2), align = "r",
+        col.names = c("Hypothesis","RR", "SE", "LL", "UL", "z", "p", "s")) %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(header = c(" " = 3, "95% CI" = 2, "Wald Test" = 2, " "))
+```
+
+
+
+
+```{r}
+#| label: fig-m2-BSA
+#| tbl-cap: Model 2 Population-Average Predicted Bandemia by Body Surface Area 
+#|          Main Effect at Level 2
+
+plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                condition = c("BSA_m2_C"), vcov = TRUE) +
+  scale_x_continuous(name = "Mean-Centered Body Surface Area (m2)",
+                     sec.axis = sec_axis(~ . + mean(Final_Patients$Surface_Area_m2), 
+                                         name = "Uncentered Body Surface Area (m2)")) +
+  geom_rug(aes(x = Surface_Area_m2 - mean(Surface_Area_m2)), 
+               data = Final_Patients) +
+  theme_bw() +
+  labs(x = "Body Surface Area (m2), Mean Centered",
+       x = "Bandemia Incidence")
+```
+
+```{r}
+#| label: fig-m2-M-DrugC
+#| tbl-cap: Model 2 Population-Average Predicted Bandemia by Mean Exposure to 
+#|          Clyclophosphamide Main Effect at Level 2
+
+plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                condition = c("M_DrugC"), vcov = TRUE) +
+  geom_rug(aes(x = M_DrugC), data = Final_Patients) +
+  theme_bw() +
+  coord_cartesian(ylim = c(0.00, 0.80)) +
+  labs(x = "Mean Exposure to Cyclophosphamide (Proportion)",
+       y = "Bandemia")
+```
+
+```{r}
+#| label: fig-m2-M-DrugD
+#| tbl-cap: Model 2 Population-Average Predicted Bandemia by Mean Exposure to 
+#|          Doxorubicin Main Effect at Level 2
+
+plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                condition = c("M_DrugD"), vcov = TRUE) +
+  geom_rug(aes(x = M_DrugD), data = Final_Patients) +
+  theme_bw() +
+  coord_cartesian(ylim = c(0.00, 0.30)) +
+  labs(x = "Mean Exposure to Doxorubicin (Proportion)",
+       y = "Bandemia")
+```
+
+
+
+
+
+
+
+
+
 
 # References
 ::: {#refs}
