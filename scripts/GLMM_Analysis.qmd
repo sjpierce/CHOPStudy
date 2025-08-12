@@ -753,12 +753,13 @@ avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA,
 #| label: fig-m2-emm-name
 #| tbl-cap: Model 2 Population-Average Estimated Marginal Means (EMMs) by Drug 
 #|          Main Effect at Level 1
-#| fig-width: 4
-#| fig-height: 3
+#| fig-width: 3
+#| fig-height: 2
 
 plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
                 by = c("Name"), vcov = TRUE) +
   theme_bw() +
+  coord_cartesian(ylim = c(0, 0.25)) +
   labs(x = "Drug Name", Y = "Estimated Marginal Proportions: Bandemia Incidence") 
 ```
 
