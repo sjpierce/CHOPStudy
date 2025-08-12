@@ -468,9 +468,9 @@ check_model(m1, type = "discrete_both", residual_type = "simulated",
             base_size = 9)
 ```
 
-Before we interpret the model further, we want to see whether Model 1 fit the 
-data better than Model 0. The resulting LRT in @tbl-compare-m0-m1 shows that 
-accounting for which drug was used prior to the visit improves the model. 
+Next, we want to see whether Model 1 fit the data better than Model 0. The
+resulting LRT in @tbl-compare-m0-m1 shows that accounting for which drug was
+used prior to the visit improves the model.
 
 ```{r}
 #| label: tbl-compare-m0-m1
@@ -648,7 +648,7 @@ check_model(m2, type = "discrete_both", residual_type = "simulated",
 ```
 
 @tbl-compare-m0-m1-m2 shows comparisons between Models 0, 1, and 2. The fact 
-that model 2 does not fit better than Model 1 is probably because we added 
+that Model 2 does not quite fit better than Model 1 is probably because we added 
 multiple L2 predictors in Model 2 but only one of them was particularly useful. 
 The fact that @tbl-m2 shows an effect of BSA suggests that we should interpret 
 Model 2 instead of Model 1. 
