@@ -88,14 +88,27 @@ library(piercer)      # for all_classes(), git_report()
 # Packages loaded below here were used in other scripts rendered below. Loading 
 # them here just makes the Software Information section output from this script 
 # more complete. 
-library(tidyverse)    # loads dplyr, ggplot2, lubridate, stringr, tidyr all at once.
+library(tidyverse)    # loads dplyr, forcats(), ggplot2, lubridate, stringr, 
+                      # tibble(), tidyr all at once.
                       # for %>%, filter(), mutate(), map_dfr(), map_chr(), 
-                      # rowid_to_colum()
+                      # rowid_to_colum(), and more...
+library(broom)        # for glance(), tidy()
+library(broom.mixed)  # for support for mixed models. 
+library(DHARMa)       # for plotQQunif(), plotResiduals(), simulateResiduals(), 
+                      # testDispersion()
+library(ggpmisc)      # for stat_correlation()
+library(glmmTMB)      # for diagnose(), glmmTMB()
 library(knitr)        # for kable()
 options(kableExtra.latex.load_packages = FALSE)
-library(kableExtra)   # for kable_styling(), add_header_above(), column_spec(),collapse_rows()
-library(readxl)       # for read_xlsx()
+library(kableExtra)   # for kable_styling(), add_header_above(), column_spec(), 
+                      # collapse_rows()
 library(labelled)     # for set_value_labels(), set_variable_labels(), etc.
+library(marginaleffects)  # for predictions(), comparisons(), slopes(), etc. 
+library(modelsummary) # for modelsummary()
+library(patchwork)    # for plot_layout()
+library(performance)  # for check_model(), icc(), model_performance(), r2(), 
+                      # test_lrt()
+library(readxl)       # for read_xlsx()
 ```
 
 # Import Data
