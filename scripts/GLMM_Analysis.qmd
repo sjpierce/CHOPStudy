@@ -343,7 +343,7 @@ icc(m0, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   data.frame() %>% 
   rename(ICC = X1, LL = X2, UL = X3) %>% 
   head(n = 2) %>% 
-  kable(digits = 2) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2)) %>% 
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
@@ -367,7 +367,7 @@ r2(m0, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   data.frame() %>% 
   rename(R2 = X1, LL = X2, UL = X3) %>% 
   head(n = 2) %>% 
-  kable(digits = 2) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2)) %>% 
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
@@ -504,7 +504,7 @@ icc(m1, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   data.frame() %>% 
   rename(ICC = X1, LL = X2, UL = X3) %>% 
   head(n = 2) %>% 
-  kable(digits = 2) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2)) %>% 
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
@@ -527,7 +527,7 @@ r2(m1, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   data.frame() %>% 
   rename(R2 = X1, LL = X2, UL = X3) %>% 
   head(n = 2) %>% 
-  kable(digits = 2) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2)) %>% 
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
@@ -686,7 +686,7 @@ icc(m2, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   data.frame() %>% 
   rename(ICC = X1, LL = X2, UL = X3) %>% 
   head(n = 2) %>% 
-  kable(digits = 2) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2)) %>% 
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
@@ -707,7 +707,7 @@ r2(m2, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   data.frame() %>% 
   rename(R2 = X1, LL = X2, UL = X3) %>% 
   head(n = 2) %>% 
-  kable(digits = 2) %>% 
+  kable(digits = 2, format.args = list(nsmall = 2)) %>% 
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
