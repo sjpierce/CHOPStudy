@@ -132,7 +132,8 @@ quarto_render(input = here("scripts/Import_Data.qmd"),
                     SourceFile = "Import_Data.qmd", 
                     LogFile = OutFile),
               execute_dir = here::here("scripts/"),
-              as_job = "auto")
+              as_job = "auto",
+              quarto_args = c("--output", OutFile))
 
 # End chunk timer
 chunk.end <- proc.time()
@@ -142,7 +143,7 @@ chunk.end - chunk.start
 # Analyze Data
 
 ``` {r}
-#| label: Analyze-Data
+#| label: Descriptive-Analysis
 #| eval: true
 
 # Memory garbage collection (for more consistent chunk timing).
@@ -150,17 +151,45 @@ gc()
 # Start chunk timer.
 chunk.start <- proc.time()
 
-OutFile <- paste0("Analyze_Data_", Sys.Date(), ".html")
+OutFile <- paste0("Descriptive_Analysis_", Sys.Date(), ".html")
 
 # Create an object holding arguments for quarto_render(). 
-quarto_render(input = here("scripts/Analyze_Data.qmd"),
+quarto_render(input = here("scripts/Descriptive_Analysis.qmd"),
               output_format = "html",
               output_file = OutFile, 
               execute_params = list(
-                    SourceFile = "Analyze_Data.qmd", 
+                    SourceFile = "Descriptive_Analysis.qmd", 
                     LogFile = OutFile),
               execute_dir = here::here("scripts/"),
-              as_job = "auto")
+              as_job = "auto",
+              quarto_args = c("--output", OutFile))
+
+# End chunk timer
+chunk.end <- proc.time()
+chunk.end - chunk.start
+```
+
+``` {r}
+#| label: GLMM-Analysis
+#| eval: true
+
+# Memory garbage collection (for more consistent chunk timing).
+gc()
+# Start chunk timer.
+chunk.start <- proc.time()
+
+OutFile <- paste0("GLMM_Analysis_", Sys.Date(), ".html")
+
+# Create an object holding arguments for quarto_render(). 
+quarto_render(input = here("scripts/GLMM_Analysis.qmd"),
+              output_format = "html",
+              output_file = OutFile, 
+              execute_params = list(
+                    SourceFile = "GLMM_Analysis.qmd", 
+                    LogFile = OutFile),
+              execute_dir = here::here("scripts/"),
+              as_job = "auto",
+              quarto_args = c("--output", OutFile))
 
 # End chunk timer
 chunk.end <- proc.time()
