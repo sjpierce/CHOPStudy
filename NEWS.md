@@ -1,5 +1,22 @@
 # CHOPStudy News
 
+## 0.15.0, 2025-08-12
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Stop loading a package we no longer use. 
+* `scripts/GLMM_Analysis.qmd`
+    * Improve narrative text. 
+    * Improve table formatting.
+    * Change figure sizes. 
+    * Improve figure formatting.
+    * Stop loading packages we no longer use. 
+* `scripts/Render_scripts.qmd` 
+    * Load more packages. 
+    * Update chunks for running other scripts.
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 0.14.0, 2025-08-10
 * `README.qmd` and `README.md`
     * Update software version & citation info.
