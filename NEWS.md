@@ -1,5 +1,15 @@
 # CHOPStudy News
 
+## 0.16.0, 2025-08-12
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/_quarto.yml`
+    * Update render key to include another script.
+* `scripts/GLMM_Analysis.qmd`
+    * Change figure size. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+
 ## 0.15.0, 2025-08-12
 * `README.qmd` and `README.md`
     * Update software version & citation info.
