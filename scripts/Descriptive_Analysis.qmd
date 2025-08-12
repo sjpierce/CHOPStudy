@@ -84,7 +84,6 @@ library(ggpmisc)    # for stat_correlation()
 library(patchwork)  # for plot_layout()
 library(knitr)      # for kable()
 library(kableExtra) # for kable_styling 
-library(gtsummary)  # for ?
 library(readxl)     # for read_xlsx()
 library(piercer)    # for git_report()
 library(quarto)     # for quarto_version()
