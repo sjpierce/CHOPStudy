@@ -7,3 +7,4 @@ project:
     - Import_Data.qmd
     - Descriptive_Analysis.qmd
     - GLMM_Analysis.qmd
+    - Render_Scripts.qmd
