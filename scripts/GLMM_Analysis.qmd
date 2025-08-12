@@ -79,10 +79,8 @@ library(tidyverse)   # loads dplyr, forcats, ggplot2, lubridate, purrr, readr,
                      # for filter(), group_by(), mutate(), rename(), summarise()
 library(broom)       # for glance(), tidy()
 library(broom.mixed) # for support for mixed models. 
-library(car)         # for vif()
 library(DHARMa)      # for plotQQunif(), plotResiduals(), simulateResiduals(), 
                      # testDispersion()
-library(emmeans)     # for contrast(), emmeans(), pairs()
 library(glmmTMB)     # for diagnose(), glmmTMB()
 library(marginaleffects)  # for predictions(), comparisons(), slopes(), etc. 
 library(modelsummary) # for modelsummary()
