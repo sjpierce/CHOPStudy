@@ -735,8 +735,8 @@ bandemia incidence associated with each drug. The estimates assume a typical dog
 
 ```{r}
 #| label: tbl-m2-emm-name
-#| tbl-cap: Model 2 Population-Average Estimated Marginal Mean (EMM) by Drug 
-#|          Main Effect at Level 1
+#| tbl-cap: Model 2 Population-Average Estimated Marginal Mean (EMM) for 
+#|          Bandemia by Drug (Main Effect at Level 1)
 
 avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
                 by = c("Name"))  %>% 
@@ -751,8 +751,8 @@ avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA,
 
 ```{r}
 #| label: fig-m2-emm-name
-#| tbl-cap: Model 2 Population-Average Estimated Marginal Means (EMMs) by Drug 
-#|          Main Effect at Level 1
+#| tbl-cap: Model 2 Population-Average Estimated Marginal Means (EMMs) for 
+#|          Bandemia by Drug (Main Effect at Level 1)
 #| fig-width: 4
 #| fig-height: 2
 
