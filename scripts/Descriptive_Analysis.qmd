@@ -240,8 +240,8 @@ var_missingness(.) %>%
                               "Missing Values" = 2))
 ```
 
-@tbl-visit-describe-cat shows univariate frequency distributions for cateogrical
-biomarker variables.
+@tbl-visit-describe-cat shows univariate frequency distributions for binary 
+cateogrical biomarker variables.
 
 ```{r}
 #| label: tbl-visit-describe-cat
@@ -267,6 +267,23 @@ Final_Visits %>%
                 fixed_thead = T) %>% 
   collapse_rows(., columns = 1, valign = "top", 
                 row_group_label_position = "stack") 
+```
+
+@tbl-visit-band-category shows the frequency distribution for 3-level ordinal 
+band category variable. 
+
+```{r}
+#| label: tbl-visit-band-category
+#| tbl-cap: !expr paste0("Frequency Distribution for Band Category ", 
+#|                       "(N = ", nrow(Final_Visits), " Visits)")
+#| message: false
+
+Final_Visits %>% 
+  count(Band_Category) %>% 
+  rename(N_Visits = n) %>% 
+  mutate(Percent = 100*(N_Visits/nrow(Final_Visits))) %>% 
+  kbl(digits = 1) %>%
+  kable_styling()
 ```
 
 @tbl-visit-bands-toxic shows the crosstabulation of whether bands were present 
