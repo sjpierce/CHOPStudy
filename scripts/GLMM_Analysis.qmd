@@ -763,28 +763,48 @@ plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA,
   labs(x = "Drug Name", Y = "Estimated Marginal Proportions: Bandemia Incidence") 
 ```
 
-To compare the estimated marginal means between different drugs, @tbl-m2-RR-name 
-shows relative risk (RR) estimates. Those are the ratios between the bandemia 
-incidence rates for pairs of drugs. The RR is 1 when bandemia incidence is equal 
-between the two drugs compared. A RR of 2 would indicate that risk of bandemia 
-is twice as high for the drug in the numerator than for the drug in the 
-denominator.
+The simplest way to compare the bandemia rates is by examining the risk 
+difference between each paid of drugs, as shown in @tbl-m2-RD-name. The risk
+difference (RD) is simply subtracting one rate from the other. 
 
 ```{r}
-#| label: tbl-m2-RR-name
-#| tbl-cap: Model 2 Population-Average Relative Risk of Bandemia Between 
-#|          Different Drugs
+#| label: tbl-m2-RD-name
+#| tbl-cap: Model 2 Population-Average Bandemia Risk Differences Between 
+#|          Different Drugs 
 
 avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
-                hypothesis = ratio ~ revpairwise, by = "Name")  %>% 
+                hypothesis = c("vincristine - cyclophosphamide" =  "b1 - b2 = 0",
+                               "vincristine - doxorubicin" =  "b1 - b3 = 0",
+                               "doxorubicin - cyclophosphamide" =  "b3 - b2 = 0"), 
+                by = "Name")  %>% 
   mutate(p.value = display_num(p.value)) %>% 
   select(hypothesis, estimate, std.error, conf.low, conf.high, statistic, p.value, 
          s.value) %>% 
   kable(digits = 2, format.args = list(nsmall = 2), align = "r",
-        col.names = c("Hypothesis","RR", "SE", "LL", "UL", "z", "p", "s")) %>% 
+        col.names = c("Hypothesis","RD", "SE", "LL", "UL", "z", "p", "s")) %>% 
   kable_styling(full_width = FALSE) %>% 
   add_header_above(header = c(" " = 3, "95% CI" = 2, "Wald Test" = 2, " "))
 ```
+
+:::{.callout-caution}
+
+```{r}
+#| label: m2-RD-DvsC-LL
+
+m2_RD_DvsC_LL <- avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+                hypothesis = difference ~ pairwise, by = "Name") %>% 
+  filter(hypothesis == "(doxorubicin) - (cyclophosphamide)") %>% 
+  pull(conf.low)
+```
+
+In @tbl-m2-RD-name we can see that the p-value for the difference in bandemia 
+rates between doxorubicin and cyclophoshamide is just above 0.05 and that 
+the CI bounds are both positive, with the lower bound at zero. Normally one 
+would expect the sign of the two CI bounds to differ when p > 0.05. The apparent 
+anomaly is merely a result of rounding to 2 decimals for display purposes: that
+risk difference's lower CI bound is `r m2_RD_DvsC_LL`, which rounds to just 0.00
+and thereby loses the negative sign.
+:::
 
 In this study BSA is a patient-level variable rather than visit-level variable 
 because only BSA at the start of CHOP was recorded and used in Model 2. 
