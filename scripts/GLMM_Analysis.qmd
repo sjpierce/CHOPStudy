@@ -728,7 +728,7 @@ avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>%
 ```
 
 Dogs were exposed to different drugs prior to each visit, so one key objective 
-was to examine whether the bandemia incidence rates associated with each drug.
+was to examine the bandemia incidence rates associated with each drug. 
 @tbl-m1-emm-name shows the population average estimated marginal means for 
 bandemia incidence associated with each drug. The estimates assume a typical dog 
 (i.e., one with a random intercept of 0). @fig-m2-emm-name displays those means. 
