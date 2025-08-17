@@ -1,5 +1,18 @@
 # CHOPStudy News
 
+## 0.17.0, 2025-08-16
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Add a frequency table for Band_Category.
+    * Compute additional weight summaries.
+* `scripts/GLMM_Analysis.qmd`
+    * Improve narrative text.
+    * Update figure & table captions.
+    * Switch from relative risk to risk differnces.
+* `scripts/references.bib`
+    * Update software version & citation info.
+
 ## 0.16.0, 2025-08-12
 * `README.qmd` and `README.md`
     * Update software version & citation info.
