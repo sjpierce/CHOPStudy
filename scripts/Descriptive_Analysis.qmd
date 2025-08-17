@@ -194,6 +194,27 @@ Final_Patients %>%
 ```
 
 ```{r}
+#| label: weight
+
+N_Weight_LT10 <- Final_Patients %>% filter(Weight_kg < 10) %>% nrow()
+N_Weight_1015 <- Final_Patients %>% filter(between(Weight_kg, left = 10, right = 15)) %>% nrow()
+
+Pct_Weight_LT10 <- 100*N_Weight_LT10/nrow(Final_Patients)
+Pct_Weight_1015 <- 100*N_Weight_1015/nrow(Final_Patients)
+```
+
+:::{.callout-tip}
+Below are specific statistics about numbers and percentage of patients at the 
+very low end of weight distribution that we use in the manuscript.
+
+* `r N_Weight_LT10` (`r round(Pct_Weight_LT10, digits = 0)`%) weighed less than 
+  10 kg.
+* `r N_Weight_1015` (`r round(Pct_Weight_1015, digits = 0)`%) weighed 10-15 kg.
+
+:::
+
+
+```{r}
 #| label: tbl-patient-Leukemic
 #| tbl-cap: !expr paste0("Frequency Distribution for Patient-Level Leukemic ", 
 #|                       " Status (N = ", nrow(Final_Patients), " Patients)")
