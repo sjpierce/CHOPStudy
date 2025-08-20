@@ -778,8 +778,8 @@ ggplot(., aes(x = Band_Category, y = Percent, fill = Band_Category)) +
   scale_fill_brewer(name = "Band Neutrophil Category", palette = "Greys") +
   xlab("Band Neutrophil Category") +
   scale_x_discrete(labels=c("Absent (0.0 k/ul)" = "Absent", 
-                            "Present (< 0.2 k/ul)" = "Present",
-                            "Bandemia (>= 0.2 k/ul)" = "Bandemia")) +
+                            "Present (<= 0.1 k/ul)" = "Present",
+                            "Bandemia (> 0.1 k/ul)" = "Bandemia")) +
   ylab("Percent of CBCs") +
   scale_y_continuous(limits=c(0, 100)) +
   facet_wrap(~ Name) + 
