@@ -463,7 +463,7 @@ number of times each drug was used).
 #| tbl-cap: !expr paste0("Frequency Distribution for Drug Used (N = ", 
 #|                       nrow(Final_Visits), " Visits)")
 
-DrugNames <- c("vincristine", "cyclophosphamide", "doxorubicin")
+DrugNames <- c("Vincristine", "Cyclophosphamide", "Doxorubicin")
 
 Final_Visits %>% 
   count(Drug) %>% 
