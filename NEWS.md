@@ -1,5 +1,22 @@
 # CHOPStudy News
 
+## 0.18.0, 2025-08-20
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Capitalize names of drugs.
+    * Add table of drug sequences that start with cyclophosphamide.
+    * Update labeling of band cagegories in a figure.
+* `scripts/GLMM_Analysis.qmd`
+    * Capitalize names of drugs.
+* `scripts/Import_Data.qmd`
+    * Capitalize names of drugs.
+    * Update definition & labeling of Bandemia and Band_Category. This should 
+      not affect summaries because Total_Bands is only stored to 1 decimal 
+      precision. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+
 ## 0.17.0, 2025-08-16
 * `README.qmd` and `README.md`
     * Update software version & citation info.
@@ -9,7 +26,7 @@
 * `scripts/GLMM_Analysis.qmd`
     * Improve narrative text.
     * Update figure & table captions.
-    * Switch from relative risk to risk differnces.
+    * Switch from relative risk to risk differences.
 * `scripts/references.bib`
     * Update software version & citation info.
 

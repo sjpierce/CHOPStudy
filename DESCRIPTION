@@ -1,7 +1,7 @@
 Package: CHOPStudy
 Title: Research Compendium for the CHOP Study
-Version: 0.17.0
-Date: 2025-08-16
+Version: 0.18.0
+Date: 2025-08-20
 Authors@R: 
     person(given = c("Steven", "J."),
            family = "Pierce",
