@@ -387,7 +387,7 @@ avg_predictions(m0, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>%
 ```
 
 ## Model 1 (L1 Predictors)
-@tbl-m1  shows the parameters for Model 1 and @tbl-m1-OR shows the corresponding 
+@tbl-m1 shows the parameters for Model 1 and @tbl-m1-OR shows the corresponding 
 odds-ratios. 
 
 ```{r}
