@@ -1318,6 +1318,40 @@ Final_Visits %>%
   add_header_above(header = c(" " = 3, "Drug Sequence (Drug Used by Visit Number)" = 10))
 ```
 
+@tbl-visit-patterns-subset shows the subset of drug sequences that deviate from 
+the CHOP protocol by using cyclosphosphamide at visit 1. 
+
+```{r}
+#| label: tbl-visit-patterns-subset
+#| tbl-cap: !expr paste0("Subset of Drug Sequences That Used Cyclosphosphamide ", 
+#|                       "at Visit 1 ",
+#|                       "(N = ", length(unique(Final_Visits$Patient)), 
+#|                       " Patients)")
+#| warning: false
+
+options(knitr.kable.NA = '-')
+
+Final_Visits %>% 
+  select(Patient, Visit_Number, Drug) %>% 
+  rename(VN = Visit_Number) %>% 
+  pivot_wider(id_cols = "Patient", names_from = "VN", names_prefix = "V", 
+              values_from = "Drug") %>% 
+  group_by(V1, V2, V3, V4, V5, V6, V7, V8, V9, V10) %>% 
+  summarize(N_Dogs = n()) %>% 
+  ungroup() %>% 
+  rowwise() %>% 
+  mutate(N_Visits = sum(!is.na(c_across(V1:V10)))) %>% 
+  ungroup() %>% 
+  arrange(desc(N_Dogs), desc(N_Visits)) %>% 
+  rowid_to_column(var = "SequenceID") %>% 
+  relocate(SequenceID, N_Dogs, N_Visits) %>% 
+  filter(V1 == 2) %>% 
+  kable() %>%
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 3, "Drug Sequence (Drug Used by Visit Number)" = 10))
+```
+
+
 # References
 ::: {#refs}
 :::
