@@ -570,14 +570,6 @@ p1 + p2 +
   plot_annotation(tag_levels = "A")
 ```
 
-::: {.callout-note}
-@fig-log-bands may become a figure in our manuscript. We used a variation of it
-as Figure 1 in the prior manuscript, which we are revising for submission to a
-new journal. The previous version had the boxplot oriented vertically, but this
-layout offers more consistency across panels with respect to axis labeling and
-it allows us to see the spread of points better.
-:::
-
 Meanwhile @fig-log-bands-gt0 also shows log-transformed values of total bands,
 but it excludes data from visits with total bands \> 0 to get a better look at
 the shape of the distribution.
@@ -723,12 +715,6 @@ p1 + p2 +
  plot_layout(nrow = 2) + 
  plot_annotation(tag_levels = "A")
 ```
-
-::: {.callout-note}
-@fig-log-total-bands-drug (or either of its panels) may become a figure in the 
-manuscript. We used a variation of panel A as Figure 2 in the prior manuscript, 
-which we are now revising for submission to another journal. 
-:::
 
 @tbl-drug-Band-Category and @fig-drug-Band-Category show the number and percent 
 of CBCs by band neutrophil category for each drug used. 
