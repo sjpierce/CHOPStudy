@@ -18,8 +18,8 @@ status](https://www.r-pkg.org/badges/version/CHOPStudy.png)](https://CRAN.R-proj
 
 This package (Pierce, 2025) is a research compendium for a study
 examining the incidence of bandemia in canine patients undergoing
-chemotherapy treatment. The research team is led by Dr. Alison Masyr
-(PI) at Michigan State University.
+chemotherapy treatment (Eliason et al., 2025). The research team is led
+by Dr. Alison Masyr (PI) at Michigan State University.
 
 ## Assumptions
 
@@ -581,6 +581,15 @@ for the useR* \[Web Page\]. <https://happygitwithr.com>
 
 Chacon, S., & Straub, B. (2014). *Pro Git*. Apress Media.
 <https://git-scm.com/book/en/v2>
+
+</div>
+
+<div id="ref-Eliason-RN8603" class="csl-entry">
+
+Eliason, C. N., Pierce, S. J., & Masyr, A. (2025). *Incidence of
+bandemia in canine lymphoma patients undergoing multi-agent
+chemotherapy* \[Manuscript in preparation\]. Department of Small Animal
+Clinical Sciences, Michigan State University.
 
 </div>
 
