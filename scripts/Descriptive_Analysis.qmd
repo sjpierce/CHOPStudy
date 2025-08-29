@@ -571,7 +571,7 @@ p1 + p2 +
 ```
 
 Meanwhile @fig-log-bands-gt0 also shows log-transformed values of total bands,
-but it excludes data from visits with total bands \> 0 to get a better look at
+but it only uses data from visits with total bands \> 0 to get a better look at
 the shape of the distribution.
 
 ```{r}
