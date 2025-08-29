@@ -55,7 +55,8 @@ chemotherapy at MSU Veterinary Medicine Clinic (VMC) between 2016 and 2022. The
 study aims to assess the incidence of bandemia (i.e., band neutrophil elevation)
 in canine lymphoma patients undergoing CHOP chemotherapy and test predictors of
 bandemia incidence. Specifically, we examine the effects of two predictors: the
-drug administered and the dog's body surface area (BSA).
+drug administered and the dog's body surface area (BSA). Some results here are
+used in a manuscript [@Eliason-RN8603].
 
 # Setup
 This section of the report documents some setup tasks that are useful to the

@@ -53,7 +53,8 @@ knitr:
 This file is part of a research compendium [@Pierce-RN8714]. It provides some
 descriptive analyses of data provided by Alison Masyr and Caitlin Eliason that
 contains observations of dogs receiving CHOP chemotherapy at MSU Veterinary
-Medicine Clinic (VMC) between 2016 and 2022.
+Medicine Clinic (VMC) between 2016 and 2022. Some results here are used in a 
+manuscript [@Eliason-RN8603].
 
 # Setup
 
@@ -787,8 +788,9 @@ ggplot(., aes(x = Band_Category, y = Percent, fill = Band_Category)) +
   theme(legend.position = "bottom")
 ```
 
-::: {.callout-tip}
-@fig-drug-Band-Category is a new piece of output requested by Dr. Masyr. 
+::: {.callout-important}
+@fig-drug-Band-Category will be Figure 1 in the manuscript we are preparing
+[@Eliason-RN8603].
 :::
 
 ### Total Bands by Visit Number

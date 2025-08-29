@@ -53,7 +53,8 @@ This file is part of a research compendium [@Pierce-RN8714]. It imports raw
 data provided by Alison Masyr and Caitlin Eliason that contains observations of
 dogs receiving CHOP chemotherapy at MSU Veterinary Medicine Clinic (VMC) between
 2016 and 2022. This file does some data cleaning and management, then saves out
-revised data files that will be used for the analyses in other scripts.
+revised data files that will be used for the analyses in other scripts. These 
+data will be used in a manuscript [@Eliason-RN8603]. 
 
 # Setup
 This section documents some setup tasks that are useful to the statistician on 
