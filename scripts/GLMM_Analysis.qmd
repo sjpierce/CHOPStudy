@@ -641,11 +641,9 @@ check_model(m2, type = "discrete_both", residual_type = "simulated",
             base_size = 9)
 ```
 
-@tbl-compare-m0-m1-m2 shows comparisons between Models 0, 1, and 2. The fact 
-that Model 2 does not quite fit better than Model 1 is probably because we added 
-multiple L2 predictors in Model 2 but only one of them was particularly useful. 
-The fact that @tbl-m2 shows an effect of BSA suggests that we should interpret 
-Model 2 instead of Model 1. 
+@tbl-compare-m0-m1-m2 shows comparisons between Models 0, 1, and 2. It is clear 
+that Model 1 is an improvement over Model 0, and that Model2 is an improvement 
+over model 1. 
 
 ```{r}
 #| label: tbl-compare-m0-m1-m2
@@ -661,6 +659,10 @@ bind_rows(test_lrt(m0, m2),
   group_rows(., group_label = "Model 0 vs Model 2", start_row = 1, end_row = 2) %>% 
   group_rows(., group_label = "Model 1 vs Model 2", start_row = 3, end_row = 4) 
 ```
+
+:::{.callout-important}
+We should interpret Model 2 instead of Model 1. 
+:::
 
 @tbl-m2-icc shows that we still have a similar level of unexplained variability 
 between dogs. This is unexpected given that BSA appears to be a meaningful 
