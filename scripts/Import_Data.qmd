@@ -321,25 +321,25 @@ rows in `All_Patients` is equal to the number of unique MRNs in `All_Visits`.
 ## Create More Variables
 After reading peer review feedback on a manuscript that got rejected, the team 
 decided on 2024-08-29 to narrow the focus of the analyses. We will now focus 
-only on data for patients who had their first visit within 2 weeks of 
+only on data for patients who had their first visit within 10 days of 
 their CHOP start date. This section creates variables we can use to implement 
 that decision.
 
 First we create a subset of the data containing only records for visit 1 within 
 the respective CHOP cycles, then add a logical variable marking which visit 1 
 observations had `CBC_Dates` indicating that the lab sample was collected within 
-2 weeks of the start of that CHOP cycle. 
+10 days of the start of that CHOP cycle. 
 
 ``` {r}
 #| label: create-Visit1-CHOP
 
 Visit1_CHOP <- All_Visits %>% 
   filter(Visit_Number == 1) %>% 
-  mutate(Started_in_2Weeks = Weeks <= 2) %>% 
-  select(Patient, MRN, CHOP_Number, Started_in_2Weeks)
+  mutate(Started_in_10d = Days_Since_Start <= 10) %>% 
+  select(Patient, MRN, CHOP_Number, Started_in_10d)
 ```
 
-Next we merge that new `Started_in_2Weeks` variable back onto the `All_Visits` 
+Next we merge that new `Started_in_10d` variable back onto the `All_Visits` 
 dataset. We can then use it later to select cases. 
 
 ``` {r}
@@ -400,20 +400,20 @@ All_Visits %>%
   kable_styling()
 ```
 
-### By Whether Visit 1 Occurred Within 2 Weeks of CHOP Cycle Starting
+### By Whether Visit 1 Occurred Within 10 Days of CHOP Cycle Starting
 In this step, we retain only records for patients whose first visit during 
-their first cycle started within 2 weeks of the CHOP cycle start date. 
+their first cycle started within 10 days of the CHOP cycle start date. 
 
 ``` {r}
-#| label: create-CHOP1-Start2W
+#| label: create-CHOP1-Start10d
 
-CHOP1_Start2W <- CHOP1 %>% 
-  filter(Started_in_2Weeks == TRUE)
+CHOP1_Start10d <- CHOP1 %>% 
+  filter(Started_in_10d == TRUE)
 
-Step2 <- CHOP1_Start2W %>% 
+Step2 <- CHOP1_Start10d %>% 
   count(Patient) %>% 
   summarise(Step = 2,
-            Event = "Keep only if patient's visit 1 occurred within 2 weeks of CHOP start", 
+            Event = "Keep only if patient's visit 1 occurred within 10 days of CHOP start", 
             N_Dogs = n(),
             N_Observations = sum(n))
 ```
@@ -427,7 +427,7 @@ happened there.
 #| tbl-cap: Records Dropped in Step 2 Subsetting
 
 CHOP1 %>% 
-  filter(Started_in_2Weeks == FALSE) %>% 
+  filter(Started_in_10d == FALSE) %>% 
   group_by(Patient, MRN) %>% 
   summarise(Visits_Dropped = n(),
             CHOP1_Start_Date = min(CHOP_Start_Date),
@@ -442,12 +442,12 @@ In this step, we retain only records where the visit occurred during the first
 phase of treatment 
 
 ``` {r}
-#| label: create-CHOP1-Start2W-Phase1
+#| label: create-CHOP1-Start10d-Phase1
 
-CHOP1_Start2W_Phase1 <- CHOP1_Start2W %>% 
+CHOP1_Start10d_Phase1 <- CHOP1_Start10d %>% 
   filter(Phase_of_Trt == 1)
 
-Step3 <- CHOP1_Start2W_Phase1 %>% 
+Step3 <- CHOP1_Start10d_Phase1 %>% 
   count(Patient) %>% 
   summarise(Step = 3,
             Event = "Keep only Phase 1 records", 
@@ -463,7 +463,7 @@ happened there.
 #| label: tbl-Step3-drops
 #| tbl-cap: Records Dropped in Step 3 Subsetting
 
-CHOP1_Start2W %>% 
+CHOP1_Start10d %>% 
   filter(Phase_of_Trt != 1) %>% 
   group_by(Patient, MRN, Phase_of_Trt) %>% 
   summarise(Visits_Dropped = n()) %>% 
@@ -478,12 +478,12 @@ drug selection is motivated by the fact that we don't have enough data about
 other drugs.
 
 ``` {r}
-#| label: create-CHOP1-Start2W-Phase1-Drug123
+#| label: create-CHOP1-Start10d-Phase1-Drug123
 
-CHOP1_Start2W_Phase1_Drug123 <- CHOP1_Start2W_Phase1 %>% 
+CHOP1_Start10d_Phase1_Drug123 <- CHOP1_Start10d_Phase1 %>% 
   filter(Drug %in% 1:3)
 
-Step4 <- CHOP1_Start2W_Phase1_Drug123 %>% 
+Step4 <- CHOP1_Start10d_Phase1_Drug123 %>% 
   count(Patient) %>% 
   summarise(Step = 4,
             Event = "Keep only Drug 1, 2, & 3 records", 
@@ -499,7 +499,7 @@ happened there.
 #| label: tbl-Step4-drops
 #| tbl-cap: Records Dropped in Step 3 Subsetting
 
-CHOP1_Start2W_Phase1 %>% 
+CHOP1_Start10d_Phase1 %>% 
   filter(!Drug %in% 1:3) %>% 
   group_by(Patient, MRN, Drug) %>% 
   summarise(Visits_Dropped = n()) %>% 
@@ -513,7 +513,7 @@ Here we rename the data object to keep the object name shorter.
 ```{r}
 #| label: create-Final-Visits
 
-Final_Visits <- CHOP1_Start2W_Phase1_Drug123
+Final_Visits <- CHOP1_Start10d_Phase1_Drug123
 ```
 
 There are `r nrow(Final_Visits)` rows in `Final_Visits`. 
@@ -577,7 +577,7 @@ bind_rows(Step0, Step1, Step2, Step3, Step4) %>%
 #| label: fig-visualize-weeks-again
 #| fig-cap: Weeks Since CHOP Started By Visit Number (After Case Selection)
 
-boxplot(Weeks ~ Visit_Number, data = CHOP1_Start2W_Phase1_Drug123, 
+boxplot(Weeks ~ Visit_Number, data = CHOP1_Start10d_Phase1_Drug123, 
         xlab="Visit Number")
 ```
 
@@ -585,7 +585,7 @@ boxplot(Weeks ~ Visit_Number, data = CHOP1_Start2W_Phase1_Drug123,
 #| label: tbl-visit-drug
 #| tbl-cap: Number of Records by Visit and Drug (After Case Selection)
 
-xtabs(~Visit_Number + Drug, data = CHOP1_Start2W_Phase1_Drug123) %>% 
+xtabs(~Visit_Number + Drug, data = CHOP1_Start10d_Phase1_Drug123) %>% 
   addmargins() %>% 
   kable(col.names = c("Visit", "1 Vincristine", "2 Cyclophosphamide", 
                       "3 Doxorubicin", "Sum")) %>% 
