@@ -49,7 +49,6 @@ knitr:
 ---
 
 # Purpose
-
 This file is part of a research compendium [@Pierce-RN8714]. It imports raw 
 data provided by Alison Masyr and Caitlin Eliason that contains observations of
 dogs receiving CHOP chemotherapy at MSU Veterinary Medicine Clinic (VMC) between
@@ -57,19 +56,16 @@ dogs receiving CHOP chemotherapy at MSU Veterinary Medicine Clinic (VMC) between
 revised data files that will be used for the analyses in other scripts.
 
 # Setup
-
 This section documents some setup tasks that are useful to the statistician on 
 the team. Most readers of this document will probably want skip directly to 
 @sec-Data-Mgt.
 
 ## Define Global Options
-
 Global R chunk options are defined in the YAML header but local chunk options
 will over-ride global options. We can temporarily disable an individual chunk by
 inserting `#| eval: false` on a line at the top of the chunk.
 
 ## Load Packages
-
 Load R packages that we need to get additional functions.
 
 ```{r}
@@ -95,7 +91,6 @@ here::i_am(path = "scripts/Import_Data.qmd")
 ```
 
 ## Read Data {#sec-Read-Data}
-
 @tbl-raw-data-file shows meta-data about the raw data file we will import.
 
 ```{r}
