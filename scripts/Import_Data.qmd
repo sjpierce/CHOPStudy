@@ -125,20 +125,26 @@ names(Raw_Visits)
 The first task is just renaming variables. After that, we also need to convert 
 some variables to factors and compute some additional variables. 
 
-The units of measurement for `Total_Bands` are 1000/ul and some are not integers 
-(they have non-zero digits to the right of the decimal place). Therefore, we 
-rescaled into a new variable that has units of 100/ul by computing 
+The units of measurement for `Total_Bands` are 1000/ul (k/ul) and some are not
+integers (they have non-zero digits to the right of the decimal place).
+Therefore, we rescaled into a new variable that has units of 100/ul by computing
 `Total_Bands_Rescale = Total_Bands*10`. That rescaled variable was used in 
-count models because those require non-negative integer values for all counts. 
+draft count models we ultimately abandoned. We decided to focus on a logistic 
+model instead of the count model. The variables and some associated descriptive
+analyses remain in the repository, but we never added the count model to the
+repository. 
+
 We also created log transformed versions of both `Total_Bands` and 
 `Total_Bands_Rescaled` for use in graphing data. Because `log(0) = -Infinity`, 
 we recode the `-Infinity` values for `log_Total_Bands` to -5 and the `-Infinity` 
 values for `log_Total_Bands_Rescaled` to -3 so that we can make compact graphs 
 of the distributions. Do not use those two variables for descriptive statistics 
 or models because they don't correctly represent the infinite values properly
-for other purposes. 
+for other purposes. These variables and associated descriptive analyses are also 
+no longer part of our manuscript plans but we just left the code for them in 
+the data management and descriptive analyses. 
 
-The code below does the data management, then lists the names of variables 
+The code below does some data management, then lists the names of variables 
 again. 
 
 ```{r}
