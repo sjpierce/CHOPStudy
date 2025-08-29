@@ -1,5 +1,34 @@
 # CHOPStudy News
 
+## 0.19.0, 2025-08-29
+* `.Rbuildignore`
+    * Omit the `graphics` folder to resolve a devtools::check() note. 
+* `DESCRIPTION`
+    * Moved piercer from Depends to Suggests field to resolve devtools::check() 
+      note. 
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Add citation for manuscript in preparation.
+* `scripts/Descriptive_Analysis.qmd`
+    * Remove blank lines.
+    * Add citation for manuscript in preparation.
+    * Remove obsolete callouts.
+* `scripts/GLMM_Analysis.qmd`    
+    * Add callouts about which figures will be used in manuscript.
+    * Fix spelling.
+    * Improve narrative text. 
+    * Update interpretation to reflect results after updated case selection.
+    * Omit a warning message. 
+* `scripts/Import_Data.qmd`
+    * Update case selection to use only dogs whose visit 1 was within 10 days of 
+      CHOP start.  
+    * Improve narrative text.
+    * Remove blank lines.
+    * Add citation for manuscript in preparation.
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Add citation for manuscript in preparation.
+
 ## 0.18.0, 2025-08-20
 * `README.qmd` and `README.md`
     * Update software version & citation info.
