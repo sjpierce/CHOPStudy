@@ -794,30 +794,22 @@ avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA,
 ```
 
 :::{.callout-caution}
-
-```{r}
-#| label: m2-RD-DvsC-LL
-
-m2_RD_DvsC_LL <- avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
-                hypothesis = difference ~ pairwise, by = "Name") %>% 
-  filter(hypothesis == "(doxorubicin) - (cyclophosphamide)") %>% 
-  pull(conf.low)
-```
-
-In @tbl-m2-RD-name we can see that the p-value for the difference in bandemia 
-rates between doxorubicin and cyclophoshamide is just above 0.05 and that 
-the CI bounds are both positive, with the lower bound at zero. Normally one 
-would expect the sign of the two CI bounds to differ when p > 0.05. The apparent 
-anomaly is merely a result of rounding to 2 decimals for display purposes: that
-risk difference's lower CI bound is `r m2_RD_DvsC_LL`, which rounds to just 0.00
-and thereby loses the negative sign.
+In @tbl-m2-RD-name the p-value for the difference in bandemia rates between 
+doxorubicin and cyclophoshamide is not significant but the lower CI bound is 
+just barely below 0. We can't conclude there is a difference between those 
+bandemia rates even though the point estimate for the risk difference 
+matches that of the risk difference between vincristine and cyclophoshamide. 
+That's because we have less data about doxorubicin than vincristine, so there is
+more uncertainty about its marginal mean and differences between it and other
+those of drugs. You can see that in the wider confidence interval for
+doxorubicin in @fig-m2-emm-name. 
 :::
 
 In this study BSA is a patient-level variable rather than visit-level variable 
 because only BSA at the start of CHOP was recorded and used in Model 2. 
 @fig-m2-BSA shows the marginal effect of BSA on bandemia incidence. The 
 incidence decreases considerably as BSA increases. The predicted value for the
-smallest dog in the sample is around 24%, while for dogs of average size
+smallest dog in the sample is around 19%, while for dogs of average size
 (centered BSA values of 0) the rate is just under 10%, and for the largest dog
 it is around 2.5%.
 
