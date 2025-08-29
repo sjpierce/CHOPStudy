@@ -775,6 +775,10 @@ difference (RD) is simply subtracting one rate from the other.
 #| tbl-cap: Model 2 Population-Average Bandemia Risk Differences Between 
 #|          Different Drugs 
 
+# Omit warning message about specifying hypothesis tests using positional 
+# indices like b1, b2, etc. I've verified that this is correct. 
+options(marginaleffects_safe = FALSE)
+
 avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
                 hypothesis = c("Vincristine - Cyclophosphamide" =  "b1 - b2 = 0",
                                "Vincristine - Doxorubicin" =  "b1 - b3 = 0",
