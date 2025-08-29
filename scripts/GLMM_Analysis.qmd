@@ -9,11 +9,6 @@ author:
     email: pierces1@msu.edu
     affiliations: 
       - name: Michigan State University, Center for Statistical Training and Consulting
-  - name: Ruxin Shi
-    orcid: 0009-0001-9483-6444
-    email: shiruxin@msu.edu
-    affiliations: 
-      - name: Michigan State University, Center for Statistical Training and Consulting
 bibliography: references.bib
 csl: apa.csl
 params:
