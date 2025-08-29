@@ -49,7 +49,6 @@ knitr:
 ---
 
 # Purpose
-
 This file is part of a research compendium [@Pierce-RN8714]. It provides some
 descriptive analyses of data provided by Alison Masyr and Caitlin Eliason that
 contains observations of dogs receiving CHOP chemotherapy at MSU Veterinary
@@ -57,19 +56,16 @@ Medicine Clinic (VMC) between 2016 and 2022. Some results here are used in a
 manuscript [@Eliason-RN8603].
 
 # Setup
-
 This section of the report documents some setup tasks that are useful to the
 statistician on the team. Most readers of this report will probably want skip
 directly to @sec-Results.
 
 ## Define Global Options
-
 Global R chunk options are defined in the YAML header but local chunk options
 will over-ride global options. We can temporarily disable an individual chunk by
 inserting `#| eval: false` on a line at the top of the chunk.
 
 ## Load Packages
-
 Load R packages that we need to get additional functions.
 
 ```{r}
@@ -130,7 +126,6 @@ load(file=here("data/Imported_CHOP_Data.RData"))
 ## Patient-Level Summaries
 @tbl-patient-cvv-missing and @tbl-patient-var-missing show summaries of missing 
 data in the patient-level dataset. 
-
 
 ```{r}
 #| label: tbl-patient-cvv-missing
@@ -214,7 +209,6 @@ very low end of weight distribution that we use in the manuscript.
 
 :::
 
-
 ```{r}
 #| label: tbl-patient-Leukemic
 #| tbl-cap: !expr paste0("Frequency Distribution for Patient-Level Leukemic ", 
@@ -233,7 +227,6 @@ Final_Patients %>%
 ## Visit-Level Summaries
 @tbl-visit-cvv-missing and @tbl-visit-var-missing show summaries of missing 
 data in the visit-level dataset. 
-
 
 ```{r}
 #| label: tbl-visit-cvv-missing
