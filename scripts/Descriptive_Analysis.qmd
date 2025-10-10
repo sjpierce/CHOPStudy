@@ -767,11 +767,6 @@ ggplot(., aes(x = Band_Category, y = Percent, fill = Band_Category)) +
   theme(legend.position = "bottom")
 ```
 
-::: {.callout-important}
-@fig-drug-Band-Category will be Figure 1 in the manuscript we are preparing
-[@Eliason-RN8603].
-:::
-
 ### Total Bands by Visit Number
 @tbl-bands-visit provides the mean and standard deviation of 
 **Total Bands** for each visit. From this data, we can observe that the 
