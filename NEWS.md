@@ -1,5 +1,21 @@
 # CHOPStudy News
 
+## 0.20.0, 2025-10-10
+* `DESCRIPTION`
+    * Updated RoxygenNote and Suggests fields. 
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Removed a callout about a figure we are no longer including in the 
+      manuscript.
+* `scripts/GLMM_Analysis.qmd`
+    * Updated callouts about which figures we are including in the paper. 
+    * Add citations for glmmTMB.
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Updated citation for manuscript in preparation.    
+    * Add citations for glmmTMB.
+    
 ## 0.19.0, 2025-08-29
 * `.Rbuildignore`
     * Omit the `graphics` folder to resolve a devtools::check() note. 
