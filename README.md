@@ -557,7 +557,7 @@ entry-spacing="0" line-spacing="2">
 <div id="ref-Allaire-RN8427" class="csl-entry">
 
 Allaire, J. J., Dervieux, C., Scheidegger, C., Teague, C., & Xie, Y.
-(2025). *Quarto* (Version 1.7.33) \[Computer Program\]. Posit Software,
+(2025). *Quarto* (Version 1.8.25) \[Computer Program\]. Posit Software,
 PBC. <https://quarto.org>
 
 </div>
@@ -587,9 +587,9 @@ Chacon, S., & Straub, B. (2014). *Pro Git*. Apress Media.
 <div id="ref-Eliason-RN8603" class="csl-entry">
 
 Eliason, C. N., Pierce, S. J., & Masyr, A. (2025). *Incidence of
-bandemia in canine lymphoma patients undergoing multi-agent
-chemotherapy* \[Manuscript in preparation\]. Department of Small Animal
-Clinical Sciences, Michigan State University.
+bandemia in canine lymphoma patients undergoing multiagent chemotherapy*
+\[Manuscript in preparation\]. Department of Small Animal Clinical
+Sciences, Michigan State University.
 
 </div>
 
@@ -624,7 +624,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.19.0) \[Reproducible Research Materials, Computer
+study* (Version 0.20.0) \[Reproducible Research Materials, Computer
 Program, R package, Private Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 
@@ -641,7 +641,7 @@ Foundation for Statistical Computing. http://www.R-project.org.
 <div id="ref-RStudio-Team-RN8351" class="csl-entry">
 
 RStudio Team. (2025). *RStudio Desktop: Integrated development
-environment for R* (Version 2025.05.1+513) \[Computer Program\]. Posit
+environment for R* (Version 2025.09.1+401) \[Computer Program\]. Posit
 Software, PBC. <https://posit.co>
 
 </div>
@@ -649,7 +649,7 @@ Software, PBC. <https://posit.co>
 <div id="ref-Torvalds-RN3929" class="csl-entry">
 
 Torvalds, L., Hamano, J. C., & other contributors to the Git Project.
-(2025). *Git for Windows* (Version 2.50.1(1)) \[Computer Program\].
+(2025). *Git for Windows* (Version 2.51.0(2)) \[Computer Program\].
 Software Freedom Conservancy. <https://git-scm.com>
 
 </div>
