@@ -189,7 +189,8 @@ Generalized linear mixed models (GLMMs) with a logit link function were employed
 to assess the effects of each drug and BSA on presence of bandemia. This model
 was chosen to capture the random effects pertaining to repeated observations
 from each dog while dealing with the binary outcome. We set the Type I error
-rate at $\alpha = 0.05$.
+rate at $\alpha = 0.05$. We used the glmmTMB package for R to fit the models
+[@Brooks-RN8667; @McGillycuddy-RN8874].
 
 The basic modeling strategy involved fitting a set of three nested models. We
 use likelihood ratio tests to compare models in sequence.
