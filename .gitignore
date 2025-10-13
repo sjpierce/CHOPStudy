@@ -57,3 +57,5 @@ scripts/output/*.html
 scripts/output/*.log
 scripts/output/*.pdf
 
+# Omit Windows files for caching thumbnail images.
+Thumbs.db
