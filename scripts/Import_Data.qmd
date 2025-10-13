@@ -99,7 +99,7 @@ here::i_am(path = "scripts/Import_Data.qmd")
 #| tbl-cap: "Meta-Data About Raw Data File"
 
 # Store path to raw data file. 
-RawFile <- here("scripts/extdata/Vinc_Cases_2025-05-20.xlsx")
+RawFile <- here("scripts/extdata/Vinc_Cases_2025-10-13.xlsx")
 
 file_details(RawFile) %>% 
   kable(, format = "html", 
