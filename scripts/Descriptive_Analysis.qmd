@@ -412,9 +412,9 @@ ggsave(filename = here(paste0("scripts/output/Figure_1.png")), plot = Fig1,
 ```
 
 ::: {.callout-tip}
-In @fig-visit-bands-neuts, one visit with missing data for neutrophils was 
-omitted from the plot and the estimation of the correlation. Also, the Pearson 
-correlation is specifically a measure of linear association. 
+@fig-visit-bands-neuts will be Figure 1 in the manuscript we are preparing
+[@Eliason-RN8603]. Note that the Pearson correlation is specifically a measure 
+of linear association. 
 :::
 
 ```{r}

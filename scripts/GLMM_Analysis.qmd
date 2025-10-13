@@ -769,7 +769,7 @@ ggsave(filename = here(paste0("scripts/output/Figure_3.png")), plot = Fig3,
 ```
 
 ::: {.callout-important}
-@fig-m2-emm-name will be Figure 2 in the manuscript we are preparing
+@fig-m2-emm-name will be Figure 3 in the manuscript we are preparing
 [@Eliason-RN8603].
 :::
 
@@ -845,7 +845,7 @@ ggsave(filename = here(paste0("scripts/output/Figure_2.png")), plot = Fig2,
 ```
 
 ::: {.callout-important}
-@fig-m2-BSA will be Figure 1 in the manuscript we are preparing 
+@fig-m2-BSA will be Figure 2 in the manuscript we are preparing 
 [@Eliason-RN8603].
 :::
 
