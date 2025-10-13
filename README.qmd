@@ -539,9 +539,20 @@ Windows Explorer to open the project in RStudio. Then, use RStudio to open the
 file `scripts/Render_Scripts.qmd` and click the "Render" button in RStudio. 
 
 If you have everything set up correctly, that will start generating files in 
-the `scripts/output` folder. It will also generate `scripts/Render_Scripts.pdf`, 
+the `scripts/output` folder. It will also generate `scripts/Render_Scripts.html`, 
 which is the log of running that rendering script and contains information on 
 how long it took to render each report called by that file.
+
+If you want to get a date-stamped output for `scripts/Render_Scripts.qmd`, use
+the commands in the Terminal to render that script. The first line changes to 
+the `scripts/` subfolder and the 2nd one does a custom render of that script,
+setting matching custom values for the output file name and the LogFile 
+parameter.
+
+```
+cd scripts
+quarto render Render_Scripts.qmd --output Render_Scripts_2025-10-13.html -P LogFile:Render_Scripts_2025-10-13.html
+```
 
 ## References
 ::: {#refs}
