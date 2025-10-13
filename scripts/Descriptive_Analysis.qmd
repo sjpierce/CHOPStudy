@@ -408,7 +408,7 @@ Fig1
 
 # Export figure for use in journal submission
 ggsave(filename = here(paste0("scripts/output/Figure_1.png")), plot = Fig1, 
-       device = "png", width = 4, height = 2.64, units = "in", dpi = 300)
+       device = "png", width = 4, height = 2.64, units = "in", dpi = 600)
 ```
 
 ::: {.callout-tip}

@@ -765,7 +765,7 @@ Fig3
 
 # Export figure for use in journal submission
 ggsave(filename = here(paste0("scripts/output/Figure_3.png")), plot = Fig3, 
-       device = "png", width = 4, height = 2, units = "in", dpi = 300)
+       device = "png", width = 4, height = 2, units = "in", dpi = 600)
 ```
 
 ::: {.callout-important}
@@ -841,7 +841,7 @@ Fig2
 
 # Export figure for use in journal submission
 ggsave(filename = here(paste0("scripts/output/Figure_2.png")), plot = Fig2, 
-       device = "png", width = 4, height = 3, units = "in", dpi = 300)
+       device = "png", width = 4, height = 3, units = "in", dpi = 600)
 ```
 
 ::: {.callout-important}
