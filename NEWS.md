@@ -1,5 +1,24 @@
 # CHOPStudy News
 
+## 0.21.0, 2025-10-13
+* `.gitignore`
+    * Omit Windows thumbnail image files from tracking. 
+    * Omit png files from tracking. 
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Added instructions for getting date-stamped output for production runs.
+* `scripts/Descriptive_Analysis.qmd`
+    * Export figure to graphics file suitable for journal submission. 
+    * Add callout about figure used in manuscript.
+* `scripts/GLMM_Analysis.qmd`
+    * Export figures to graphics file suitable for journal submission. 
+    * Update callouts about which figures are used in manuscript. 
+* `scripts/Import_Data.qmd`
+    * Updated external data file being imported (filled in 1 missing value for 
+      total neutrophils based on reviewing medical chart).
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 0.20.0, 2025-10-10
 * `DESCRIPTION`
     * Updated RoxygenNote and Suggests fields. 
