@@ -1,5 +1,16 @@
 # CHOPStudy News
 
+## 0.22.0, 2025-10-13
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Update resolution for exported figures to meet journal requirements. 
+* `scripts/GLMM_Analysis.qmd`
+    * Update resolution for exported figures to meet journal requirements. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
+
 ## 0.21.0, 2025-10-13
 * `.gitignore`
     * Omit Windows thumbnail image files from tracking. 
