@@ -755,11 +755,17 @@ avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA,
 #| fig-width: 4
 #| fig-height: 2
 
-plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+Fig3 <- plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
                 by = c("Name"), vcov = TRUE) +
   theme_bw() +
   coord_cartesian(ylim = c(0, 0.25)) +
-  labs(x = "Drug Name", Y = "Estimated Marginal Proportions: Bandemia Incidence") 
+  labs(x = "Drug name", y = "Bandemia") 
+
+Fig3
+
+# Export figure for use in journal submission
+ggsave(filename = here(paste0("scripts/output/Figure_3.png")), plot = Fig3, 
+       device = "png", width = 4, height = 2, units = "in", dpi = 300)
 ```
 
 ::: {.callout-important}
@@ -821,16 +827,21 @@ it is around 2.5%.
 #| fig-width: 4
 #| fig-height: 3
 
-plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
+Fig2 <- plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA, 
                 condition = c("BSA_m2_C"), vcov = TRUE) +
-  scale_x_continuous(name = "Mean-Centered Body Surface Area (m2)",
+  scale_x_continuous(name = expression("Mean-centered body surface area (" *  m^2 * ")"),
                      sec.axis = sec_axis(~ . + mean(Final_Patients$Surface_Area_m2), 
-                                         name = "Uncentered Body Surface Area (m2)")) +
+                                         name = expression("Uncentered body surface area (" * m^2 * ")"))) +
   geom_rug(aes(x = Surface_Area_m2 - mean(Surface_Area_m2)), 
                data = Final_Patients) +
   theme_bw() +
-  labs(x = "Body Surface Area (m2), Mean Centered",
-       x = "Bandemia Incidence")
+  labs(y = "Bandemia")
+
+Fig2
+
+# Export figure for use in journal submission
+ggsave(filename = here(paste0("scripts/output/Figure_2.png")), plot = Fig2, 
+       device = "png", width = 4, height = 3, units = "in", dpi = 300)
 ```
 
 ::: {.callout-important}

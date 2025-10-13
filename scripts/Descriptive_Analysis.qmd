@@ -382,24 +382,33 @@ Final_Visits %>%
 #| fig-cap: !expr paste0("Scatterplot of Total Bands and Total Neutrophils ", 
 #|                       "With Linear and Loess Smoothing Curves ",
 #|                       "(N = ", nrow(Final_Visits), " Visits)")
-#| fig-width: 6
-#| fig-height: 4
+#| fig-width: 4
+#| fig-height: 2.64
 #| warning: false
 
-Final_Visits %>% 
+Fig1 <- Final_Visits %>% 
   ggplot(., aes(x = Total_Neutrophil, y = Total_Bands)) + 
   geom_point() +
   stat_correlation(method = "pearson", small.r = TRUE, r.conf.level = 0.95, 
-                   use_label("method", "R", "R.CI", "n")) +
-  geom_smooth(method="loess", se = TRUE, fullrange = FALSE, level = 0.95) +
+                   use_label("R", "R.CI", "n")) +
+  geom_smooth(method="loess", se = TRUE, fullrange = FALSE, 
+              level = 0.95, linetype = "dashed", col = "red") +
   geom_smooth(method="lm", se = TRUE, fullrange = FALSE, level = 0.95, 
-              col = "red") +
+              linetype = "solid", col = "red") +
   theme_bw() +
   coord_cartesian(xlim = c(0, 50), ylim = c(0, 7), ) +
   scale_x_continuous(breaks = seq(from = 0, to = 50, by = 10)) +
   scale_y_continuous(breaks = seq(from = 0, to = 7, by = 1)) +
-  xlab("Total Neutrophils (k/ul)") +
-  ylab("Total Bands (k/ul)") 
+  xlab("Total neutrophils (k/ul)") +
+  ylab("Total bands (k/ul)") +
+  annotate(geom = "text", x =45, y = 4.6, label = "Loess", col = "red") +
+  annotate(geom = "text", x =45, y = 2.5, label = "Linear", col = "red") 
+
+Fig1
+
+# Export figure for use in journal submission
+ggsave(filename = here(paste0("scripts/output/Figure_1.png")), plot = Fig1, 
+       device = "png", width = 4, height = 2.64, units = "in", dpi = 300)
 ```
 
 ::: {.callout-tip}
