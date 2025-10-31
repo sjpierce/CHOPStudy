@@ -109,6 +109,7 @@ library(patchwork)    # for plot_layout()
 library(performance)  # for check_model(), icc(), model_performance(), r2(), 
                       # test_lrt()
 library(readxl)       # for read_xlsx()
+library(tinytex)      # for install_tinytex()
 ```
 
 # Import Data
