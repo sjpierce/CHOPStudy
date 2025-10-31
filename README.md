@@ -104,7 +104,7 @@ package to work.
 
 Install [RStudio
 Desktop](https://posit.co/products/open-source/rstudio/) version
-2025.05.1+513 (or later). We recommend using RStudio to interact with
+2025.09.2+418 (or later). We recommend using RStudio to interact with
 the files for this package. RStudio is both a good interface to R and
 has built-in support for using some of the other software discussed
 below.
@@ -113,7 +113,7 @@ below.
 
 We rely on [Quarto](https://quarto.org) (Allaire et al., 2025) scripts
 to enhance reproducibility because they provide excellent support for
-generating dynamic reports (Mair, 2016). Install Quarto version 1.7.33
+generating dynamic reports (Mair, 2016). Install Quarto version 1.8.25
 or later. Although RStudio bundles a version of Quarto, we want the most
 recent stable release instead. Quarto also includes a copy of
 [Pandoc](https://pandoc.org/).
@@ -556,7 +556,7 @@ that script. The first line changes to the `scripts/` subfolder and the
 values for the output file name and the LogFile parameter.
 
     cd scripts
-    quarto render Render_Scripts.qmd --output Render_Scripts_2025-10-13.html -P LogFile:Render_Scripts_2025-10-13.html
+    quarto render Render_Scripts.qmd --output Render_Scripts_2025-10-31.html -P LogFile:Render_Scripts_2025-10-31.html
 
 ## References
 
@@ -633,7 +633,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.22.0) \[Reproducible Research Materials, Computer
+study* (Version 0.23.0) \[Reproducible Research Materials, Computer
 Program, R package, Private Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 
@@ -650,7 +650,7 @@ Foundation for Statistical Computing. http://www.R-project.org.
 <div id="ref-RStudio-Team-RN8351" class="csl-entry">
 
 RStudio Team. (2025). *RStudio Desktop: Integrated development
-environment for R* (Version 2025.09.1+401) \[Computer Program\]. Posit
+environment for R* (Version 2025.09.2+418) \[Computer Program\]. Posit
 Software, PBC. <https://posit.co>
 
 </div>
