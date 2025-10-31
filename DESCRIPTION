@@ -21,12 +21,22 @@ RoxygenNote: 7.3.3
 Depends: 
     R (>= 4.5)
 Suggests: 
+    broom,
+    broom.mixed,
     devtools,
+    DHARMa,
     dplyr,
+    ggpmisc,
     git2r,
+    glmmTMB,
     here,
     kableExtra,
     knitr,
+    labelled,
+    marginaleffects,
+    modelsummary,
+    patchwork,
+    performance,
     piercer (>= 0.23.0),
     quarto,
     rmarkdown, 
