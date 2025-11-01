@@ -84,7 +84,7 @@ repository is stored on GitHub. You will need to be able to use Git and
 GitHub to synchronize changes between your local copy of the repository
 and GitHub.
 
-### Install R 4.5.1 or later.
+### Install R 4.5.2 or later.
 
 You can get the most recent version of R (R Development Core Team, 2025)
 from the [Comprehensive R Archive Network
@@ -642,7 +642,7 @@ Program, R package, Private Repository\]. GitHub.
 <div id="ref-R-Devel-Core-RN8182" class="csl-entry">
 
 R Development Core Team. (2025). *R: A language and environment for
-statistical computing* (Version 4.5.1) \[Computer Program\]. R
+statistical computing* (Version 4.5.2) \[Computer Program\]. R
 Foundation for Statistical Computing. http://www.R-project.org.
 
 </div>
