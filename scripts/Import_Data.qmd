@@ -542,7 +542,7 @@ Leukemic <- Final_Visits %>%
 There are `r nrow(Leukemic)` rows in `Leuklemic`. 
 
 Now we trim the `All_Patients` data down to just the patients included in the 
-`Final_Visits` data frame and merge it with `Visit_Counts`. 
+`Final_Visits` data frame and merge it with `Visit_Counts` and `Leuklemic`.
 
 ```{r}
 #| label: create-Final-Patients
