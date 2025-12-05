@@ -291,8 +291,12 @@ patient weight and body surface area.
 #| label: create-All-Patients
 
 All_Patients <- All_Visits %>% 
-  select(Patient, MRN, Weight_kg, Surface_Area_m2) %>% 
-  unique()
+  arrange(Patient, CHOP_Number, Visit_Number) %>% 
+  select(Patient, MRN, In_Final_Patients, Age_Yrs, Sex, Breed, Diagnosis, Stage, 
+         Substage, Phenotype, Weight_kg, Surface_Area_m2) %>% 
+  group_by(Patient, MRN) %>% 
+  slice_head(n = 1) %>% 
+  ungroup()
 ```
 
 Next, we verify that the number of rows in `All_Patients` is equal to the number 
