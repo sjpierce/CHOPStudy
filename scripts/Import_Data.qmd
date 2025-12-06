@@ -314,8 +314,8 @@ patient weight and body surface area.
 
 All_Patients <- All_Visits %>% 
   arrange(Patient, CHOP_Number, Visit_Number) %>% 
-  select(Patient, MRN, In_Final_Patients, Age_Yrs, Sex, Breed, Diagnosis, Stage, 
-         Substage, Phenotype, Weight_kg, Surface_Area_m2) %>% 
+  select(Patient, MRN, In_Final_Patients, Age_Yrs, Sex, Neutered, Breed, 
+         Diagnosis, Stage, Substage, Phenotype, Weight_kg, Surface_Area_m2) %>% 
   group_by(Patient, MRN) %>% 
   slice_head(n = 1) %>% 
   ungroup()
