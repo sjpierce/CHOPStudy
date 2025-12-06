@@ -164,13 +164,13 @@ time-invariant patient-level characteristic within the CHOP cycle.
 #|                       "(N = ", nrow(Final_Patients), " Patients)")
 #| message: false
 
-VNames <- c("Weight_kg", "Surface_Area_m2", "N_Visits")
+VNames <- c("Age_Yrs", "Weight_kg", "Surface_Area_m2", "N_Visits")
 
 CNames <- c("Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", "Q75", "Max")
 
 Final_Patients %>% 
-  select(Weight_kg, Surface_Area_m2, N_Visits) %>% 
-  pivot_longer(cols = c(Weight_kg, Surface_Area_m2, N_Visits), 
+  select(Age_Yrs, Weight_kg, Surface_Area_m2, N_Visits) %>% 
+  pivot_longer(cols = c(Age_Yrs, Weight_kg, Surface_Area_m2, N_Visits), 
                names_to = "Variable", values_to = "Value") %>% 
   mutate(Variable = factor(Variable, levels = VNames)) %>% 
   # Aggregate to one row per variable.
@@ -210,9 +210,117 @@ very low end of weight distribution that we use in the manuscript.
 :::
 
 ```{r}
-#| label: tbl-patient-Leukemic
-#| tbl-cap: !expr paste0("Frequency Distribution for Patient-Level Leukemic ", 
+#| label: tbl-patient-Sex
+#| tbl-cap: !expr paste0("Frequency Distribution for Sex ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Sex, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Sex-Neutered
+#| tbl-cap: !expr paste0("Contingency Table for Sex by Neutered Status", 
 #|                       " Status (N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Sex + Neutered, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  pivot_wider(names_from = Neutered, values_from = Freq) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Breed
+#| tbl-cap: !expr paste0("Frequency Distribution for Breed ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Breed, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  arrange(desc(Freq), Breed) %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Diagnosis
+#| tbl-cap: !expr paste0("Frequency Distribution for Diagnosis ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Diagnosis, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  arrange(desc(Freq), Diagnosis) %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Stage
+#| tbl-cap: !expr paste0("Frequency Distribution for Lymphoma Stage ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Stage, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Substage
+#| tbl-cap: !expr paste0("Frequency Distribution for Lymphoma Substage ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Substage, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+```{r}
+#| label: tbl-patient-Phenotype
+#| tbl-cap: !expr paste0("Frequency Distribution for Lymphoma Phenotype ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
+#| message: false
+
+Final_Patients %>% 
+  xtabs(~Phenotype, addNA = TRUE, data = .) %>% 
+  as.data.frame() %>% 
+  mutate(Percent = 100*Freq/nrow(Final_Patients)) %>% 
+  kable(., format = "html", digits = 0) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T)
+```
+
+
+```{r}
+#| label: tbl-patient-Leukemic
+#| tbl-cap: !expr paste0("Frequency Distribution for Leukemic Status ", 
+#|                       "(N = ", nrow(Final_Patients), " Patients)")
 #| message: false
 
 Final_Patients %>% 
@@ -476,6 +584,43 @@ Final_Visits %>%
   select(Drug, Name, N_Visits, Percent) %>% 
   kbl(digits = 1) %>%
   kable_styling()
+```
+
+```{r}
+#| label: tbl-visit-describe-Dose-by-Drug
+#| tbl-cap: !expr paste0("Descriptive Statistics for Dosage ", 
+#|                       "by Drug (N = ", nrow(Final_Visits), 
+#|                       " Visits)")
+#| message: false
+
+VNames <- c("Dose_mgpm2")
+VNamesUnits <- c("Dosage (mg/m2)")
+
+CNames <- c("Drug", "Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", 
+            "Q75", "Max")
+
+Final_Visits %>% 
+  select(Name, Dose_mgpm2) %>% 
+  pivot_longer(cols = c(Dose_mgpm2), 
+               names_to = "Variable", values_to = "Value") %>% 
+  mutate(Variable = factor(VNames, levels = VNames)) %>% 
+  # Aggregate to one row per variable.
+  group_by(Name) %>% 
+  summarise(Variable = VNames,
+            N = sum(!is.na(Value)), 
+            Mean = mean(Value, na.rm = TRUE),
+            SD = sd(Value, na.rm = TRUE),
+            Min = min(Value, na.rm = TRUE),
+            Q25 = quantile(Value, probs = .25, na.rm = TRUE),
+            Q50 = quantile(Value, probs = .50, na.rm = TRUE),
+            Q75 = quantile(Value, probs = .75, na.rm = TRUE),
+            Max = max(Value, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(Variable = factor(Variable, levels = VNames, labels = VNamesUnits)) %>% 
+  kable(., format = "html", digits = 1, 
+        col.names = CNames, row.names = FALSE) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                fixed_thead = T) 
 ```
 
 @tbl-visit-freq shows the univariate frequency distribution for visit number. 
