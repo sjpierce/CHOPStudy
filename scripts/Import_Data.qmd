@@ -186,6 +186,16 @@ All_Visits <- Raw_Visits %>%
          Sex = case_when(Sex == "N" ~ "M",
                          Sex == "S" ~ "F",
                          .default = Sex),
+         # Fix handling of missing data.
+         Stage = if_else(Stage == "N/A", 
+                         true = NA, 
+                         false = Stage),
+         Substage = if_else(Substage == "N/A", 
+                            true = NA, 
+                            false = Substage),
+         Phenotype = if_else(Phenotype == "N/A", 
+                             true = NA, 
+                             false = Phenotype),
   arrange(Patient, CHOP_Number, Visit_Number, CBC_Date)
 
 # Show the updated variable names to confirm all looks right. 
