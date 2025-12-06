@@ -639,8 +639,9 @@ Final_Visits <- Final_Visits %>%
   mutate(DrugV_C = DrugV - M_DrugV,
          DrugC_C = DrugC - M_DrugC,
          DrugD_C = DrugD - M_DrugD) %>% 
-  # Center the L2 predictor for use in GLMM analyses.
-  mutate(BSA_m2_C = Surface_Area_m2 - mean(Final_Patients$Surface_Area_m2)) %>% 
+  # Center the L2 predictors for use in GLMM analyses.
+  mutate(BSA_m2_C = Surface_Area_m2 - mean(Final_Patients$Surface_Area_m2),
+         Age_Yrs_C = Age_Yrs - mean(Age_Yrs)) %>% 
   set_variable_labels(DrugV = "Dummy code, Drug = Vincristine (L1, uncentered)",
                       DrugC = "Dummy code, Drug = Cyclophosphamide (L1, uncentered)",
                       DrugD = "Dummy code, Drug = Doxorubicin (L1, uncentered)",
