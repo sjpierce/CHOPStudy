@@ -177,7 +177,15 @@ All_Visits <- Raw_Visits %>%
          # Add drug name
          Name = factor(Drug, levels = 1:3, 
                        labels = c("Vincristine", "Cyclophosphamide", 
-                                  "Doxorubicin"))) %>% 
+                                  "Doxorubicin")),
+         # Add neutered variable, then fix Sex variable. 
+         Neutered = case_when(Sex %in% c("F","M") ~ "Intact",
+                              Sex == "N" ~ "Neutered",
+                              Sex == "S" ~ "Spayed",
+                              .default = NA),
+         Sex = case_when(Sex == "N" ~ "M",
+                         Sex == "S" ~ "F",
+                         .default = Sex),
   arrange(Patient, CHOP_Number, Visit_Number, CBC_Date)
 
 # Show the updated variable names to confirm all looks right. 
