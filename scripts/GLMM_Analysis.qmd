@@ -157,11 +157,20 @@ having total band neutrophils $\gt$ 0.10 k/ul and coded (0 = No, 1 = Yes). This
 means that we can interpret estimated marginal means on the response scale as 
 the incidence rate of bandemia. 
 
+### Age (`Age_Yrs`)
+Age at the start of CHOP (`Age_Yrs`) was measured in years. This is a
+patient-level (L2) measure that was invariant across visits. Prior to modeling,
+we grand-mean centered this variable to improve interpretation of model
+coefficients [@Schielzeth-RN1814], yielding `Age_Yrs_C`.
+
+### Sex ('Sex')
+Sex is a binary, dummy-coded, patient-level (L2) measure (0 = female, 1 = male).
+
 ### Body Surface Area (`BSA_m2_C`)
 Body surface area at the start of CHOP (`Surface_Area_m2`) was measured in 
 square meters ($m^2$) at the beginning of the CHOP cycle. This is a
 patient-level (L2) measure that was invariant across visits. Prior to modeling,
-we grand-mean centered this variable to improve interpretatibility of model
+we grand-mean centered this variable to improve interpretation of model
 coefficients [@Schielzeth-RN1814], yielding `BSA_m2_C`.
 
 ### Prior Drug Administered (`DrugC_C`, `DrugD_C`, `M_DrugC_C`, `M_DrugD_C`)
@@ -207,9 +216,9 @@ use likelihood ratio tests to compare models in sequence.
   slopes for the L2 predictors. The aggregated means of the L1 drug dummy codes 
   (`M_DrugC` and `M_DrugD`) allow us to control for the fact that there was 
   variability in the proportion visits at which each dog was exposed to each 
-  drug. We want to control for that when testing the effect of centered BSA. The 
-  model retains L1 effects for the centered drug dummy codes plus the fixed and 
-  random intercept terms. 
+  drug. We want to control for that when testing the effects of age, BSA, and 
+  sex. The model retains L1 effects for the centered drug dummy codes plus the 
+  fixed and random intercept terms. 
 
 :::{.callout-important}
 Our manuscript [@Eliason-RN8603] will only report Model 2, but Models 0 and 1
@@ -576,8 +585,8 @@ we intend to test and @tbl-m2-OR shows the corresponding odds-ratios.
 #| results: asis
 
 # Add L2 predictors
-m2 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + BSA_m2_C + 
-                (1 | Patient), 
+m2 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + Age_Yrs_C + 
+                BSA_m2_C + Sex + (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
               ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
 
