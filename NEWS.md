@@ -1,5 +1,32 @@
 # CHOPStudy News
 
+## 0.23.0, 2025-12-09
+* `DESCRIPTION`
+    * Updated Suggests field to include more packages used by Quarto scripts. 
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/Descriptive_Analysis.qmd`
+    * Added analyses for new variables.
+* `scripts/GLMM_Analysis.qmd`
+* `scripts/Import_Data.qmd` 
+    * Update to use a new data file containing exctra variables: Age_Yrs, Sex, 
+      Breed, Diagnosis, Stage, Substage, Phenotype, In_Final_Patients, 
+      In_Final_Visits, and Dose_mgpkg. Fixed 2 cases with missing values on 
+      patient characteristics and removed 4 rows that were repeat CBCs after the 
+      same chemo event (we kept the earliest record for each event), fixed a 
+      couple dose values .
+    * Improve narrative text. 
+    * Fix method for creating initial All_Patients dataset with unique patient 
+      records.
+    * Recoded Sex & created Neutered variable.
+    * Recoded some missing data.
+    * Add variables to All_Patients.
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Update manuscript title. 
+* `scripts/Render_Scripts.qmd`
+    * Load another package so version info will be more complete. 
+
 ## 0.22.0, 2025-10-13
 * `README.qmd` and `README.md`
     * Update software version & citation info.
