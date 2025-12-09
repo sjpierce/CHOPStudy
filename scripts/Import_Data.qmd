@@ -195,11 +195,7 @@ All_Visits <- Raw_Visits %>%
                             false = Substage),
          Phenotype = if_else(Phenotype == "N/A", 
                              true = NA, 
-                             false = Phenotype),
-         # Fix variable type and treat "not given" as Dose = 0. 
-         Dose_mgpkg = if_else(Dose_mgpkg == "not given", 
-                              true = 0, 
-                              false = as.numeric(Dose_mgpkg))) %>% 
+                             false = Phenotype)) %>% 
   arrange(Patient, CHOP_Number, Visit_Number, CBC_Date)
 
 # Show the updated variable names to confirm all looks right. 
