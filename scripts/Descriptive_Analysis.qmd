@@ -286,6 +286,15 @@ Final_Patients %>%
                 fixed_thead = T)
 ```
 
+:::{.callout-caution}
+Using `Stage` as a predictor in the model would be complicated by the fact that 
+there is only one patient with `Stage = 1` and none with `Stage = 2`. Meanwhile, 
+some patients have missing `Stage` data because they have diseases to which
+staging does not apply, while others just have true missing data. Given the size 
+and heterogeneity of the sample, I think omitting `Stage` as a model predictor 
+of bandemia seems like the wiser choice.
+:::
+
 ```{r}
 #| label: tbl-patient-Substage
 #| tbl-cap: !expr paste0("Frequency Distribution for Lymphoma Substage ", 
@@ -301,6 +310,12 @@ Final_Patients %>%
                 fixed_thead = T)
 ```
 
+:::{.callout-caution}
+The concerns about using `Stage` as a predictor in the model also extend to
+`Substage` Given the size and heterogeneity of the sample, omitting `Substage`
+as a model predictor of bandemia seems like the wiser choice.
+:::
+
 ```{r}
 #| label: tbl-patient-Phenotype
 #| tbl-cap: !expr paste0("Frequency Distribution for Lymphoma Phenotype ", 
@@ -315,6 +330,13 @@ Final_Patients %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T)
 ```
+
+:::{.callout-caution}
+The amount of missing data for `Phenotype` poses a problem for using it as a
+predictor in the model. Some of that may be a result of that property not being
+relevant to some of the diagnoses in the sample. Omitting `Phenotype` as a model
+predictor of bandemia seems like the wiser choice.
+:::
 
 
 ```{r}
@@ -622,6 +644,21 @@ Final_Visits %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
                 fixed_thead = T) 
 ```
+
+:::{.callout-caution}
+Dosage is a visit-level (L1) variable. The three drugs have very different
+ranges of typical values for dosage: The ranges differ by multiple orders of
+magnitude. Furthermore, there is no good reason expect that the dosage effect
+would have the same slope for across drugs. To use dosage in the model, we would
+need to center it, aggregate it to L2 means, then include main effect and 
+interaction terms at both L1 and L2 between dosage and drug. We would also need 
+to consider non-linear dosage effects. The interactions would permit the 
+dosage effect to vary across drugs but this, plus considering non-linearity, 
+would add a lot of parameters to the model. Given the sample size, that seems
+overly ambitious. It seems better to omit dosage effects from the model. I am 
+not confident our data are sufficient to get reliable findings about dosage 
+effects. 
+:::
 
 @tbl-visit-freq shows the univariate frequency distribution for visit number. 
 
