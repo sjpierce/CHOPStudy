@@ -1,5 +1,13 @@
 # CHOPStudy News
 
+## 0.24.0, 2025-12-09
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/GLMM_Analysis.qmd`
+    * Added Model 3 section. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 0.23.0, 2025-12-09
 * `DESCRIPTION`
     * Updated Suggests field to include more packages used by Quarto scripts. 
@@ -7,7 +15,6 @@
     * Update software version & citation info.
 * `scripts/Descriptive_Analysis.qmd`
     * Added analyses for new variables.
-* `scripts/GLMM_Analysis.qmd`
 * `scripts/Import_Data.qmd` 
     * Update to use a new data file containing exctra variables: Age_Yrs, Sex, 
       Breed, Diagnosis, Stage, Substage, Phenotype, In_Final_Patients, 
