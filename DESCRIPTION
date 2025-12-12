@@ -9,7 +9,7 @@ Authors@R:
            email = "pierces1@msu.edu",
            comment = c(ORCID = "0000-0002-0679-3019"))
 Description: This package is a research compendium for a study examining the 
-    incidence of bandemia in canine patients undergoing chemotherapy treatment. 
+    prevalence of bandemia in canine patients undergoing chemotherapy treatment. 
     The research team is led by Dr. Alison Masyr (PI) at Michigan State 
     University. 
 License: file LICENSE

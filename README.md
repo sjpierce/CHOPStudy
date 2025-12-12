@@ -17,7 +17,7 @@ status](https://www.r-pkg.org/badges/version/CHOPStudy.png)](https://CRAN.R-proj
 <!-- badges: end -->
 
 This package (Pierce, 2025) is a research compendium for a study
-examining the incidence of bandemia in canine patients undergoing
+examining the prevalence of bandemia in canine patients undergoing
 chemotherapy treatment (Eliason et al., 2025). The research team is led
 by Dr. Alison Masyr (PI) at Michigan State University.
 
@@ -633,7 +633,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.24.0) \[Reproducible Research Materials, Computer
+study* (Version 0.25.0) \[Reproducible Research Materials, Computer
 Program, R package, Private Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 

@@ -47,11 +47,11 @@ knitr:
 This file is part of a research compendium [@Pierce-RN8714]. It runs a
 generalized linear mixed model (GLMM) on data about dogs receiving CHOP
 chemotherapy at MSU Veterinary Medicine Clinic (VMC) between 2016 and 2022. The
-study aims to assess the incidence of bandemia (i.e., band neutrophil elevation)
-in canine lymphoma patients undergoing CHOP chemotherapy and test predictors of
-bandemia incidence. Specifically, we examine the effects of two predictors: the
-drug administered and the dog's body surface area (BSA). Some results here are
-used in a manuscript [@Eliason-RN8603].
+study aims to assess the prevalence of bandemia (i.e., band neutrophil
+elevation) in canine lymphoma patients undergoing CHOP chemotherapy and test
+predictors of bandemia prevalence. Specifically, we examine the effects of two
+predictors: the drug administered and the dog's body surface area (BSA). Some
+results here are used in a manuscript [@Eliason-RN8603].
 
 # Setup
 This section of the report documents some setup tasks that are useful to the
@@ -155,7 +155,7 @@ Our outcome for the logistic models is a binary variable measuring whether the
 CBC sample taken at a given visit exhibited bandemia, which was defined as 
 having total band neutrophils $\gt$ 0.10 k/ul and coded (0 = No, 1 = Yes). This 
 means that we can interpret estimated marginal means on the response scale as 
-the incidence rate of bandemia. 
+the prevalence rate of bandemia. 
 
 ### Age (`Age_Yrs`)
 Age at the start of CHOP (`Age_Yrs`) was measured in years. This is a
@@ -232,13 +232,13 @@ model fit indices for GLMMs, including AIC, BIC, ICC, and RMSE. In addition, it
 also reports the conditional and marginal $R^2$ [@Nakagawa-RN3697].
 
 ### Effect Size Estimates
-Interpretation was facilitated by using the `marginaleffects` package 
-[@Arel-Bundock-RN8812] to obtain estimated marginal means for bandemia incidence
-associated with each drug along with relevant 95% confidence intervals, 
-risk differences (RD) for bandemia when comparing pairs of drugs, and graphing 
-average predicted bandemia incidence as a function of each continuous predictor. 
-We also estimated the odds ratio (OR) for each predictor along with 95% 
-confidence intervals.
+Interpretation was facilitated by using the `marginaleffects` package
+[@Arel-Bundock-RN8812] to obtain estimated marginal means for bandemia
+prevalence associated with each drug along with relevant 95% confidence
+intervals, risk differences (RD) for bandemia when comparing pairs of drugs, and
+graphing average predicted bandemia prevalence as a function of each continuous
+predictor. We also estimated the odds ratio (OR) for each predictor along with
+95% confidence intervals.
 
 ### Collinearity
 The `performance` package [@Lüdecke-RN8788] provides a function for examining 
@@ -304,7 +304,7 @@ modelsummary(list("Model 0" = m0), output = "kableExtra",
 
 Before we do much to interpret the model, we do some quick diagnostic checks. 
 The chunk below should return text describing the result of some checks. The 
-warning it provides is a result of the low incidence of bandemia in this sample. 
+warning it provides is a result of the low prevalence of bandemia in this sample. 
 
 ```{r}
 #| label: diag-m0
@@ -351,6 +351,7 @@ icc(m0, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   kable_styling() %>% 
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
+
 Because Model 0 does not use any substantive predictors, we do not expect its 
 fixed effects to explain any variance. Thus, an marginal R2 of 0 is expected. 
 The conditional R2 includes variance explained by both fixed and random effects,
@@ -376,7 +377,7 @@ r2(m0, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
 
-Another thing to examine is the population marginal mean for bandemia incidence 
+Another thing to examine is the population marginal mean for bandemia prevalence 
 for a typical dog (random effect of 0), which is shown in @tbl-m0-emm-intercept.
 
 ```{r}
@@ -443,11 +444,11 @@ modelsummary(list("Model 1" = m1), output = "kableExtra",
              notes = list(FN)) 
 ```
 
-Before we do much to interpret the model, we do some quick diagnostic checks. 
-The chunk below should return text describing the result of some checks. The 
-warning it provides is a result of the low incidence of bandemia in this sample. 
-Because we only added predictors that are dummy codes for drug (a categorical
-variable), there is no need to check for multicollinearity.
+Before we do much to interpret the model, we do some quick diagnostic checks.
+The chunk below should return text describing the result of some checks. The
+warning it provides is a result of the low prevalence of bandemia in this
+sample. Because we only added predictors that are dummy codes for drug (a
+categorical variable), there is no need to check for multicollinearity.
 
 ```{r}
 #| label: diag-m1
@@ -537,7 +538,7 @@ r2(m1, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
 ```
 
 @tbl-m1-emm-intercept shows that the population marginal mean for bandemia 
-incidence for a typical dog (random effect of 0) remains similar to that 
+prevalence for a typical dog (random effect of 0) remains similar to that 
 observed in Model 0. That's what we would expect. 
 
 ```{r}
@@ -553,9 +554,9 @@ avg_predictions(m1, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>%
   add_header_above(header = c(" " = 2, "95% CI" = 2, "Wald Test" = 2, " "))
 ```
 
-@tbl-m1-emm-name shows the population average estimated marginal means for 
-bandemia incidence associated with each drug. The estimates assume a typical dog 
-(i.e., one with a random intercept of 0). 
+@tbl-m1-emm-name shows the population average estimated marginal means for
+bandemia prevalence associated with each drug. The estimates assume a typical
+dog (i.e., one with a random intercept of 0).
 
 ```{r}
 #| label: tbl-m1-emm-name
@@ -623,10 +624,11 @@ modelsummary(list("Model 2" = m2), output = "kableExtra",
              notes = FN) 
 ```
 
-Before we do much to interpret the model, we do some quick diagnostic checks. 
-The chunk below should return text describing the result of some checks. The 
-warning it provides is a result of the low incidence of bandemia in this sample. 
-We also check for multicollinearity, but find it is not a problem in this model. 
+Before we do much to interpret the model, we do some quick diagnostic checks.
+The chunk below should return text describing the result of some checks. The
+warning it provides is a result of the low prevalence of bandemia in this
+sample. We also check for multicollinearity, but find it is not a problem in
+this model.
 
 ```{r}
 #| label: diag-m2
@@ -719,7 +721,7 @@ r2(m2, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
 ```
 
 @tbl-m2-emm-intercept shows that the population marginal mean for bandemia 
-incidence for a typical dog (random effect of 0) remains similar to that 
+prevalence for a typical dog (random effect of 0) remains similar to that 
 observed in Model 0. That's what we would expect. 
 
 ```{r}
@@ -735,11 +737,12 @@ avg_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA) %>%
   add_header_above(header = c(" " = 2, "95% CI" = 2, "Wald Test" = 2, " "))
 ```
 
-Dogs were exposed to different drugs prior to each visit, so one key objective 
-was to examine the bandemia incidence rates associated with each drug. 
-@tbl-m1-emm-name shows the population average estimated marginal means for 
-bandemia incidence associated with each drug. The estimates assume a typical dog 
-(i.e., one with a random intercept of 0). @fig-m2-emm-name displays those means. 
+Dogs were exposed to different drugs prior to each visit, so one key objective
+was to examine the bandemia prevalence rates associated with each drug.
+@tbl-m1-emm-name shows the population average estimated marginal means for
+bandemia prevalence associated with each drug. The estimates assume a typical
+dog (i.e., one with a random intercept of 0). @fig-m2-emm-name displays those
+means.
 
 ```{r}
 #| label: tbl-m2-emm-name
@@ -823,8 +826,8 @@ doxorubicin in @fig-m2-emm-name.
 
 In this study BSA is a patient-level variable rather than visit-level variable 
 because only BSA at the start of CHOP was recorded and used in Model 2. 
-@fig-m2-BSA shows the marginal effect of BSA on bandemia incidence. The 
-incidence decreases considerably as BSA increases. The predicted value for the
+@fig-m2-BSA shows the marginal effect of BSA on bandemia prevalence. The 
+prevalence decreases considerably as BSA increases. The predicted value for the
 smallest dog in the sample is around 19%, while for dogs of average size
 (centered BSA values of 0) the rate is just under 10%, and for the largest dog
 it is around 2.5%.
@@ -862,7 +865,7 @@ ggsave(filename = here(paste0("scripts/output/Figure_2.png")), plot = Fig2,
 mean exposure to cyclophosphamide and doxorubicin. Here, mean exposure refers to 
 the proportion of visits at which the indicated drug was administered. These 
 plots are consistent with @tbl-m2, which shows that neither of those variables 
-had noteworthy effects on bandemia incidence. 
+had noteworthy effects on bandemia prevalence. 
 
 ```{r}
 #| label: fig-m2-M-DrugC
@@ -944,10 +947,11 @@ modelsummary(list("Model 3" = m3), output = "kableExtra",
              notes = FN) 
 ```
 
-Before we do much to interpret the model, we do some quick diagnostic checks. 
-The chunk below should return text describing the result of some checks. The 
-warning it provides is a result of the low incidence of bandemia in this sample. 
-We also check for multicollinearity, but find it is not a problem in this model. 
+Before we do much to interpret the model, we do some quick diagnostic checks.
+The chunk below should return text describing the result of some checks. The
+warning it provides is a result of the low prevalence of bandemia in this
+sample. We also check for multicollinearity, but find it is not a problem in
+this model.
 
 ```{r}
 #| label: diag-m3
