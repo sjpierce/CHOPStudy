@@ -585,8 +585,8 @@ we intend to test and @tbl-m2-OR shows the corresponding odds-ratios.
 #| results: asis
 
 # Add L2 predictors
-m2 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + Age_Yrs_C + 
-                BSA_m2_C + Sex + (1 | Patient), 
+m2 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + BSA_m2_C + 
+              (1 | Patient), 
               data = Final_Visits, family = binomial(link = "logit"), 
               ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
 
@@ -635,7 +635,7 @@ diagnose(m2)
 check_collinearity(m2)
 ```
 
-@fig-check-m1 displays some additional graphs used to check model assumptions. 
+@fig-check-m2 displays some additional graphs used to check model assumptions. 
 While the binned residuals do indicate minor issues with the model especially 
 for situations where the probability of bandemia is very low or very high, the 
 other panels don't show any cause for major concern. 
@@ -663,7 +663,7 @@ bind_rows(test_lrt(m0, m2),
           test_lrt(m1, m2)) %>% 
   mutate(Model = case_when(Name == "m0" ~ "No Predictors",
                            Name == "m1" ~ "L1 Predictors",
-                           Name == "m2" ~ "L1 & L2 Predictors")) %>% 
+                           Name == "m2" ~ "L1 & L2 Predictors (BSA, Drug)")) %>% 
   kable(digits = 3, row.names = FALSE) %>% 
   kable_styling() %>% 
   group_rows(., group_label = "Model 0 vs Model 2", start_row = 1, end_row = 2) %>% 
@@ -895,6 +895,120 @@ plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, re.form = NA,
   labs(x = "Mean Exposure to Doxorubicin (Proportion)",
        y = "Bandemia")
 ```
+
+## Model 3 (L1 & More L2 Predictors)
+@tbl-m3 shows the parameters for Model 3, which includes all the variables 
+we intend to test and @tbl-m3-OR shows the corresponding odds-ratios. 
+
+```{r}
+#| label: tbl-m3 
+#| tbl-cap: Model 3 Parameters
+#| results: asis
+
+# Add L2 predictors
+m3 <- glmmTMB(Bandemia ~ DrugC_C + DrugD_C + M_DrugC + M_DrugD + Age_Yrs_C + 
+                BSA_m2_C + Sex + (1 | Patient), 
+              data = Final_Visits, family = binomial(link = "logit"), 
+              ziformula = ~ 0, dispformula = ~ 1, REML = FALSE)
+
+FN = paste0("Log Likelihood = ", round(logLik(m2), digits = 3),
+            ". Deviance = ", round(-2*logLik(m2), digits = 3),
+            ". Model df = ", length(m2$fit$par), 
+            ". Residual df = ", nobs(m2) - length(m2$fit$par),
+            ". Drug reference level is Vincristine",
+            ". 95% CIs reported.")
+
+modelsummary(list("Model 3" = m3), output = "kableExtra", 
+             align = "llrrrrr", escape = FALSE,
+             col.names = c("Component", "Term", "Est.", "CI.LL", "CI.UL", "z", "p"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int", "statistic", "p.value"), 
+             gof_omit = "R2 Marg.|R2 Cond.|ICC",
+             notes = list(FN, paste("95% CIs reported.")),
+             footnote_as_chunk = TRUE) %>% 
+  cat()
+```
+
+```{r}
+#| label: tbl-m3-OR 
+#| tbl-cap: Model 3 Odds-Ratios
+
+FN = paste0("95% CIs reported.")
+
+modelsummary(list("Model 3" = m3), output = "kableExtra", 
+             align = "llrrr", escape = FALSE, exponentiate = TRUE,
+             col.names = c("Component", "Term", "OR", "OR.LL", "OR.UL"),
+             shape = component + term ~ model + statistic, 
+             statistic = c("conf.int"), 
+             gof_map = "none",
+             notes = FN) 
+```
+
+Before we do much to interpret the model, we do some quick diagnostic checks. 
+The chunk below should return text describing the result of some checks. The 
+warning it provides is a result of the low incidence of bandemia in this sample. 
+We also check for multicollinearity, but find it is not a problem in this model. 
+
+```{r}
+#| label: diag-m3
+
+diagnose(m3)
+check_collinearity(m3)
+```
+
+@fig-check-m3 displays some additional graphs used to check model assumptions. 
+While the binned residuals do indicate minor issues with the model especially 
+for situations where the probability of bandemia is very low or very high, the 
+other panels don't show any cause for major concern. 
+
+```{r}
+#| label: fig-check-m3
+#| fig-cap: Diagnostic Checks on Model 3
+#| fig-height: 7
+#| fig-width: 8
+
+check_model(m3, type = "discrete_both", residual_type = "simulated",
+            check = c("pp_check", "binned_residuals", "qq", "reqq"),
+            base_size = 9)
+```
+
+@tbl-compare-m1-m2-m3 shows comparisons between Models 1, 2, and 3. It is clear 
+that Model 2 is an improvement over Model 1, and that Model 3 is not an 
+improvement over Model 1 or Model 2.  
+
+```{r}
+#| label: tbl-compare-m1-m2-m3
+#| tbl-cap: Likelihood Ratio Tests Comparing Models 1, 2, and 3.
+
+bind_rows(test_lrt(m1, m2),
+          test_lrt(m1, m3), 
+          test_lrt(m2, m3)) %>% 
+  mutate(Model = case_when(Name == "m0" ~ "No Predictors",
+                           Name == "m1" ~ "L1 Predictors",
+                           Name == "m2" ~ "L1 & L2 Predictors (BSA, Drug)",
+                           Name == "m3" ~ "L1 & L2 Predictors (BSA, Drug, Age, Sex)"),
+         ) %>% 
+  kable(digits = 3, row.names = FALSE) %>% 
+  kable_styling() %>% 
+  group_rows(., group_label = "Model 1 vs Model 2", start_row = 1, end_row = 2) %>% 
+  group_rows(., group_label = "Model 1 vs Model 3", start_row = 3, end_row = 4) %>% 
+  group_rows(., group_label = "Model 2 vs Model 3", start_row = 5, end_row = 6)
+```
+
+:::{.callout-important}
+@tbl-compare-m1-m2-m3 suggests that we should interpret Model 2 instead of Model
+3. We can mention in the paper that adding age and sex effects did not improve
+the model, but that can be a brief aside (just one sentence).
+
+@tbl-m3 shows that in Model 3 neither age nor sex had clear effect on bandemia.
+Comparing @tbl-m2-OR and @tbl-m3-OR shows that adding age and sex to the model
+makes the confidence interval for the odds-ratio of the BSA effect a bit wider.
+It widens enough to span a value of 1. The bulk of the CI still suggests
+the effect is probably negative, but we cannot exclude the possibility of either
+no effect or a very small positive effect. However, on balance, there remains a 
+fair degree of overlap between the BSA CIs for Model 2 and Model 3 and we have 
+reason to rely more on Model 2. 
+:::
 
 # References
 ::: {#refs}
