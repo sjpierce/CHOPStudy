@@ -1,5 +1,14 @@
 # CHOPStudy News
 
+## 0.24.0, 2025-12-09
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/GLMM_Analysis.qmd`
+    * Reverted Model 2 predictors to previous state and added Model 3 to better
+      test the new age and sex effects. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 0.23.0, 2025-12-09
 * `DESCRIPTION`
     * Updated Suggests field to include more packages used by Quarto scripts. 
@@ -8,6 +17,7 @@
 * `scripts/Descriptive_Analysis.qmd`
     * Added analyses for new variables.
 * `scripts/GLMM_Analysis.qmd`
+    * Added predictors to Model 2. 
 * `scripts/Import_Data.qmd` 
     * Update to use a new data file containing exctra variables: Age_Yrs, Sex, 
       Breed, Diagnosis, Stage, Substage, Phenotype, In_Final_Patients, 
