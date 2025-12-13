@@ -1,6 +1,23 @@
 # CHOPStudy News
 
-## 0.24.0, 2025-12-09
+## 0.25.0, 2025-12-13
+* `DESCRIPTION` 
+    * Replace the term "incidence" with "prevalence" (more accurate term) in 
+      text and then fix line breaks for readability.
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Replace the term "incidence" with "prevalence" (more accurate term) in 
+      text and then fix line breaks for readability.
+* `scripts/Descriptive_Analysis.qmd`
+    * Added a table about numbers of patients with specific combinations across 
+      visit 1 and 2. 
+* `scripts/GLMM_Analysis.qmd`
+    * Replace the term "incidence" with "prevalence" (more accurate term) in 
+      text and then fix line breaks for readability.
+* `scripts/references.bib`
+    * Update software version & citation info.
+
+## 0.24.0, 2025-12-11
 * `README.qmd` and `README.md`
     * Update software version & citation info.
 * `scripts/GLMM_Analysis.qmd`
