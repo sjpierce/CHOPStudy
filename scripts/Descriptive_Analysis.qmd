@@ -1518,6 +1518,34 @@ Final_Visits %>%
   add_header_above(header = c(" " = 3, "Drug Sequence (Drug Used by Visit Number)" = 10))
 ```
 
+@tbl-v1-v2 shows the contingency table (2-way crosstabulation) of the drug used 
+at visit 1 versus the drug used at visit 2. The cell counts are the number of 
+patients who had a pattern that started with the indicated pair drugs. The NA 
+values are missing data resulting from either use of some other drug (besides 
+vincristine, cyclophosphamide, or doxorubicin), or from not having any data at 
+all for the indicated visit. Note that there were two patients that only had one 
+visit each (see @tbl-visit-patterns rows for `SequenceID` values of 3 and 33).
+
+```{r}
+#| label: tbl-v1-v2
+#| tbl-cap: !expr paste0("Contingency Table of Drug Used at Visit 1 by Drug ", 
+#|                       "Used at Visit 2 ",
+#|                       "(N = ", length(unique(Final_Visits$Patient)), 
+#|                       " Patients)")
+#| warning: false
+
+Final_Visits %>% 
+  select(Patient, Visit_Number, Name) %>% 
+  rename(VN = Visit_Number) %>% 
+  pivot_wider(id_cols = "Patient", names_from = "VN", names_prefix = "Drug_at_Visit_", 
+              values_from = "Name") %>% 
+  xtabs(~Drug_at_Visit_1 + Drug_at_Visit_2, addNA = TRUE, data = .) %>% 
+  addmargins() %>% 
+  kable(col.names = c("Drug at Visit 1", "Vincristine", "Cyclophosphamide",
+                      "Doxorubicin", "<NA>", "Sum")) %>%
+  kable_styling() %>% 
+  add_header_above(header = c(" " = 1, "Drug at Visit 2" = 4, " "))
+```
 
 # References
 ::: {#refs}
