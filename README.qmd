@@ -547,11 +547,11 @@ If you want to get a date-stamped output for `scripts/Render_Scripts.qmd`, use
 the commands in the Terminal to render that script. The first line changes to 
 the `scripts/` subfolder and the 2nd one does a custom render of that script,
 setting matching custom values for the output file name and the LogFile 
-parameter.
+parameter. Make sure you set the date part of file names correctly. 
 
 ```
 cd scripts
-quarto render Render_Scripts.qmd --output Render_Scripts_2025-10-31.html -P LogFile:Render_Scripts_2025-10-31.html
+quarto render Render_Scripts.qmd --output Render_Scripts_2025-12-15.html -P LogFile:Render_Scripts_2025-12-15.html
 ```
 
 ## References
