@@ -676,9 +676,9 @@ bind_rows(test_lrt(m0, m2),
 We should interpret Model 2 instead of Model 1. 
 :::
 
-@tbl-m2-icc shows that we still have a similar level of unexplained variability 
-between dogs. This is unexpected given that BSA appears to be a meaningful 
-predictor of bandemia in @tbl-m2. 
+@tbl-m2-icc shows that we still have had a small decrease in unexplained 
+variability between dogs compared wo what we saw in Model 1. This is expected
+given that BSA appears to be a meaningful predictor of bandemia in @tbl-m2.
 
 ```{r}
 #| label: tbl-m2-icc
@@ -699,7 +699,9 @@ icc(m2, ci = 0.95, ci_method = NULL, robust = TRUE, iterations = 100) %>%
   add_header_above(header = c(" " = 2, "95% CI" = 2))
 ```
 
-@tbl-m2-r2 shows the marginal R2 for Model 2. 
+@tbl-m2-r2 shows the marginal R2 for Model 2. It is notably larger than it was 
+in Model 1. This is also consistent with the presence of BAS as a meaningful L2 
+predictor. 
 
 ```{r}
 #| label: tbl-m2-r2
@@ -829,7 +831,7 @@ because only BSA at the start of CHOP was recorded and used in Model 2.
 @fig-m2-BSA shows the marginal effect of BSA on bandemia prevalence. The 
 prevalence decreases considerably as BSA increases. The predicted value for the
 smallest dog in the sample is around 19%, while for dogs of average size
-(centered BSA values of 0) the rate is just under 10%, and for the largest dog
+(centered BSA values of 0) the rate is around 8%, and for the largest dog
 it is around 2.5%.
 
 ```{r}
