@@ -1,5 +1,25 @@
 # CHOPStudy News
 
+## 0.26.0, 2025-12-21
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Updated example Terminal command for rendering `Render_Scripts.qmd` to 
+      date-stamped output.
+* `scripts/Descriptive_Analysis.qmd`
+    * Updated dosage variable name to use correct units. 
+* `scripts/GLMM_Analysis.qmd`    
+    * Improved narrative text. 
+* `scripts/Import_Data.qmd` 
+    * Update to use new data file because we detected and corrected a data entry 
+      error for Patient = 26 in which drug was used at visit 1. 
+    * Update to use new data file because we detected and corrected a data entry 
+      error for Patient = 30, Visit_Number = 5 where dosage was incorrect 
+      (detected because it was too small for the drug used). Also updated dose 
+      variable name to use correct units. 
+    * Removed an old callout that's not useful anymore. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+
 ## 0.25.0, 2025-12-13
 * `DESCRIPTION` 
     * Replace the term "incidence" with "prevalence" (more accurate term) in 
