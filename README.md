@@ -557,7 +557,7 @@ values for the output file name and the LogFile parameter. Make sure you
 set the date part of file names correctly.
 
     cd scripts
-    quarto render Render_Scripts.qmd --output Render_Scripts_2025-12-15.html -P LogFile:Render_Scripts_2025-12-15.html
+    quarto render Render_Scripts.qmd --output Render_Scripts_2025-12-21.html -P LogFile:Render_Scripts_2025-12-21.html
 
 ## References
 
