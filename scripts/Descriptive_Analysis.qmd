@@ -615,15 +615,15 @@ Final_Visits %>%
 #|                       " Visits)")
 #| message: false
 
-VNames <- c("Dose_mgpkg")
-VNamesUnits <- c("Dosage (mg/kg)")
+VNames <- c("Dose_mgpm2")
+VNamesUnits <- c("Dosage (mg/m^2)")
 
 CNames <- c("Drug", "Variable", "N", "Mean", "SD", "Min", "Q25", "Q50", 
             "Q75", "Max")
 
 Final_Visits %>% 
-  select(Name, Dose_mgpkg) %>% 
-  pivot_longer(cols = c(Dose_mgpkg), 
+  select(Name, Dose_mgpm2) %>% 
+  pivot_longer(cols = c(Dose_mgpm2), 
                names_to = "Variable", values_to = "Value") %>% 
   mutate(Variable = factor(VNames, levels = VNames)) %>% 
   # Aggregate to one row per variable.
