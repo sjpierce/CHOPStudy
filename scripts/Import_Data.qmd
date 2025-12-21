@@ -202,14 +202,6 @@ All_Visits <- Raw_Visits %>%
 names(All_Visits)
 ```
 
-::: {.callout-note}
-In previous versions of the output (2024-04-02 and earlier), we had been 
-recoding Patient_Number values > 28 by subtracting 1 from them just to make the 
-whole set of numbers sequential. We removed that code because it makes no 
-functional difference to our analyses and it is easier to cross-reference back 
-to source data file if we don't do that. 
-:::
-
 ## Check Patient and MRN Variables
 I assumed that `Patient` and `MRN` variables were created such that these two
 variables have a one-to-one correspondence. Each `Patient` value should always
