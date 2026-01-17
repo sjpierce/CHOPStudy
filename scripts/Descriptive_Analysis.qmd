@@ -1382,6 +1382,43 @@ ggplot(drug_counts, aes(x = Visit_Number, y = Count)) +
   theme_minimal()
 ```
 
+## Bandemia by Visit Number
+@tbl-bandemia-by-visit and @fig-bandemia-by-visit show that there is not a
+simple functional form for the relationship between visit number and bandemia
+rate. It is probably not viable to model a visit effect in this study because of
+this and because of the structural association of visit number with which drug
+was used (see @fig-visit-drug in the Drug Sequences section). Also note that the
+bandemia rate at visit 10 should be interpreted with caution because of the tiny
+sample size.
+
+```{r}
+#| label: tbl-bandemia-by-visit
+#| tbl-cap: Bandemia Rate by Visit Number
+
+Final_Visits %>% 
+  group_by(Visit_Number) %>% 
+  summarize(N = n(),
+            Bandemia = mean(Bandemia)) %>%
+  kable(format = "html", digits = 2) %>% 
+  kable_styling()
+```
+
+```{r}
+#| label: fig-bandemia-by-visit
+#| fig-cap: Bandemia Rate by Visit Number
+
+Final_Visits %>% 
+  group_by(Visit_Number) %>% 
+  summarize(Bandemia = mean(Bandemia)) %>%
+  ggplot(., aes(x = Visit_Number, y = Bandemia)) + 
+  geom_bar(stat = "identity") + 
+  scale_x_continuous(breaks = c(1:10), minor_breaks = NULL) +
+  scale_y_continuous(limits = c(0,.36), 
+                     breaks = seq(from = 0, to = .35, by = .05),
+                     minor_breaks = NULL) +
+  theme_bw()
+```
+
 ## Total White Blood Cells (WBC) 
 @tbl-WBC-visit provides the mean and standard deviation of total WBC for each 
 visit number. 
