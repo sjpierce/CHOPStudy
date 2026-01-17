@@ -111,7 +111,7 @@ below.
 
 ### Install Quarto
 
-We rely on [Quarto](https://quarto.org) (Allaire et al., 2025) scripts
+We rely on [Quarto](https://quarto.org) (Allaire et al., 2026) scripts
 to enhance reproducibility because they provide excellent support for
 generating dynamic reports (Mair, 2016). Install Quarto version 1.8.26
 or later. Although RStudio bundles a version of Quarto, we want the most
@@ -567,7 +567,7 @@ entry-spacing="0" line-spacing="2">
 <div id="ref-Allaire-RN8427" class="csl-entry">
 
 Allaire, J. J., Dervieux, C., Scheidegger, C., Teague, C., & Xie, Y.
-(2025). *Quarto* (Version 1.8.26) \[Computer Program\]. Posit Software,
+(2026). *Quarto* (Version 1.8.27) \[Computer Program\]. Posit Software,
 PBC. <https://quarto.org>
 
 </div>
@@ -634,7 +634,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.26.0) \[Reproducible Research Materials, Computer
+study* (Version 0.27.0) \[Reproducible Research Materials, Computer
 Program, R package, Private Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 
