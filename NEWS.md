@@ -3,6 +3,8 @@
 ## 0.27.0, 2026-01-17
 * `README.qmd` and `README.md`
     * Update software version & citation info.
+    * Updated example Terminal command for rendering `Render_Scripts.qmd` to 
+      date-stamped output. 
 * `scripts/Import_Data.qmd` 
     * Update to use new data file because we added an extra variable. 
 * `scripts/Descriptive_Analysis.qmd`
