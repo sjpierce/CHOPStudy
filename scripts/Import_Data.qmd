@@ -99,7 +99,7 @@ here::i_am(path = "scripts/Import_Data.qmd")
 #| tbl-cap: "Meta-Data About Raw Data File"
 
 # Store path to raw data file. 
-RawFile <- here("scripts/extdata/Vinc_Cases_2025-12-21.xlsx")
+RawFile <- here("scripts/extdata/Vinc_Cases_2026-01-16.xlsx")
 
 file_details(RawFile) %>% 
   kable(, format = "html", 
@@ -186,6 +186,10 @@ All_Visits <- Raw_Visits %>%
          Sex = factor(case_when(Sex == "N" ~ "M",
                                 Sex == "S" ~ "F",
                                 .default = Sex)),
+         Sick_Type = factor(Sick_Type, levels = c("Not sick", "Self-limited",
+                                                  "Medicated", "Hospitalized")),
+         Is_Sick = if_else(Sick_Type == "Not sick", true = 0, false = 1, 
+                           missing = NA),
          # Fix handling of missing data.
          Stage = if_else(Stage == "N/A", 
                          true = NA, 
