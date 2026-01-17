@@ -551,7 +551,7 @@ parameter. Make sure you set the date part of file names correctly.
 
 ```
 cd scripts
-quarto render Render_Scripts.qmd --output Render_Scripts_2025-12-21.html -P LogFile:Render_Scripts_2025-12-21.html
+quarto render Render_Scripts.qmd --output Render_Scripts_2026-01-17.html -P LogFile:Render_Scripts_2026-01-17.html
 ```
 
 ## References
