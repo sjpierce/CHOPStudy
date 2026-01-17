@@ -1,12 +1,17 @@
 # CHOPStudy News
 
 ## 0.27.0, 2026-01-17
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
 * `scripts/Import_Data.qmd` 
     * Update to use new data file because we added an extra variable. 
 * `scripts/Descriptive_Analysis.qmd`
     * Added Sickness section and other output relevant to sickness variables. 
     * Added Bandemia by Visit Number section.
     * Added output in Drug Sequences section. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 0.26.0, 2025-12-21
 * `README.qmd` and `README.md`
     * Update software version & citation info.
