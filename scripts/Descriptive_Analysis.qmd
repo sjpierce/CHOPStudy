@@ -84,6 +84,7 @@ library(kableExtra) # for kable_styling
 library(readxl)     # for read_xlsx()
 library(piercer)    # for git_report()
 library(quarto)     # for quarto_version()
+library(effectsize) # for cramers_v()
 library(CHOPStudy)  # for version info 
 ```
 
@@ -386,7 +387,10 @@ var_missingness(.) %>%
 ```
 
 @tbl-visit-describe-cat shows univariate frequency distributions for binary 
-cateogrical biomarker variables.
+categorical biomarker variables. The `Is_Sick` variable is a binary transform 
+of `Sick_Type`; it has a lot of missing values because we only collected 
+`Sick_Type` for observations with `Total_Bands > 0` (equivalent to 
+`Bands_Present = 1 (i.e., Yes)`). 
 
 ```{r}
 #| label: tbl-visit-describe-cat
@@ -394,11 +398,13 @@ cateogrical biomarker variables.
 #|                       "Variables (N = ", nrow(Final_Visits), " Visits)")
 #| message: false
 
-VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio", "Toxic_Change")
+VNames <- c("Bands_Present", "Bandemia", "High_BN_Ratio", "Is_Sick", 
+            "Toxic_Change")
 
 Final_Visits %>% 
-  select(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change) %>% 
-  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio, Toxic_Change), 
+  select(Bands_Present, Bandemia, High_BN_Ratio, Is_Sick, Toxic_Change) %>% 
+  pivot_longer(cols = c(Bands_Present, Bandemia, High_BN_Ratio, Is_Sick, 
+                        Toxic_Change), 
                names_to = "Variable", values_to = "Value") %>% 
   group_by(Variable, Value, .drop = FALSE) %>% 
   summarise(N = n()) %>% 
@@ -413,6 +419,27 @@ Final_Visits %>%
   collapse_rows(., columns = 1, valign = "top", 
                 row_group_label_position = "stack") 
 ```
+
+@tbl-visit-Sick-Type shows the frequency distribution of the 4-level `Sick_Type` 
+variable across all observations. This variable has a lot of missing values 
+because we only collected `Sick_Type` for observations with `Total_Bands > 0` 
+(equivalent to `Bands_Present = 1 (i.e., Yes)`). Self-limited means that 
+sickness was not treated with either medication or hospitalization. 
+
+```{r}
+#| label: tbl-visit-Sick-Type
+#| tbl-cap: !expr paste0("Frequency Distribution for Sick Type ", 
+#|                       "(N = ", nrow(Final_Visits), " Visits)")
+#| message: false
+
+Final_Visits %>% 
+  count(Sick_Type) %>% 
+  rename(N_Visits = n) %>% 
+  mutate(Percent = 100*(N_Visits/nrow(Final_Visits))) %>% 
+  kbl(digits = 1) %>%
+  kable_styling()
+```
+
 
 @tbl-visit-band-category shows the frequency distribution for 3-level ordinal 
 band category variable. 
@@ -1617,6 +1644,121 @@ Final_Visits %>%
   ggplot(., aes(fill = Name, y = Percent, x = Visit_Number)) + 
   geom_bar(position = "fill", stat = "identity") + 
   labs(y = "Percentage")
+```
+
+## Sickness
+This section includes summaries prepared as we were responding to a peer review 
+comment about the possibility about dogs being sick was a possible confounder. 
+
+:::{.callout-note}
+Per Dr. Masyr, "illness, medication, and hospitalization details are 
+most relevant for patients with bands. Clinically, we know that most patients 
+feel well and do not require medical support at the time points we are 
+monitoring." Therefore, we added the `Sick_Type` and `Is_Sick` variables to the 
+data to address the comment. These variables were only filled out for the 
+observations where `Total_Bands` > 0 (equivalent to 
+`Bands_Present = 1 (i.e., Yes)`). That is why there are lots of missing values
+for those variables. 
+:::
+
+@tbl-visit-Sick-Type and @tbl-visit-describe-cat respectively showed frequency 
+distributions for the categorical `Sick_Type` and binary `Bandemia` and 
+`Is_Sick` variables over the entire dataset. Below, we focus on the data in the 
+subset of observations where `Total_Bands` > 0 (equivalent to 
+`Bands_Present = 1 (i.e., Yes)`). 
+
+```{r}
+#| label: create-Final-Visits-With-Bands
+
+Final_Visits_With_Bands <- Final_Visits %>% 
+  filter(Total_Bands > 0)
+```
+
+@tbl-Is-Sick-Bandemia shows the 2 x 2 contingency table for `Is_Sick` and 
+`Bandemia` among observations with bands present. We can derive several insights 
+from this, starting with the overall rates of bandemia and sickness in this 
+subset of the data. The Sum row at the bottom of that table shows that 
+`r round(mean(Final_Visits_With_Bands$Bandemia)*100, digits = 1)`% of 
+observations with any bands present had bandemia. Meanwhile the Sum column on 
+the right side of the table shows the dog was sick in only 
+`r round(mean(Final_Visits_With_Bands$Is_Sick)*100, digits = 1)`% of 
+observations with bands present. A chi-square test based on
+@tbl-Is-Sick-Bandemia faild to detect an association between being sick and
+having bandemia among observations where bands are present. 
+
+```{r}
+#| label: tbl-Is-Sick-Bandemia
+#| tbl-cap: !expr paste0("Contingency Table for Is_Sick by Bandemia Among ", 
+#|                       "Observations With Total_Bands > 0 ",
+#|                       "(N = ", nrow(Final_Visits_With_Bands), " Visits)")
+#| results: asis
+#| message: false
+
+CT <- Final_Visits_With_Bands %>% 
+  xtabs(~Is_Sick + Bandemia, addNA = TRUE, data = .)
+CT.CV <- cramers_v(x = CT, adjust = TRUE, ci = 0.95, alternative = "greater")
+
+FN <- paste0("Chi-square test for independence, X^2(",
+             chisq.test(x = CT)$parameter, ") = ",
+             round(chisq.test(x = CT)$statistic, digits = 2),
+             ", p = ", display_num(chisq.test(x = CT)$p.value), "; ",
+             "Cramer's V (adjusted) = ",
+             format(round(CT.CV$Cramers_v_adjusted, digits = 2), nsmall = 2),
+             ", 1-tailed 95% CI = [",
+             round(CT.CV$CI_low, digits = 2), ", ",
+             format(CT.CV$CI_high, nsmall = 2), "].")
+
+Final_Visits_With_Bands %>% 
+  mutate(Bandemia = factor(Bandemia, levels = 0:1, labels = c("No", "Yes")),
+         Is_Sick = factor(Is_Sick, levels = 0:1, labels = c("No", "Yes"))) %>% 
+  xtabs(~Is_Sick + Bandemia, addNA = TRUE, data = .) %>% 
+  addmargins() %>% 
+  kable(digits = 1, col.names = c("Is Sick", "No", "Yes", "Sum")) %>% 
+  kable_styling() %>% 
+  add_header_above(header = c(" ", "Bandemia" = 2, " ")) %>% 
+  footnote(kable_input = ., general = FN, , footnote_as_chunk = TRUE) %>% 
+  cat()
+```
+
+:::{.callout-caution}
+Based on data in @tbl-Is-Sick-Bandemia, bandemia was detected 
+in `r round(100*CT[1,2]/sum(CT[1,]), digits = 1)`% of the observations where the 
+dog was not sick and `r round(100*CT[2,2]/sum(CT[2,]), digits = 1)`% of the 
+observations where the dog was sick. This descriptively hints at a possible
+association between sickness and bandemia but the difference in these two
+bandemia rates was not large enough to be confident there is really an
+association according to the chi-square test result. Note that the confidence
+interval for Cramer's V in @tbl-Is-Sick-Bandemia is so wide that it spans all
+possible values for that measure of association.
+:::
+
+@tbl-Sick-Type shows a finer breakdown of the degree of sickness present in 
+observations with bands present. We can see that a few observations came from 
+sick dogs that improved without any medical intervention. Over half of 
+the observations where some amount of sickness was present were treated with 
+medication that did not include antibiotics. Only a small number of these 
+observations were from dogs that were hospitalized due to sickness.
+
+```{r}
+#| label: tbl-Sick-Type
+#| tbl-cap: !expr paste0("Frequency Distribution for Sick_Type Among Observations ", 
+#|                       "With Total_Bands > 0 ",
+#|                       "(N = ", nrow(Final_Visits_With_Bands), " Visits)")
+#| results: asis
+#| message: false
+
+FN <- paste("Self-limited means the dog was sick but improved without",
+            "intervention.",
+            "Medicated means the dog received supportive medications for",
+            "gastro-intestinal distress that did not include antibiotics.") 
+
+Final_Visits_With_Bands %>% 
+  count(Sick_Type) %>% 
+  mutate(Percent = 100*n/sum(n)) %>% 
+  kable(digits = 1) %>% 
+  kable_styling() %>% 
+  footnote(kable_input = ., general = FN, , footnote_as_chunk = TRUE) %>% 
+  cat()
 ```
 
 # References
