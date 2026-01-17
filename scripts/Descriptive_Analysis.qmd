@@ -1584,6 +1584,41 @@ Final_Visits %>%
   add_header_above(header = c(" " = 1, "Drug at Visit 2" = 4, " "))
 ```
 
+To summarize how often each drug was used at each visit, see @tbl-visit-drug for
+raw counts, and @fig-visit-drug for a visualization of the percentages. These
+outputs strongly suggest that fitting a model that could disentangle temporal
+effects from drug effects would be very difficult in this sample because the
+conditional distribution of which drug was administered varies considerably by
+visit due to structured CHOP protocol: visits 1, 3, 5, 7, and 9 mostly used
+vincristine, visits 2 and 6 mostly used cyclophosphamide, and visits 4 and 8
+mostly used doxorubicin. That confounds drug with visit.
+
+```{r}
+#| label: tbl-visit-drug
+#| tbl-cap: Number of Records by Visit and Drug 
+
+xtabs(~Visit_Number + Drug, data = Final_Visits) %>% 
+  addmargins() %>% 
+  kable(col.names = c("Visit", "1 Vincristine", "2 Cyclophosphamide", 
+                      "3 Doxorubicin", "Sum")) %>% 
+  kable_styling() %>% 
+  add_header_above(., header = c(" ", "Drug" = 3, " "))
+```
+
+```{r}
+#| label: fig-visit-drug
+#| fig-cap: Distribution of Drug, by Visit
+
+Final_Visits %>% 
+  group_by(Visit_Number, Name, .drop = FALSE) %>% 
+  summarize(N = n()) %>% 
+  mutate(Percent = 100 * (N/sum(N))) %>% 
+  ungroup() %>% 
+  ggplot(., aes(fill = Name, y = Percent, x = Visit_Number)) + 
+  geom_bar(position = "fill", stat = "identity") + 
+  labs(y = "Percentage")
+```
+
 # References
 ::: {#refs}
 :::
