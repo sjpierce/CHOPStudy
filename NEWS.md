@@ -1,5 +1,74 @@
 # CHOPStudy News
 
+## 1.0.0, 2026-01-26
+The manuscript will be accepted by *Animals* 
+([https://www.mdpi.com/journal/animals](https://www.mdpi.com/journal/animals)) 
+pending minor revisions due tomorrow. One of the final edits is inserting info 
+about this research compendium. Once version 1.0.0 of this package/repository is 
+published and publicly available, I will get a DOI assigned and then release a 
+version 1.0.1 that adds that information to the repository. Subsequent updates 
+after that may also add final citation information for the paper (after it is 
+published and gets a DOI of its own). 
+
+Package changes listed below all relate to final preparations for public release
+of the package. I'm cleaning things up, removing obsolete files, etc. 
+
+* `DESCRIPTION`
+    * Updated Suggests field with final list of packages used in our scripts. 
+* Updated licensing for the package. 
+    * `LICENSE`
+    * `LICENSE.md`
+    * `LICENSE.note`
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Updated text to prepare for public release.
+    * Updated badges and info about repository status. 
+* `.gitignore` 
+    * Stopped ignoring data files to prepare for public release. 
+* `data/Imported_CHOP_Data.RData`
+    * Added file.
+* `graphics/`
+    * Removed folder containing logo files I ended up not using. 
+* `R/Placeholder.R`
+    * Removed a file that is no longer needed. 
+* `man/CHOPStudy-package.Rd`
+    * Updated package-level help. 
+* `scripts/extdata/Vinc_Cases_2026-01-26.xlsx`
+    * Added the raw data file. 
+* Rendered all scripts & committed output to GitHub. 
+    * `scripts/output/Descriptive_Analysis_2026-01-26.html`
+    * `scripts/output/GLMM_Analys1s_2026-01-26.html`
+    * `scripts/output/Import_Data_2026-01-26.html`
+    * `scripts/output/Render_Scripts_2026-01-26.html`
+* `scripts/Analyze_Data.qmd`
+    * Removed an obsolete file associated with earlier iterations of the 
+      manuscript that were sent to other journals. It was superceded by scripts 
+      that remain in the repository but are better organized and consistent with 
+      the final paper. 
+* `scripts/Import_Data.qmd`
+    * Switched to an updated data file that excludes MRN variable (i.e., to a 
+      de-identified data file) and updated code that used that variable.
+    * Added a callout in Purpose section.
+* `scripts/Render_Scripts.qmd` 
+    * Updated purpose section, added References section.
+    * Updated list of R packages loaded. 
+    * Added a callout in in Assumptions section. 
+* Removed citation style language files that I did not use in this particular
+  package. 
+    * `scripts/apa-numeric-superscript.csl`
+    * `scripts/apa-numeric-superscript-brackets.csl`
+* Removed example scripts that are no longer needed. Final scripts remain in 
+  the repository.
+    * `scripts/Example_Render_to_HTML.qmd`
+    * `scripts/Example_Render_to_PDF.qmd`
+* Removed LaTeX files that were not used (we used HTML output in this project 
+  instead of PDF output).
+    * `scripts/compact-title.tex`
+    * `scripts/title.tex`
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Update citation for our manuscript. 
+    
 ## 0.27.0, 2026-01-17
 * `README.qmd` and `README.md`
     * Update software version & citation info.
