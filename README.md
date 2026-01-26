@@ -16,10 +16,14 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 status](https://www.r-pkg.org/badges/version/CHOPStudy.png)](https://CRAN.R-project.org/package=CHOPStudy)
 <!-- badges: end -->
 
-This package (Pierce, 2025) is a research compendium for a study
+This package (Pierce, 2026) is a research compendium for a study
 examining the prevalence of bandemia in canine patients undergoing
-chemotherapy treatment (Eliason et al., 2025). The research team is led
+chemotherapy treatment (Eliason et al., 2026). The research team is led
 by Dr. Alison Masyr (PI) at Michigan State University.
+
+For an overview of how I approach creating a research compendium, see
+materials for my most recent CSTAT webinar on reproducible research at
+https://sjpierce.github.io/presentations.html.
 
 ## Assumptions
 
@@ -39,7 +43,7 @@ al., 2025) for version control on files associated with this package and
 to synchronize changes between your local copy of the repository and
 [GitHub](https://github.com), with
 [RStudio](https://posit.co/products/open-source/rstudio/) (RStudio Team,
-2025) as the primary editor. There is a lot of useful information about
+2026) as the primary editor. There is a lot of useful information about
 using these tools at the [Happy Git and GitHub for the
 userR](https://happygitwithr.com) website (Bryan et al., n.d.). Other
 useful resources on using Git and GitHub include Bryan (2018) and
@@ -220,7 +224,10 @@ Install the [*piercer*](https://github.com/sjpierce/piercer) package for
 R. Instructions for doing that are at the link. Please read and follow
 them before trying to install or use this package.
 
-### Install TinyTex
+### Install TinyTex (Optional)
+
+This sectional is optional because this package does not use scripts
+that generate PDF output (some of my other projects use PDF output).
 
 [TinyTex](https://yihui.org/tinytex/) is a specific distribution of
 LaTeX, which is document preparation software that allows high-quality
@@ -371,6 +378,8 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     alone!
   - `data/`: This folder is where the data file produced by our scripts
     will be stored. This is a standard folder for R package structures.
+    - `Imported_CHOP_Data.RData`: This is the data file produced by
+      running the `scripts/Import_Data.qmd` script.
     - `Placeholder.text` This text file is just present to ensure that
       the `data` subfolder will be created when you clone the repository
       or extract files from ZIP file copy of the repository obtained
@@ -389,10 +398,17 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `.quarto/`: This hidden folder may be created by Quarto to hold
       temporary files. Do not edit or delete any of these files unless
       you know what you are doing! This folder is not tracked by Git.
-    - `extdata/`: This subfolder is where you will need to put any raw
-      data files mentioned in the Obtaining Data Files section below.
+    - `extdata/`: This subfolder contains the raw data file mentioned in
+      the Obtaining Data Files section below.
       - `Vinc_Cases_2025-03-26.xlsx`: This is the current raw data set.
-    - `output/`: This subfolder holds rendered output files.
+    - `output/`: This subfolder holds rendered output files created by
+      the Quarto scripts in `scripts/`.
+      - `Descriptive_Analysis_2026-01-26.html` is final output we used
+        in the manuscript.
+      - `GLMM_Analysis_2026-01-26.html` is final output we used in the
+        manuscript.
+      - `Import_Data_2026-01-26.html` is final output we used in the
+        manuscript.
     - `.gitignore`: This was auto-created by Quarto. Don’t edit or
       delete it.
     - `_brand.yml`: This file specifies color, font, and logo settings
@@ -400,31 +416,24 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `_quarto.yml`: This is a Quarto metadata file containing
       project-level YAML code that will be inherited by Quarto scripts
       in this folder or its subfolders.  
-    - `Analyze_Data.qmd`: This script runs logistic regression models to
-      be used in the manuscript.
     - `apa.csl`: This is a citation style language file for the
       Publication Manual of the American Psychological Association, 7th
       ed. It is used by Quarto to format reference sections.
-    - `compact-title.tex`: This LaTeX file can be called from an .qmd
-      file’s YAML header via the in_header option. It just formats the
-      title of the rendered PDF file so it uses less vertical white
-      space. It may be used by other scripts.
     - `Delete_nul_file.bat`: This is a Windows batch file that automates
       removing a nuisance file sometimes left over when rendering a
       Quarto or R Markdown script doesn’t work right.
     - `Descriptive_Analysis.qmd`: This file runs some descriptive
-      analyses we plant to use in our manuscript.
+      analyses we used in our manuscript (plus others that we omitted
+      due to space constraints).
     - `Development_Tools.R`: This contains some examples of R commands I
       use interactively when working on the package.
-    - `Example_Render_to_HTML.qmd`: This is just an example script that
-      you can copy to start a new script that will produce an HTML
-      output file.
-    - `Example_Render_to_PDF.qmd`: This is just an example script that
-      you can copy to start a new script that will produce a PDF output
-      file.
+    - `GLMM_Analysis.qmd`: This file runs some the actual GLMM model
+      used  
+      in our manuscript.
     - `Import_Data.qmd`: This script imports the raw data from Excel,
       prepares it for use, and saves an R data file that will be used by
-      other scripts.
+      other scripts. Re-running this script will overwrite the
+      `data/Imported_CHOP_Data.RData` file.
     - `references.bib`: This is a BibTeX file containing the citation
       data for references mentioned in various scripts. Quarto uses it
       to get the data needed to insert reference lists.
@@ -439,12 +448,12 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
     - `Setup_as_Package.qmd`: This is a script I used to remind myself
       of how to rapidly do various parts of turning a new repository
       into an R package. It’s only really used once.
-    - `title.tex`: This LaTeX file enables better handling of author
-      affiliations in PDF outputs. It may be used by other scripts.
   - `.gitignore`: This file tells Git what files to ignore and omit from
     synchronizing with the main repository on GitHub.
   - `.Rbuildignore`: This file tells R what files to ignore when
     building the package from the source code.
+  - `CHOPStudy.Rproj`: This is an RStudio project file. It contains some
+    settings for working with the project in that software.
   - `DESCRIPTION`: This file is a brief, structured description of the
     package that is required by R package building conventions. It holds
     essential meta-data.
@@ -464,8 +473,6 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
   - `README.qmd`: This file gives an introduction to the package.
     Rendering it produces the `README.md` file and opens the preview
     automatically.
-  - `CHOPStudy.Rproj`: This is an RStudio project file. It contains some
-    settings for working with the project in that software.
 
 ## Software Dependencies
 
@@ -492,10 +499,12 @@ we each obtain.
 
 ## Obtaining Data Files
 
-The data required to use this package are not available in the GitHub
-repository and should not be checked into Git version control. This
-reduces the number of servers where the data files may be stored and
-thereby increases data security.
+The data required to use this package are available in this GitHub
+repository. They do not contain any data about humans (only about dogs),
+so there should be no problem with freely distributing them. Dr. Masyr
+(the principal investigator) authorized release of the data along with
+the package. This reduces the number of servers where the data files may
+be stored and thereby increases data security.
 
 To obtain the data files, you can contact the package author Steven J.
 Pierce at pierces1@msu.edu. If you are a CSTAT employee assigned to the
@@ -534,7 +543,7 @@ in the R console. The resulting help page has an Index link at the
 bottom that will show you a list of all the custom functions in the
 package.
 
-## Example Use Case
+## Use Case: Reproducing Our Results
 
 One of the main uses of the package is to run scripts that import,
 manage, and analyze data for the manuscript it supports. For example, if
@@ -544,20 +553,24 @@ RStudio. Then, use RStudio to open the file `scripts/Render_Scripts.qmd`
 and click the “Render” button in RStudio.
 
 If you have everything set up correctly, that will start generating
-files in the `scripts/output` folder. It will also generate
-`scripts/Render_Scripts.html`, which is the log of running that
-rendering script and contains information on how long it took to render
+files in the `scripts/output` folder, including
+`scripts/output/Render_Scripts.html`, which is the log of running that
+rendering script that contains information on how long it took to render
 each report called by that file.
 
 If you want to get a date-stamped output for
-`scripts/Render_Scripts.qmd`, use the commands in the Terminal to render
-that script. The first line changes to the `scripts/` subfolder and the
-2nd one does a custom render of that script, setting matching custom
-values for the output file name and the LogFile parameter. Make sure you
-set the date part of file names correctly.
+`scripts/Render_Scripts.qmd`, use commands similar to the ones shown
+below in the Terminal to render that script. The first line changes to
+the `scripts/` subfolder and the second one does a custom render of that
+script, setting matching custom values for the output file name and the
+LogFile parameter.
 
     cd scripts
-    quarto render Render_Scripts.qmd --output Render_Scripts_2026-01-17.html -P LogFile:Render_Scripts_2026-01-17.html
+    quarto render Render_Scripts.qmd --output Render_Scripts_2026-01-26.html -P LogFile:Render_Scripts_2026-01-26.html
+
+Make sure you change the date part of file names if you want to avoid
+overwriting `scripts/output/Render_Scripts_2026-01-26.html`, which is
+the final output I produced to accompany the manuscript.
 
 ## References
 
@@ -596,10 +609,10 @@ Chacon, S., & Straub, B. (2014). *Pro Git*. Apress Media.
 
 <div id="ref-Eliason-RN8603" class="csl-entry">
 
-Eliason, C. N., Pierce, S. J., & Masyr, A. (2025). *Band neutrophils are
-observed in canine lymphoma patients undergoing multiagent chemotherapy*
-\[Manuscript in preparation\]. Department of Small Animal Clinical
-Sciences, Michigan State University.
+Eliason, C. N., Pierce, S. J., & Masyr, A. (2026). *Band neutrophils are
+observed in dogs undergoing multiagent chemotherapy including
+vincristine* \[Manuscript accepted for publication\]. Department of
+Small Animal Clinical Sciences, Michigan State University.
 
 </div>
 
@@ -675,8 +688,8 @@ and share your code*. O’Reilly Media. <https://r-pkgs.org>
 
 # Citing This Package
 
-Please cite the package itself (Pierce, 2025), plus any associated data
-files.
+Please cite the package itself (Pierce, 2026), which includes the
+necessary data file.
 
 ## Disclaimer
 
