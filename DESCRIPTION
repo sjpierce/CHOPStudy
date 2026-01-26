@@ -1,6 +1,6 @@
 Package: CHOPStudy
 Title: Research Compendium for the CHOP Study
-Version: 1.0.0
+Version: 1.0.1
 Date: 2026-01-26
 Authors@R: 
     person(given = c("Steven", "J."),

@@ -1,5 +1,11 @@
 # CHOPStudy News
 
+## 1.0.1, 2026-01-26
+* `README.qmd` and `README.md`
+    * Added DOI badge, updated reference list entry. 
+* `scripts/references.bib`
+    * Updated entry for the package to include DOI. 
+
 ## 1.0.0, 2026-01-26
 The manuscript will be accepted by *Animals* 
 ([https://www.mdpi.com/journal/animals](https://www.mdpi.com/journal/animals)) 
