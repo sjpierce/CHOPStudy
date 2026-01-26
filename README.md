@@ -104,7 +104,7 @@ package to work.
 
 Install [RStudio
 Desktop](https://posit.co/products/open-source/rstudio/) version
-2025.09.2+418 (or later). We recommend using RStudio to interact with
+2026.01.0+392 (or later). We recommend using RStudio to interact with
 the files for this package. RStudio is both a good interface to R and
 has built-in support for using some of the other software discussed
 below.
@@ -113,7 +113,7 @@ below.
 
 We rely on [Quarto](https://quarto.org) (Allaire et al., 2026) scripts
 to enhance reproducibility because they provide excellent support for
-generating dynamic reports (Mair, 2016). Install Quarto version 1.8.26
+generating dynamic reports (Mair, 2016). Install Quarto version 1.8.27
 or later. Although RStudio bundles a version of Quarto, we want the most
 recent stable release instead. Quarto also includes a copy of
 [Pandoc](https://pandoc.org/).
@@ -633,9 +633,9 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
-Pierce, S. J. (2025). *CHOPStudy: Research compendium for the CHOP
-study* (Version 0.27.0) \[Reproducible Research Materials, Computer
-Program, R package, Private Repository\]. GitHub.
+Pierce, S. J. (2026). *CHOPStudy: Research compendium for the CHOP
+study* (Version 1.0.0) \[Reproducible Research Materials, Computer
+Program, R package, Public Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>
 
 </div>
@@ -650,8 +650,8 @@ Foundation for Statistical Computing. http://www.R-project.org.
 
 <div id="ref-RStudio-Team-RN8351" class="csl-entry">
 
-RStudio Team. (2025). *RStudio Desktop: Integrated development
-environment for R* (Version 2025.09.2+418) \[Computer Program\]. Posit
+RStudio Team. (2026). *RStudio Desktop: Integrated development
+environment for R* (Version 2026.01.0+392) \[Computer Program\]. Posit
 Software, PBC. <https://posit.co>
 
 </div>
