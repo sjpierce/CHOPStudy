@@ -26,6 +26,7 @@ Suggests:
     devtools,
     DHARMa,
     dplyr,
+    effectsize,
     ggpmisc,
     git2r,
     glmmTMB,
@@ -39,6 +40,7 @@ Suggests:
     performance,
     piercer (>= 0.23.0),
     quarto,
+    readxl,
     rmarkdown, 
     tidyverse,
     tinytex
