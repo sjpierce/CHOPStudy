@@ -28,8 +28,8 @@ knitr::opts_chunk$set(
 # CHOPStudy Package Documentation 
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Project Status: Inactive – The project has reached a stable, usable state but is no longer being actively developed; support/maintenance will be provided as time allows.](https://www.repostatus.org/badges/latest/inactive.svg)](https://www.repostatus.org/#inactive)
 [![CRAN status](https://www.r-pkg.org/badges/version/CHOPStudy)](https://CRAN.R-project.org/package=CHOPStudy)
 <!-- badges: end -->
 
@@ -72,11 +72,11 @@ release versions of the software packages discussed below and also frequently
 updating your installed R packages.
 
 ## Installation
-This package is only available from a *private* repository available on the 
+This package is only available from a *public* repository available on the 
 [GitHub server](https://github.com) at 
-https://github.com/sjpierce/CHOPStudy. Private repositories are only visible 
-to GitHub users who are logged in and have been registered by the repository 
-owner as a collaborator on the project. 
+https://github.com/sjpierce/CHOPStudy. Public repositories are visible to 
+everyone but can only be edited by GitHub users who are logged in and have been 
+registered by the repository owner as a collaborator on the project. 
 
 This package's repository will remain private until the associated manuscript
 has been accepted for publication. Once that happens, the repository may be made
