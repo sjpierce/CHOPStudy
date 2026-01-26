@@ -6,7 +6,7 @@
 \alias{CHOPStudy-package}
 \title{CHOPStudy: Research Compendium for the CHOP Study}
 \description{
-This package is a research compendium for a study examining the incidence of bandemia in canine patients undergoing chemotherapy treatment. The research team is led by Dr. Alison Masyr (PI) at Michigan State University.
+This package is a research compendium for a study examining the prevalence of bandemia in canine patients undergoing chemotherapy treatment. The research team is led by Dr. Alison Masyr (PI) at Michigan State University.
 }
 \seealso{
 Useful links:
