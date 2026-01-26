@@ -42,12 +42,18 @@ inst/doc
 scripts/.quarto/
 
 # Omit R data files in the data folder.
-data/*.Rdata
-data/*.RData
-data/*.Rds
+# Commented out on 2026-01-26 when preparing to publish the repository.
+# We can safely place the de-identified data on GitHub for reproducibility
+# purposes.
+#data/*.Rdata
+#data/*.RData
+#data/*.Rds
 
 # Omit external data files.
-scripts/extdata
+# Commented out on 2026-01-26 when preparing to publish the repository.
+# We can safely place the de-identified data on GitHub for reproducibility
+# purposes.
+#scripts/extdata
 
 # Omit log, HTML, and PDF output files from knitting Quarto scripts.
 scripts/*.html
