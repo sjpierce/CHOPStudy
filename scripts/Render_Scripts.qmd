@@ -56,6 +56,14 @@ render this entire file to automate rendering all the scripts shown below.
 All the assumptions built into the various scripts being rendered must be 
 satisfied.
 
+:::{.callout-caution}
+Rendering the import script in the `Import-Data` chunk below will overwrite the 
+existing `data/Imported_CHOP_Data.RData` file in your local repository. If you 
+just want to reproduce the analyses without re-running the import, disable the
+`Import-Data` chunk by setting its chunk option to `#| eval: false` before you
+render this production script.
+:::
+
 # Setup
 This section contains chunks that you must run before trying to use the code 
 chunks below it to interactively render a specific script. 
