@@ -7,6 +7,8 @@ Steven J. Pierce
 
 <!-- badges: start -->
 
+[![Latest version
+DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18381003.svg)](https://doi.org/10.5281/zenodo.18381003)
 [![](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![Project Status: Inactive – The project has reached a stable, usable
 state but is no longer being actively developed; support/maintenance
@@ -648,9 +650,10 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2026). *CHOPStudy: Research compendium for the CHOP
-study* (Version 1.0.0) \[Reproducible Research Materials, Computer
+study* (Version 1.0.1) \[Reproducible Research Materials, Computer
 Program, R package, Public Repository\]. GitHub.
-<https://github.com/sjpierce/CHOPStudy>
+<https://github.com/sjpierce/CHOPStudy>. Zenodo.
+<https://doi.org/10.5281/zenodo.18381003>
 
 </div>
 
