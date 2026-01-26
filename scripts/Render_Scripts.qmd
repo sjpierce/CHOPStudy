@@ -50,7 +50,8 @@ scripts that import, manage, and analyze data for use a manuscript
 [@Eliason-RN8603]. Specifically, this Quarto script is a convenient way to 
 render the other various scripts in a sensible order and with useful parameter 
 values. It can be used interactively to render selected scripts, or you can just 
-render this entire file to automate rendering all the scripts shown below. 
+render this entire file to automate rendering all the scripts shown below to 
+date-stamped, production HTML output files. 
 
 # Assumptions
 All the assumptions built into the various scripts being rendered must be 
