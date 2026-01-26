@@ -56,6 +56,17 @@ dogs receiving CHOP chemotherapy at MSU Veterinary Medicine Clinic (VMC) between
 revised data files that will be used for the analyses in other scripts. These 
 data will be used in a manuscript [@Eliason-RN8603]. 
 
+:::{.callout-caution}
+* Rendering this script will overwrite the `data/Imported_CHOP_Data.RData` file 
+  in your local repository regardless of whether you are rendering the HTML 
+  output to a draft file or to a date-stamped production output file. 
+* Consider copying that file to a new file name before you render this script if
+  you want to retain the original version I published with this package. 
+  Alternatively, you should also be able to download my original version from 
+  GitHub. 
+  
+:::
+
 # Setup
 This section documents some setup tasks that are useful to the statistician on 
 the team. Most readers of this document will probably want skip directly to 
