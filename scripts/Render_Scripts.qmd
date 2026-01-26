@@ -9,6 +9,8 @@ author:
     email: pierces1@msu.edu
     affiliations: 
       - name: Michigan State University, Center for Statistical Training and Consulting
+bibliography: references.bib
+csl: apa.csl
 params: 
   SourceDir: "scripts/" 
   SourceFile: "Render_Scripts.qmd" 
@@ -43,10 +45,12 @@ knitr:
 ---
 
 # Purpose
-This Quarto script is a convenient way to render various scripts in a sensible 
-order and with useful parameter values. It can be used interactively to render 
-selected scripts, or you can just render this entire file to automate rendering 
-all the scripts shown below. 
+This file is part of a research compendium [@Pierce-RN8714]. It renders other 
+scripts that import, manage, and analyze data for use a manuscript 
+[@Eliason-RN8603]. Specifically, this Quarto script is a convenient way to 
+render the other various scripts in a sensible order and with useful parameter 
+values. It can be used interactively to render selected scripts, or you can just 
+render this entire file to automate rendering all the scripts shown below. 
 
 # Assumptions
 All the assumptions built into the various scripts being rendered must be 
@@ -196,6 +200,10 @@ quarto_render(input = here("scripts/GLMM_Analysis.qmd"),
 chunk.end <- proc.time()
 chunk.end - chunk.start
 ```
+
+# References
+::: {#refs}
+:::
 
 # Software Information
 This section documents information that is important for reproducibility. Most
