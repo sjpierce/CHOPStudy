@@ -92,6 +92,18 @@ here::i_am(path = "scripts/Import_Data.qmd")
 ```
 
 ## Read Data {#sec-Read-Data}
+
+:::{.callout-note}
+As a final stage of preparing the repository for public release, we replaced 
+the data file `Vinc_Cases_2026-01-16.xlsx` with `Vinc_Cases_2026-01-26.xlsx`. 
+The only change to the data file was removing the `MRN` variable containing 
+medical record numbers. We had previously verified that the `Patient` variable 
+is a suitably de-identified replacement for `MRN`: they have a one-to-one 
+correspondence, but while `MRN` values appear in actual clinic records, the 
+`Patient` values do not). The file containing `MRN` files is being retained by 
+the team as private documentation and will not be shared publicly. 
+:::
+
 @tbl-raw-data-file shows meta-data about the raw data file we will import.
 
 ```{r}
@@ -99,7 +111,7 @@ here::i_am(path = "scripts/Import_Data.qmd")
 #| tbl-cap: "Meta-Data About Raw Data File"
 
 # Store path to raw data file. 
-RawFile <- here("scripts/extdata/Vinc_Cases_2026-01-16.xlsx")
+RawFile <- here("scripts/extdata/Vinc_Cases_2026-01-26.xlsx")
 
 file_details(RawFile) %>% 
   kable(, format = "html", 
@@ -214,8 +226,16 @@ number of unique combinations will be the same as the number of unique values
 for each variable separately and then it doesn't matter which of those two
 variables we use to identify a given dog.
 
+::: {.callout-caution}
+After switching to the final data file that excluded `MRN`, I disabled the 
+chunk below. We retain internal team documentation of the results of running it 
+in date-stamped output from 2026-01-17, which used the 2026-01-16 version of the
+data. The code remains here to show how we checked that `Patient` variable.
+:::
+
 ```{r}
 #| label: check-Patient-MRN
+#| eval: false
 
 tibble(Patients_N = All_Visits %>% select(Patient) %>% n_distinct(), 
        MRNs_N = All_Visits %>% select(MRN) %>% n_distinct(),
@@ -227,7 +247,8 @@ tibble(Patients_N = All_Visits %>% select(Patient) %>% n_distinct(),
 ::: {.callout-tip}
 If `Match = TRUE` in the result immediately above, that confirms `Patient` and 
 `MRN` variables are both unique identifiers for a dog and have a one-to-one 
-correspondence. 
+correspondence. However, `Patient` is study-specific and can't be directly 
+linked to actual clinic records. 
 :::
 
 ## Check Weeks Since CHOP Started
@@ -276,8 +297,8 @@ boxplot(Weeks ~ Visit_Number, data = All_Visits, xlab="Visit Number")
 
 ## Check Uniqueness of Visit Records
 Next we verify that each row in the visit-level data (`All_Visits`) is a unique 
-combination of a patient (`Patient` and `MRN`), a CHOP cycle (`CHOP_Number`), 
-and a visit number (`Visit_Number`). 
+combination of a patient (`Patient`), a CHOP cycle (`CHOP_Number`), and a visit 
+number (`Visit_Number`). 
 
 ```{r}
 #| label: check-visit-uniqueness
@@ -285,7 +306,7 @@ and a visit number (`Visit_Number`).
 # We expect a value of TRUE for Matching_N.
 tibble(All_Visits_N = nrow(All_Visits),
        Unique_Visits_N = All_Visits %>% 
-         select(MRN, CHOP_Number, Visit_Number) %>% 
+         select(Patient, CHOP_Number, Visit_Number) %>% 
          n_distinct(),
        Matching_N = All_Visits_N == Unique_Visits_N)
 ```
@@ -306,22 +327,30 @@ patient weight and body surface area.
 
 All_Patients <- All_Visits %>% 
   arrange(Patient, CHOP_Number, Visit_Number) %>% 
-  select(Patient, MRN, In_Final_Patients, Age_Yrs, Sex, Neutered, Breed, 
+  select(Patient, In_Final_Patients, Age_Yrs, Sex, Neutered, Breed, 
          Diagnosis, Stage, Substage, Phenotype, Weight_kg, Surface_Area_m2) %>% 
-  group_by(Patient, MRN) %>% 
+  group_by(Patient) %>% 
   slice_head(n = 1) %>% 
   ungroup()
 ```
 
 Next, we verify that the number of rows in `All_Patients` is equal to the number 
-of unique MRNs in `All_Visits`. If that is true, then all rows in `All_Visits` 
-for a given `MRN` must have the exact same values for both weight and surface 
-area. 
+of unique MRNs in `All_Visits`). If that is true, then all rows in `All_Visits` 
+for a given `Patient` must have the exact same values for both weight and 
+surface area. 
+
+::: {.callout-caution}
+After switching to the final data file that excluded `MRN`, I disabled the 
+chunk below. We retain internal team documentation of the results of running it 
+in date-stamped output from 2026-01-17, which used the 2026-01-16 version of the
+data. The code remains here to show how we checked assumptions previously.
+:::
 
 ```{r}
 #| label: check-patient-N
+#| eval: FALSE
 
-# We expect a value of TRUE for Matching_N.
+# We expect a value of TRUE for Matching_N. 
 tibble(All_MRNs_N = All_Visits %>% select(MRN) %>% n_distinct(),
        All_Patients_N = nrow(All_Patients),
        Matching_N = All_MRNs_N == All_Patients_N)
@@ -350,7 +379,7 @@ observations had `CBC_Dates` indicating that the lab sample was collected within
 Visit1_CHOP <- All_Visits %>% 
   filter(Visit_Number == 1) %>% 
   mutate(Started_in_10d = Days_Since_Start <= 10) %>% 
-  select(Patient, MRN, CHOP_Number, Started_in_10d)
+  select(Patient, CHOP_Number, Started_in_10d)
 ```
 
 Next we merge that new `Started_in_10d` variable back onto the `All_Visits` 
@@ -360,7 +389,7 @@ dataset. We can then use it later to select cases.
 #| label: merge-All-Visits-Visit1-CHOP
 
 All_Visits <- left_join(x = All_Visits, y = Visit1_CHOP, 
-                      by = join_by(Patient, MRN, CHOP_Number)) 
+                      by = join_by(Patient, CHOP_Number)) 
 ```
 
 ## Subset the Visit-Level  Data 
@@ -406,9 +435,9 @@ happened there.
 #| tbl-cap: Records Dropped in Step 1 Subsetting
 
 All_Visits %>% 
-  select(Patient, MRN, CHOP_Number) %>% 
+  select(Patient, CHOP_Number) %>% 
   filter(CHOP_Number != 1) %>% 
-  group_by(Patient, MRN, CHOP_Number) %>% 
+  group_by(Patient, CHOP_Number) %>% 
   summarize(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
@@ -442,7 +471,7 @@ happened there.
 
 CHOP1 %>% 
   filter(Started_in_10d == FALSE) %>% 
-  group_by(Patient, MRN) %>% 
+  group_by(Patient) %>% 
   summarise(Visits_Dropped = n(),
             CHOP1_Start_Date = min(CHOP_Start_Date),
             Visit1_CBC_Date = min(CBC_Date), 
@@ -479,7 +508,7 @@ happened there.
 
 CHOP1_Start10d %>% 
   filter(Phase_of_Trt != 1) %>% 
-  group_by(Patient, MRN, Phase_of_Trt) %>% 
+  group_by(Patient, Phase_of_Trt) %>% 
   summarise(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
@@ -515,7 +544,7 @@ happened there.
 
 CHOP1_Start10d_Phase1 %>% 
   filter(!Drug %in% 1:3) %>% 
-  group_by(Patient, MRN, Drug) %>% 
+  group_by(Patient, Drug) %>% 
   summarise(Visits_Dropped = n()) %>% 
   kable(digits = 2) %>% 
   kable_styling()
