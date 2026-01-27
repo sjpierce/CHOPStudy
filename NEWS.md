@@ -1,5 +1,15 @@
 # CHOPStudy News
 
+## 1.0.2, 2026-01-27
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* Added final figures rendered with version 1.0.0
+    * `scripts/output/Figure_1.png`
+    * `scripts/output/Figure_2.png`
+    * `scripts/output/Figure_3.png`
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 1.0.1, 2026-01-26
 * `README.qmd` and `README.md`
     * Added DOI badge, updated reference list entry. 
