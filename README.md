@@ -650,7 +650,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2026). *CHOPStudy: Research compendium for the CHOP
-study* (Version 1.0.1) \[Reproducible Research Materials, Computer
+study* (Version 1.0.2) \[Reproducible Research Materials, Computer
 Program, R package, Public Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>. Zenodo.
 <https://doi.org/10.5281/zenodo.18381003>
