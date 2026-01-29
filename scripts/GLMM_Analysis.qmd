@@ -844,6 +844,9 @@ it is around 2.5%.
 Fig2 <- plot_predictions(m2, newdata = Final_Visits, conf_level = 0.95, 
                          re.form = NA, condition = c("BSA_m2_C"), vcov = TRUE) +
   scale_x_continuous(name = expression("Mean-centered body surface area (" *  m^2 * ")"),
+                     breaks = c(-0.5, 0, 0.5),
+                     # Journal wants minus sign ("−") instead of hyphen ("-") 
+                     labels = c("−0.5", "0.0", "0.5"),
                      sec.axis = sec_axis(~ . + mean(Final_Patients$Surface_Area_m2), 
                                          name = expression("Uncentered body surface area (" * m^2 * ")"))) +
   geom_rug(aes(x = Surface_Area_m2 - mean(Surface_Area_m2)), 
