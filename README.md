@@ -406,11 +406,16 @@ project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-RStudio-P
       - `Vinc_Cases_2025-03-26.xlsx`: This is the current raw data set.
     - `output/`: This subfolder holds rendered output files created by
       the Quarto scripts in `scripts/`.
-      - `Descriptive_Analysis_2026-01-26.html` is final output we used
+      - `Descriptive_Analysis_2026-01-29.html` is final output we used
         in the manuscript.
-      - `GLMM_Analysis_2026-01-26.html` is final output we used in the
+      - `Figure_1.png` is used in the manuscript.
+      - `Figure_2.png` is used in the manuscript.
+      - `Figure_3.png` is used in the manuscript.
+      - `GLMM_Analysis_2026-01-29.html` is final output we used in the
         manuscript.
-      - `Import_Data_2026-01-26.html` is final output we used in the
+      - `Import_Data_2026-01-29.html` is final output we used in the
+        manuscript.
+      - `Render_Scripts_2026-01-29.html` is final output we used in the
         manuscript.
     - `.gitignore`: This was auto-created by Quarto. Don’t edit or
       delete it.
@@ -569,10 +574,10 @@ script, setting matching custom values for the output file name and the
 LogFile parameter.
 
     cd scripts
-    quarto render Render_Scripts.qmd --output Render_Scripts_2026-01-26.html -P LogFile:Render_Scripts_2026-01-26.html
+    quarto render Render_Scripts.qmd --output Render_Scripts_2026-01-29.html -P LogFile:Render_Scripts_2026-01-29.html
 
 Make sure you change the date part of file names if you want to avoid
-overwriting `scripts/output/Render_Scripts_2026-01-26.html`, which is
+overwriting `scripts/output/Render_Scripts_2026-01-29.html`, which is
 the final output I produced to accompany the manuscript.
 
 ## References
@@ -650,7 +655,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2026). *CHOPStudy: Research compendium for the CHOP
-study* (Version 1.0.2) \[Reproducible Research Materials, Computer
+study* (Version 1.0.3) \[Reproducible Research Materials, Computer
 Program, R package, Public Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>. Zenodo.
 <https://doi.org/10.5281/zenodo.18381003>
