@@ -1,5 +1,35 @@
 # CHOPStudy News
 
+## 1.0.3, 2026-01-29
+The journal requested minor edits to Figures 1 & 2 during proofreading. All
+changes here aim to satisfy that request and then update associated version
+information , documentation, and final rendered output.
+
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+    * Update example rendering command line to match when I generated final 
+      output for the paper. 
+    * Update Repository Structure section to list additional output files. 
+* Rendered all scripts & committed output to GitHub. 
+    * `scripts/output/Descriptive_Analysis_2026-01-29.html`
+    * `scripts/output/Figure_1.png`
+    * `scripts/output/Figure_2.png`
+    * `scripts/output/GLMM_Analys1s_2026-01-29.html`
+    * `scripts/output/Import_Data_2026-01-29.html`
+    * `scripts/output/Render_Scripts_2026-01-29.html`
+* Removed outdated output files. 
+    * `scripts/output/Descriptive_Analysis_2026-01-26.html`
+    * `scripts/output/GLMM_Analys1s_2026-01-26.html`
+    * `scripts/output/Import_Data_2026-01-26.html`
+    * `scripts/output/Render_Scripts_2026-01-26.html`
+* `scripts/Descriptive_Analysis.qmd`
+    * Fixed symbol for units of measurement in exported Figure 1 file.
+* `scripts/GLMM_Analysis.qmd`
+    * Fixed axis tick mark label to use a proper minus sign instead of a hyphen 
+      in exported Figure 2 file. 
+* `scripts/references.bib`
+    * Update software version & citation info.
+    
 ## 1.0.2, 2026-01-27
 * `README.qmd` and `README.md`
     * Update software version & citation info.
