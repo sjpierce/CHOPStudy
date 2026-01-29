@@ -556,8 +556,8 @@ Fig1 <- Final_Visits %>%
   coord_cartesian(xlim = c(0, 50), ylim = c(0, 7), ) +
   scale_x_continuous(breaks = seq(from = 0, to = 50, by = 10)) +
   scale_y_continuous(breaks = seq(from = 0, to = 7, by = 1)) +
-  xlab("Total neutrophils (k/ul)") +
-  ylab("Total bands (k/ul)") +
+  xlab(expression(paste("Total neutrophils (k/", mu,"l)"))) +
+  ylab(expression(paste("Total bands (k/", mu,"l)"))) +
   annotate(geom = "text", x =45, y = 4.6, label = "Loess", col = "red") +
   annotate(geom = "text", x =45, y = 2.5, label = "Linear", col = "red") 
 
