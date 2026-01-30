@@ -1,5 +1,19 @@
 # CHOPStudy News
 
+## 1.0.4, 2026-01-30
+The paper is fully published now, so I'm adding final reference info to the 
+repository. I did not modify any scripts for managing or analyzing the data, 
+so I did not re-render the output files. Re-rendering them from this version 
+of the repository should yield same results as shown under 1.0.3 except that 
+the reference entry for the paper will be in final form and the software 
+information sections should now show CHOPStudy v1.0.4 instead of v1.0.3. 
+
+* `README.qmd` and `README.md`
+    * Update software version & citation info.
+* `scripts/references.bib`
+    * Update software version & citation info.
+    * Updated to include final citation for the published paper. 
+    
 ## 1.0.3, 2026-01-29
 The journal requested minor edits to Figures 1 & 2 during proofreading. All
 changes here aim to satisfy that request and then update associated version
