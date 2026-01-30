@@ -617,10 +617,10 @@ Chacon, S., & Straub, B. (2014). *Pro Git*. Apress Media.
 
 <div id="ref-Eliason-RN8603" class="csl-entry">
 
-Eliason, C. N., Pierce, S. J., & Masyr, A. (2026). *Band neutrophils are
+Eliason, C. N., Pierce, S. J., & Masyr, A. (2026). Band neutrophils are
 observed in dogs undergoing multiagent chemotherapy including
-vincristine* \[Manuscript accepted for publication\]. Department of
-Small Animal Clinical Sciences, Michigan State University.
+vincristine. *Animals*, *16*(3), Article 434.
+<https://doi.org/10.3390/ani16030434>
 
 </div>
 
@@ -655,7 +655,7 @@ J. A. (2016). Ten simple rules for taking advantage of Git and GitHub.
 <div id="ref-Pierce-RN8714" class="csl-entry">
 
 Pierce, S. J. (2026). *CHOPStudy: Research compendium for the CHOP
-study* (Version 1.0.3) \[Reproducible Research Materials, Computer
+study* (Version 1.0.4) \[Reproducible Research Materials, Computer
 Program, R package, Public Repository\]. GitHub.
 <https://github.com/sjpierce/CHOPStudy>. Zenodo.
 <https://doi.org/10.5281/zenodo.18381003>
